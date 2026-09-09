@@ -1,15 +1,439 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Месяц 1 · Основы HTML</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page:     #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --dark-card:   #0A0A0A;
+      --border:      #E0E0EE;
+      --text-body:   #1A1A1A;
+      --text-muted:  #888899;
+      --text-label:  #555566;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg-page);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* ─── TOP BAR ─── */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px;
+      border-bottom: 1.5px solid var(--border);
+      background: var(--white);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .burger { display: flex; flex-direction: column; gap: 5px; }
+    .burger span { display: block; width: 22px; height: 2.5px; background: var(--black); border-radius: 2px; }
+    .brand-name { font-weight: 900; font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .brand-sub  { font-weight: 600; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--black); text-decoration: none;
+      background: var(--bg-page); border: 1.5px solid var(--border);
+      padding: 9px 20px; border-radius: 100px;
+      transition: background .2s;
+    }
+    .back-btn:hover { background: var(--border); }
+    .back-btn svg { flex-shrink: 0; }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 64px 60px 52px;
+      position: relative; overflow: hidden;
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: start; gap: 40px;
+    }
+
+    .deco-circle {
+      position: absolute; border-radius: 50%;
+      border: 2px solid rgba(10,10,10,0.07);
+      pointer-events: none;
+    }
+    .deco-lg { width: 380px; height: 380px; top: -100px; right: -60px; }
+    .deco-sm { width: 220px; height: 220px; top:  50px; right: 100px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--black); color: var(--white);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 8px 22px; border-radius: 100px; margin-bottom: 24px;
+    }
+    .hero-badge::before { content: '●'; color: var(--yellow); font-size: 10px; }
+
+    .hero-h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900; font-size: 68px; letter-spacing: -0.02em;
+      text-transform: uppercase; line-height: 1; color: var(--black);
+    }
+    .hero-h1 em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-weight: 700; font-size: 72px;
+    }
+
+    .accent-row { display: flex; align-items: center; gap: 18px; margin: 14px 0 20px; }
+    .acc-line { height: 4px; border-radius: 2px; background: var(--yellow); }
+
+    .hero-sub {
+      font-size: 17px; font-weight: 500; color: var(--text-muted);
+      max-width: 520px; line-height: 1.65;
+    }
+
+    /* Hero right: month meta card */
+    .hero-meta {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 32px 28px;
+      min-width: 220px; display: flex; flex-direction: column; gap: 20px;
+      position: relative; z-index: 2;
+      margin-top: 12px;
+    }
+    .meta-item-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+    }
+    .meta-item-val {
+      font-weight: 900; font-size: 32px; letter-spacing: -0.02em; line-height: 1;
+    }
+    .meta-item-val.sm {
+      font-size: 18px; font-weight: 800;
+    }
+    .meta-sep { height: 1.5px; background: var(--border); }
+    .meta-badge {
+      background: var(--yellow); border-radius: 12px;
+      padding: 10px 16px; text-align: center;
+      font-weight: 900; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    /* ─── SKILLS PILLS ─── */
+    .skills-row {
+      padding: 0 60px 48px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .skills-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-label); margin-right: 4px;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 100px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .pill.dark   { background: var(--black); color: var(--white); }
+    .pill.yellow { background: var(--yellow); color: var(--black); }
+    .pill.purple { background: var(--purple-soft); color: var(--black); }
+    .pill.beige  { background: var(--beige); color: var(--black); border: 1px solid #E0D8C0; }
+
+    /* ─── LESSONS GRID ─── */
+    .section { padding: 0 60px 80px; }
+    .sec-hdr {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .sec-title { font-weight: 900; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-label); }
+    .sec-count { font-weight: 700; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+
+    .lessons-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+
+    .lcard {
+      border-radius: 22px; padding: 32px 28px 28px;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 16px;
+      border: 1.5px solid var(--border);
+      transition: transform .2s, box-shadow .2s;
+      background: var(--white);
+      position: relative; overflow: hidden;
+    }
+    .lcard:hover:not(.locked) {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(10,10,10,.10);
+    }
+    .lcard.yellow { background: var(--yellow); border-color: transparent; }
+    .lcard.purple { background: var(--purple-soft); border-color: transparent; }
+    .lcard.beige  { background: var(--beige); border-color: #E0D8C0; }
+    .lcard.dark   { background: var(--dark-card); color: var(--white); border-color: transparent; }
+
+    .lcard.locked { opacity: .5; pointer-events: none; }
+
+    .lcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+    .lnum {
+      font-weight: 900; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--black); color: var(--white);
+      padding: 5px 14px; border-radius: 100px;
+      display: inline-block; flex-shrink: 0;
+    }
+    .lcard.yellow .lnum { background: rgba(10,10,10,0.85); }
+    .lcard.dark .lnum   { background: rgba(255,255,255,.15); color: var(--white); }
+
+    .lcard-status {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 100px;
+      background: rgba(10,10,10,.07); color: var(--text-label);
+    }
+    .lcard.dark .lcard-status { background: rgba(255,255,255,.12); color: rgba(255,255,255,.7); }
+    .lcard-status.live { background: rgba(10,10,10,.9); color: var(--yellow); }
+
+    .lname {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-style: italic;
+      font-size: 24px; line-height: 1.25;
+    }
+    .lcard.dark .lname { color: var(--white); }
+
+    .ltopics {
+      display: flex; flex-direction: column; gap: 8px;
+      margin-top: 4px;
+    }
+    .ltopic {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; font-weight: 500; color: var(--text-body); line-height: 1.4;
+    }
+    .ltopic::before { content: '—'; color: var(--text-muted); flex-shrink: 0; }
+    .lcard.dark .ltopic { color: rgba(255,255,255,.75); }
+    .lcard.dark .ltopic::before { color: rgba(255,255,255,.3); }
+
+    .lcard-bot {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto; padding-top: 16px;
+      border-top: 1.5px solid rgba(10,10,10,.08);
+    }
+    .lcard.dark .lcard-bot { border-color: rgba(255,255,255,.12); }
+
+    .lmeta { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .lcard.dark .lmeta { color: rgba(255,255,255,.45); }
+
+    .larrow {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(10,10,10,.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0; transition: background .2s;
+    }
+    .lcard.yellow .larrow { background: rgba(10,10,10,.13); }
+    .lcard.dark .larrow { background: rgba(255,255,255,.12); color: var(--yellow); }
+    .lcard:hover:not(.locked) .larrow { background: rgba(10,10,10,.15); }
+
+    /* ─── FOOTER ─── */
+    .site-footer {
+      border-top: 1.5px solid var(--border); padding: 24px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-l { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .footer-r { display: flex; align-items: center; gap: 14px; }
+    .slogan   { font-weight: 800; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .dashes   { display: flex; flex-direction: column; gap: 4px; }
+    .d-lg { width: 32px; height: 3px; background: var(--yellow); border-radius: 2px; }
+    .d-sm { width: 18px; height: 3px; background: var(--yellow); border-radius: 2px; }
+
+    @media (max-width: 1100px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-meta { display: none; }
+      .lessons-grid { grid-template-columns: repeat(2,1fr); }
+      .hero-h1 { font-size: 52px; }
+      .hero-h1 em { font-size: 56px; }
+    }
+    @media (max-width: 640px) {
+      .lessons-grid { grid-template-columns: 1fr; }
+      .top-bar, .hero, .section, .skills-row, .site-footer { padding-left: 24px; padding-right: 24px; }
+      .hero-h1 { font-size: 36px; }
+      .hero-h1 em { font-size: 40px; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Здесь все презентации 1 го Месяца</h1>
-    <button> <a href="../index.html">Назад</a> </button>
-    <div>
-        <button> <a href="./lesson-1/index.html">Lesson 1</a> </button>
+
+  <!-- TOP BAR -->
+  <nav class="top-bar">
+    <div class="brand">
+      <div class="burger"><span></span><span></span><span></span></div>
+      <div>
+        <div class="brand-name">Веб-Курс</div>
+        <div class="brand-sub">Основы разработки</div>
+      </div>
     </div>
+    <a href="../index.html" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Все модули
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="deco-circle deco-lg"></div>
+    <div class="deco-circle deco-sm"></div>
+
+    <div class="hero-left">
+      <div class="hero-badge">МЕСЯЦ 1 · МОДУЛЬ HTML</div>
+
+      <div class="hero-h1">
+        ОСНОВЫ<br><em>HTML-кода</em>
+      </div>
+
+      <div class="accent-row">
+        <div class="acc-line" style="width:90px"></div>
+        <div class="acc-line" style="width:48px"></div>
+      </div>
+
+      <p class="hero-sub">Первый месяц курса: разбираемся с редакторами кода, структурой HTML-документа, тегами и создаём первые реальные страницы.</p>
+    </div>
+
+    <div class="hero-meta">
+      <div>
+        <div class="meta-item-label">Месяц</div>
+        <div class="meta-item-val">01</div>
+      </div>
+      <div class="meta-sep"></div>
+      <div>
+        <div class="meta-item-label">Уроков</div>
+        <div class="meta-item-val">4</div>
+      </div>
+      <div class="meta-sep"></div>
+      <div>
+        <div class="meta-item-label">Технология</div>
+        <div class="meta-item-val sm">HTML5</div>
+      </div>
+      <div class="meta-badge">ОТКРЫТ</div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <div class="skills-row">
+    <div class="skills-label">Что изучаем:</div>
+    <span class="pill dark">Редакторы кода</span>
+    <span class="pill yellow">VS Code</span>
+    <span class="pill purple">Теги HTML</span>
+    <span class="pill beige">Семантика</span>
+    <span class="pill dark">Структура документа</span>
+    <span class="pill beige">Практика</span>
+  </div>
+
+  <!-- LESSONS -->
+  <section class="section">
+    <div class="sec-hdr">
+      <div class="sec-title">≡ &nbsp;Уроки модуля</div>
+      <div class="sec-count">4 урока</div>
+    </div>
+
+    <div class="lessons-grid">
+
+      <!-- Lesson 1 — active yellow -->
+      <a href="./lesson-1/index.html" class="lcard yellow">
+        <div class="lcard-top">
+          <div class="lnum">УРОК 01</div>
+          <div class="lcard-status live">● Доступен</div>
+        </div>
+        <div class="lname">Редакторы кода и VS Code</div>
+        <div class="ltopics">
+          <div class="ltopic">Что такое редактор кода и зачем он нужен</div>
+          <div class="ltopic">Виды редакторов: Notepad++, Sublime, VS Code</div>
+          <div class="ltopic">Почему выбираем VS Code</div>
+          <div class="ltopic">Установка и первые настройки</div>
+        </div>
+        <div class="lcard-bot">
+          <div class="lmeta">~45 мин</div>
+          <div class="larrow">→</div>
+        </div>
+      </a>
+
+      <!-- Lesson 2 — purple locked -->
+      <a href="./lesson-2/index.html" class="lcard purple locked">
+        <div class="lcard-top">
+          <div class="lnum">УРОК 02</div>
+          <div class="lcard-status">Скоро</div>
+        </div>
+        <div class="lname">Структура HTML-документа</div>
+        <div class="ltopics">
+          <div class="ltopic">DOCTYPE, html, head, body</div>
+          <div class="ltopic">Метатеги и кодировка</div>
+          <div class="ltopic">Как браузер читает HTML</div>
+          <div class="ltopic">Первая страница с нуля</div>
+        </div>
+        <div class="lcard-bot">
+          <div class="lmeta">~50 мин</div>
+          <div class="larrow">🔒</div>
+        </div>
+      </a>
+
+      <!-- Lesson 3 — beige locked -->
+      <a href="./lesson-3/index.html" class="lcard beige locked">
+        <div class="lcard-top">
+          <div class="lnum">УРОК 03</div>
+          <div class="lcard-status">Скоро</div>
+        </div>
+        <div class="lname">Теги, атрибуты и семантика</div>
+        <div class="ltopics">
+          <div class="ltopic">Парные и одиночные теги</div>
+          <div class="ltopic">Атрибуты: id, class, href, src</div>
+          <div class="ltopic">Семантические теги HTML5</div>
+          <div class="ltopic">Правильная вложенность</div>
+        </div>
+        <div class="lcard-bot">
+          <div class="lmeta">~55 мин</div>
+          <div class="larrow">🔒</div>
+        </div>
+      </a>
+
+      <!-- Lesson 4 — dark locked, span 3 -->
+      <a href="./lesson-4/index.html" class="lcard dark locked" style="grid-column: span 3;">
+        <div class="lcard-top">
+          <div class="lnum">УРОК 04</div>
+          <div class="lcard-status">Скоро</div>
+        </div>
+        <div class="lname" style="font-size:28px;">Практика: киноафиша и меню ресторана</div>
+        <div class="ltopics" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 32px;">
+          <div class="ltopic">Верстаем страницу киноафиши</div>
+          <div class="ltopic">Таблица сеансов с расписанием</div>
+          <div class="ltopic">Меню ресторана со структурой</div>
+          <div class="ltopic">Финальная проверка и разбор ошибок</div>
+        </div>
+        <div class="lcard-bot">
+          <div class="lmeta">~60 мин · Итоговая практика</div>
+          <div class="larrow">→</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-l">WEB-HTML-DEV &nbsp;·&nbsp; Месяц 1 &nbsp;·&nbsp; Основы HTML</div>
+    <div class="footer-r">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+      </svg>
+      <div>
+        <div class="slogan">Изучай. Код. Создавай.</div>
+        <div class="dashes">
+          <div class="d-lg"></div>
+          <div class="d-sm"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
