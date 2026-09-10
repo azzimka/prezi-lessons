@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Урок 2 — Виды тегов: блочные и строчные | Месяц 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --border:      #E0E0EE;
+      --text:        #1A1A1A;
+      --muted:       #888899;
+      --label:       #555566;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewport { flex: 1; position: relative; overflow: hidden; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateX(80px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit   { opacity: 0; transform: translateX(-80px); }
+
+    /* ── HEADER ── */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 24px 56px 0; flex-shrink: 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 18px; }
+    .burger { display: flex; flex-direction: column; gap: 6px; }
+    .burger span { display: block; width: 32px; height: 4px; background: var(--black); border-radius: 2px; }
+    .brand-title { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .brand-sub   { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .header-right { text-align: right; }
+    .header-lesson { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+
+    /* ── CONTENT AREA (отступ снизу 20px, чтобы карточки не прилипали к футеру) ── */
+    .slide-content { flex: 1; padding: 14px 56px 20px; display: flex; align-items: center; overflow: hidden; min-height: 0; }
+
+    /* ── FOOTER — padding-right: 260px СТРОГО ОБЯЗАТЕЛЕН ── */
+    .slide-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 260px 20px 56px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-bar {
+      position: fixed; bottom: 16px; right: 36px;
+      display: flex; gap: 12px; z-index: 100;
+    }
+    .nav-btn {
+      width: 58px; height: 58px; background: var(--white);
+      border: 2px solid var(--border); border-radius: 16px;
+      font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.06);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-btn:hover    { background: var(--black); color: var(--white); border-color: var(--black); }
+    .nav-btn:active   { transform: scale(0.95); }
+    .nav-btn:disabled { opacity: 0.25; pointer-events: none; box-shadow: none; }
+    .nav-btn.active   { background: var(--yellow) !important; color: var(--black) !important; border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(223,255,79,0.45); }
+    .nav-btn-icon {
+      width: 28px; height: 28px; object-fit: contain; display: block;
+      pointer-events: none; transition: transform 0.2s, filter 0.2s;
+    }
+    .nav-btn:hover .nav-btn-icon { filter: brightness(0) invert(1); }
+    .nav-btn.active .nav-btn-icon { filter: none; transform: scale(1.08); }
+
+    /* ── LOUPE MODE ── */
+    .magnifier-lens {
+      position: fixed; top: 0; left: 0;
+      width: 90px; height: 90px; border-radius: 50%;
+      border: 3px solid var(--black);
+      box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
+      pointer-events: none; overflow: hidden; z-index: 9999;
+      display: none; background: var(--bg); will-change: transform;
+    }
+    .magnifier-lens.active { display: block; }
+    .magnifier-lens::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 7px; height: 7px; background: var(--yellow);
+      border: 1.5px solid var(--black); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 10;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .magnifier-inner { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+    body.magnifier-mode, body.magnifier-mode * { cursor: none !important; }
+    body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !important; }
+
+    /* ════ TITLE SLIDE ════ */
+    .s-title { position: relative; overflow: hidden; }
+    .title-top {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between; padding: 36px 56px;
+    }
+    .title-brand { display: flex; align-items: center; gap: 18px; }
+    .title-brand-name { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .title-brand-sub  { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .title-date-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: right; }
+    .title-date-val   { font-size: 24px; font-weight: 800; text-align: right; margin-top: 4px; }
+    .title-center {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; padding: 40px 48px 16px;
+    }
+    .title-badge {
+      background: var(--black); color: var(--white); border-radius: 100px;
+      padding: 10px 28px; font-size: 18px; font-weight: 800; letter-spacing: 0.15em;
+      text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px;
+    }
+    .title-badge::before { content: '●'; color: var(--yellow); }
+    .title-main-line {
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 82px;
+      letter-spacing: -0.02em; text-transform: uppercase; color: var(--black); line-height: 1;
+    }
+    .accent-lines-row { display: flex; align-items: center; gap: 20px; }
+    .accent-line { height: 5px; width: 80px; background: var(--yellow); flex-shrink: 0; border-radius: 3px; }
+    .title-italic-line {
+      font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+      font-size: 96px; letter-spacing: -0.02em; color: var(--black); line-height: 1;
+    }
+    .title-third-line {
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 82px;
+      letter-spacing: -0.02em; text-transform: uppercase; color: var(--black); line-height: 1;
+    }
+    .title-subtitle { font-size: 22px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+    .title-agenda {
+      width: 100%; max-width: 1360px;
+      background: var(--white); border: 2px solid var(--border); border-radius: 22px;
+      padding: 16px 24px; margin-top: 14px;
+      box-shadow: 0 10px 30px rgba(10,10,10,0.04);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .agenda-header { display: flex; align-items: center; gap: 14px; }
+    .agenda-pill {
+      background: var(--black); color: var(--white);
+      font-size: 13px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 100px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .agenda-pill::before { content: '●'; color: var(--yellow); font-size: 11px; }
+    .agenda-caption { font-size: 16px; font-weight: 800; color: var(--label); letter-spacing: 0.08em; text-transform: uppercase; }
+    .agenda-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .agenda-card {
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 12px 16px; display: flex; align-items: center; gap: 14px;
+    }
+    .agenda-num {
+      font-size: 16px; font-weight: 900; color: var(--black);
+      background: var(--yellow); width: 34px; height: 34px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .agenda-text { font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.35; }
+    .title-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 56px 28px; flex-shrink: 0;
+    }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; margin-top: 6px; }
+    .title-slogan { text-align: right; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .deco-circles { position: absolute; top: 16px; right: 56px; pointer-events: none; }
+    .deco-circle-lg { width: 340px; height: 340px; border: 2px solid rgba(10,10,10,0.1); border-radius: 50%; }
+    .deco-circle-sm { width: 220px; height: 220px; border: 2px solid rgba(10,10,10,0.07); border-radius: 50%; position: absolute; top: 60px; left: 60px; }
+
+    /* ════ TOC ════ */
+    .toc-wrap { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+    .toc-heading { display: flex; align-items: center; gap: 16px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; letter-spacing: -0.01em; text-transform: uppercase; }
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .toc-item { display: flex; align-items: center; gap: 18px; padding: 14px 22px; border-radius: 14px; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; }
+    .toc-num { font-size: 19px; font-weight: 900; min-width: 28px; }
+    .toc-white  { background: var(--white); border: 1px solid var(--border); color: var(--black); }
+    .toc-yellow { background: var(--yellow); color: var(--black); }
+    .toc-beige  { background: var(--beige); border: 1px solid #E0D8C0; color: var(--black); }
+    .toc-purple { background: var(--purple-soft); color: var(--black); }
+    .toc-black  { background: var(--black); color: var(--white); }
+
+    /* ════ CONTENT 2-COL ════ */
+    .content-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; width: 100%; height: 100%; align-items: stretch; }
+    .content-card-left { background: rgba(200,184,240,0.15); border-radius: 24px; padding: 30px 36px; display: flex; flex-direction: column; justify-content: center; }
+    .content-section-label { font-weight: 800; font-size: 16px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .content-h2 { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 52px; line-height: 1.1; color: var(--black); margin-bottom: 16px; }
+    .content-section-title { font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; margin-top: 12px; }
+    .content-body { font-weight: 500; font-size: 20px; line-height: 1.5; color: var(--text); }
+    .text-underline { text-decoration: underline; text-underline-offset: 4px; }
+    .content-right { display: flex; flex-direction: column; gap: 16px; height: 100%; justify-content: center; }
+
+    /* ── CODE PREVIEWS & BADGES ── */
+    .code-line-badge {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-weight: 800; font-size: 17px; padding: 5px 12px; border-radius: 10px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .code-line-badge.yellow { background: var(--yellow); color: var(--black); }
+    .code-line-badge.purple { background: var(--purple-soft); color: var(--black); }
+    .code-line-badge.beige  { background: var(--beige); color: var(--black); }
+    .code-line-badge.dark   { background: var(--black); color: var(--white); }
+
+    .rule-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 20px;
+      padding: 18px 24px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .rule-card-hdr { display: flex; align-items: center; justify-content: space-between; }
+    .rule-card-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--black); }
+    .rule-card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .rule-card-desc { font-size: 16px; font-weight: 500; line-height: 1.45; color: var(--label); }
+
+    /* ── STREAM & VISUAL DEMO ── */
+    .stream-demo-wrap {
+      background: var(--white); border: 2px solid var(--border); border-radius: 22px;
+      padding: 24px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .stream-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 2px dashed var(--border); }
+    .stream-header-title { font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--label); }
+    
+    .stream-bar-block {
+      background: rgba(200, 184, 240, 0.35); border: 2px dashed #9B86D4;
+      border-radius: 12px; padding: 12px 18px; display: flex; align-items: center;
+      justify-content: space-between; width: 100%;
+    }
+    .stream-bar-tag { font-family: 'SFMono-Regular', Consolas, monospace; font-weight: 900; font-size: 18px; color: var(--black); }
+    .stream-bar-note { font-size: 14px; font-weight: 700; color: var(--label); text-transform: uppercase; }
+
+    .stream-text-box {
+      background: var(--bg); border: 2px solid var(--border); border-radius: 16px;
+      padding: 20px 24px; font-size: 20px; font-weight: 600; line-height: 1.7; color: var(--black);
+    }
+    .inline-highlight {
+      background: var(--yellow); padding: 4px 10px; border-radius: 6px;
+      font-family: 'SFMono-Regular', Consolas, monospace; font-weight: 800; border: 1.5px solid var(--black);
+    }
+    .inline-highlight.purple { background: var(--purple-soft); }
+    .inline-highlight.white  { background: var(--white); }
+
+    /* ── CATALOG GRIDS ── */
+    .catalog-wrap { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+    .catalog-top { display: flex; flex-direction: column; gap: 4px; }
+    .catalog-title { font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 900; text-transform: uppercase; color: var(--black); letter-spacing: -0.01em; }
+    .catalog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .catalog-item {
+      background: var(--white); border: 2px solid var(--border); border-radius: 18px;
+      padding: 16px 18px; display: flex; flex-direction: column; gap: 6px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .catalog-item:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(10,10,10,0.06); }
+    .catalog-tag-row { display: flex; align-items: center; justify-content: space-between; }
+    .catalog-tag-name { font-family: 'SFMono-Regular', Consolas, monospace; font-weight: 900; font-size: 21px; color: var(--black); }
+    .catalog-tag-role { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .catalog-tag-desc { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; }
+
+    /* ── COMPARE MATRIX ── */
+    .matrix-wrap { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+    .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .matrix-col {
+      background: var(--white); border: 2px solid var(--border); border-radius: 22px;
+      padding: 20px 24px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .matrix-hdr { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    .matrix-hdr-title { font-size: 20px; font-weight: 900; text-transform: uppercase; color: var(--black); }
+    .matrix-row {
+      background: var(--bg); border-radius: 12px; padding: 9px 14px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .matrix-row-lbl { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--label); }
+    .matrix-row-val { font-size: 16px; font-weight: 700; color: var(--black); line-height: 1.35; }
+
+    /* ── 3 TESTS & NESTING ── */
+    .tests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; width: 100%; }
+    .test-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 20px;
+      padding: 20px 20px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .test-top { display: flex; align-items: center; gap: 14px; }
+    .test-num {
+      width: 42px; height: 42px; border-radius: 12px; background: var(--yellow);
+      font-weight: 900; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .test-name { font-size: 20px; font-weight: 800; text-transform: uppercase; color: var(--black); }
+    .test-desc { font-size: 17px; font-weight: 500; color: var(--text); line-height: 1.5; }
+    .test-code-preview {
+      background: var(--black); color: var(--white); border-radius: 12px; padding: 12px 16px;
+      font-family: 'SFMono-Regular', Consolas, monospace; font-size: 16px; margin-top: auto;
+    }
+
+    .group-pill {
+      font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px;
+    }
+    .group-pill.bg-purple { background: var(--purple-soft); color: var(--black); }
+    .group-pill.bg-yellow { background: var(--yellow); color: var(--black); }
+    .group-pill.bg-dark   { background: var(--black); color: var(--white); }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+
+    <!-- ══════════════════════════════
+         SLIDE 1 — TITLE SLIDE
+    ══════════════════════════════ -->
+    <div class="slide s-title active" data-index="0">
+      <div class="deco-circles">
+        <div class="deco-circle-lg"></div>
+        <div class="deco-circle-sm"></div>
+      </div>
+      <div class="title-top">
+        <div class="title-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="title-brand-name">ВЕБ-КУРС</div>
+            <div class="title-brand-sub">ОСНОВЫ РАЗРАБОТКИ</div>
+          </div>
+        </div>
+        <div>
+          <div class="title-date-label">ФОРМАТ ОБУЧЕНИЯ</div>
+          <div class="title-date-val">ПРАКТИЧЕСКИЙ КУРС</div>
+        </div>
+      </div>
+
+      <div class="title-center">
+        <div class="title-badge">ОСНОВЫ HTML · ТЕГИ И СТРУКТУРА</div>
+        <div class="title-main-line">ВИДЫ ТЕГОВ:</div>
+        <div class="accent-lines-row">
+          <div class="accent-line"></div>
+          <div class="title-italic-line">блочные</div>
+          <div class="accent-line"></div>
+        </div>
+        <div class="title-third-line">И СТРОЧНЫЕ</div>
+        <div class="title-subtitle">Анатомия элементов, поведение в потоке и правила верстки</div>
+
+        <!-- ── ОБЯЗАТЕЛЬНЫЙ AGENDA БЛОК УРОКА ── -->
+        <div class="title-agenda">
+          <div class="agenda-header">
+            <span class="agenda-pill">LESSON 2 · AGENDA</span>
+            <span class="agenda-caption">Что мы сегодня изучим:</span>
+          </div>
+          <div class="agenda-grid">
+            <div class="agenda-card">
+              <span class="agenda-num">01</span>
+              <div class="agenda-text">Повторение: парные и непарные теги</div>
+            </div>
+            <div class="agenda-card">
+              <span class="agenda-num">02</span>
+              <div class="agenda-text">Блочные и строчные: отличия в потоке</div>
+            </div>
+            <div class="agenda-card">
+              <span class="agenda-num">03</span>
+              <div class="agenda-text">Правила вложенности и тег &lt;div&gt;</div>
+            </div>
+            <div class="agenda-card">
+              <span class="agenda-num">04</span>
+              <div class="agenda-text">Анатомия ссылок: тег &lt;a&gt; и href</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="title-bottom">
+        <div>
+          <div class="title-id-label">ID КУРСА</div>
+          <div class="title-id-val">WEB-HTML-DEV</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <div>
+            <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+            <div class="title-slogan-accents">
+              <div class="slogan-dash"></div>
+              <div class="slogan-dash-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 2 — TABLE OF CONTENTS
+    ══════════════════════════════ -->
+    <div class="slide" data-index="1">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="brand-title">ВЕБ-КУРС</div>
+            <div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">ВИДЫ ТЕГОВ · МЕСЯЦ 1</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="toc-wrap">
+          <div class="toc-heading">
+            <div class="burger" style="gap:5px;"><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span></div>
+            СОДЕРЖАНИЕ УРОКА
+          </div>
+          <div class="toc-grid">
+            <div class="toc-item toc-white"><span class="toc-num">01</span> Разминка: парные и непарные теги</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">02</span> Блочные теги: поведение в потоке</div>
+            <div class="toc-item toc-white"><span class="toc-num">03</span> Каталог ключевых блочных тегов</div>
+            <div class="toc-item toc-beige"><span class="toc-num">04</span> Строчные теги: жизнь внутри текста</div>
+            <div class="toc-item toc-purple"><span class="toc-num">05</span> Главные строчные элементы</div>
+            <div class="toc-item toc-white"><span class="toc-num">06</span> Блок vs Строка: матрица отличий</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">07</span> Правила вложенности тегов</div>
+            <div class="toc-item toc-black"><span class="toc-num">08</span> Тег &lt;div&gt;: главная коробка верстки</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">09</span> Тег &lt;a&gt;: анатомия гиперссылки</div>
+            <div class="toc-item toc-purple"><span class="toc-num">10</span> 4 вида ссылок и суперсила HTML5</div>
+            <div class="toc-item toc-white"><span class="toc-num">11</span> Практика: Карточка интернет-магазина</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">12</span> Самостоятельная работа: Кинотеатр</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ОСНОВЫ РАЗРАБОТКИ</span>
+        <span>СТРАНИЦА 02 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 3 — ПОВТОРЕНИЕ: ПАРНЫЕ И НЕПАРНЫЕ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="2">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · ПОВТОРЕНИЕ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">ЭКСПРЕСС-РАЗМИНКА</div>
+            <div class="content-h2">Парные и<br/>непарные</div>
+            <div class="content-section-title">В ЧЁМ ГЛАВНАЯ СУТЬ?</div>
+            <div class="content-body">Тег — это команда для браузера. В HTML есть 2 формата записи. <span class="text-underline">Разница зависит от того, содержит ли тег текст или контент внутри себя</span>.</div>
+            
+            <div style="margin-top:14px;padding:14px 18px;background:var(--yellow);border-radius:16px;">
+              <div style="font-size:12px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--label);margin-bottom:4px;">ПРАВИЛО ПАМЯТИ:</div>
+              <div style="font-size:16px;font-weight:700;color:var(--black);line-height:1.4;">
+                Есть текст внутри? Обязательно закрой тег со слэшем: <code>&lt;/tag&gt;</code>!<br/>
+                Нет текста (картинка или черта)? Закрывать не нужно!
+              </div>
+            </div>
+          </div>
+
+          <div class="content-right">
+            <!-- Парные -->
+            <div class="rule-card">
+              <div class="rule-card-hdr">
+                <div class="rule-card-title">1. Парные теги (Контейнеры)</div>
+                <span class="group-pill bg-purple">ЕСТЬ ТЕЛО</span>
+              </div>
+              <div class="rule-card-desc">
+                Состоят из открывающего <code>&lt;tag&gt;</code> и закрывающего <code>&lt;/tag&gt;</code>. Оборачивают текст, придавая ему смысл или стили.
+              </div>
+              <div class="rule-card-tags">
+                <span class="code-line-badge dark">&lt;h1&gt;...&lt;/h1&gt;</span>
+                <span class="code-line-badge purple">&lt;p&gt;...&lt;/p&gt;</span>
+                <span class="code-line-badge dark">&lt;strong&gt;...&lt;/strong&gt;</span>
+                <span class="code-line-badge beige">&lt;a&gt;...&lt;/a&gt;</span>
+                <span class="code-line-badge dark">&lt;ul&gt;...&lt;/ul&gt;</span>
+              </div>
+            </div>
+
+            <!-- Непарные -->
+            <div class="rule-card">
+              <div class="rule-card-hdr">
+                <div class="rule-card-title">2. Одиночные теги (Пустые)</div>
+                <span class="group-pill bg-yellow">НЕТ ТЕЛА</span>
+              </div>
+              <div class="rule-card-desc">
+                Закрывать не нужно — внутри них нет букв! Они вставляют медиаобъекты или выполняют действие разделителя.
+              </div>
+              <div class="rule-card-tags">
+                <span class="code-line-badge yellow">&lt;img src="..." /&gt;</span>
+                <span class="code-line-badge dark">&lt;br /&gt; (перенос)</span>
+                <span class="code-line-badge beige">&lt;hr /&gt; (черта)</span>
+                <span class="code-line-badge yellow">&lt;input /&gt;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · АНАТОМИЯ HTML</span>
+        <span>СТРАНИЦА 03 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 4 — БЛОЧНЫЕ ЭЛЕМЕНТЫ (BLOCK)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="3">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · БЛОЧНЫЕ ТЕГИ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">ТИП 1 ИЗ 2 · DISPLAY: BLOCK</div>
+            <div class="content-h2">Блочные<br/>элементы</div>
+            <div class="content-section-title">ПОВЕДЕНИЕ В ОКНЕ</div>
+            <div class="content-body">Блочный тег — это кирпич страницы. <span class="text-underline">Он жадный: занимает 100% ширины всей строки</span>, даже если текста внутри всего пара букв.</div>
+            <div class="content-section-title">АВТОМАТИЧЕСКИЙ ПЕРЕНОС</div>
+            <div class="content-body">Всегда начинается с новой строки и выталкивает соседа вниз. Как кирпичи, которые кладутся строго друг на друга!</div>
+          </div>
+
+          <div class="content-right">
+            <div class="stream-demo-wrap">
+              <div class="stream-header">
+                <span class="stream-header-title">Как браузер видит блочные теги:</span>
+                <span class="group-pill bg-purple">100% ШИРИНЫ</span>
+              </div>
+              <div class="stream-bar-block">
+                <span class="stream-bar-tag">&lt;header&gt; Шапка сайта &lt;/header&gt;</span>
+                <span class="stream-bar-note">Ширина 100%</span>
+              </div>
+              <div class="stream-bar-block" style="background:rgba(223, 255, 79, 0.4);border-color:#A8C81A;">
+                <span class="stream-bar-tag">&lt;h1&gt; Заголовок статьи &lt;/h1&gt;</span>
+                <span class="stream-bar-note">Ширина 100%</span>
+              </div>
+              <div class="stream-bar-block" style="background:rgba(237, 232, 216, 0.7);border-color:#C2B89D;">
+                <span class="stream-bar-tag">&lt;p&gt; Абзац текста на странице &lt;/p&gt;</span>
+                <span class="stream-bar-note">Ширина 100%</span>
+              </div>
+            </div>
+
+            <div style="background:var(--yellow);border-radius:18px;padding:16px 22px;">
+              <div style="font-size:13px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--label);margin-bottom:4px;">СУПЕРСИЛА БЛОКОВ:</div>
+              <div style="font-size:17px;font-weight:700;color:var(--black);line-height:1.4;">
+                Блокам можно задавать точную ширину (<code>width</code>), высоту (<code>height</code>), а также внешние и внутренние отступы со всех 4 сторон!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · БЛОЧНЫЕ ЭЛЕМЕНТЫ</span>
+        <span>СТРАНИЦА 04 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 5 — КАТАЛОГ БЛОЧНЫХ ТЕГОВ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="4">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">БАЗА ТЕГОВ</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · КАТАЛОГ БЛОКОВ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="catalog-wrap">
+          <div class="catalog-top">
+            <div class="content-section-label">СТРОИТЕЛЬНЫЕ КИРПИЧИ СТРАНИЦЫ</div>
+            <div class="catalog-title">Каталог ключевых блочных тегов</div>
+          </div>
+
+          <div class="catalog-grid">
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;div&gt;</span>
+                <span class="catalog-tag-role">КОНТЕЙНЕР</span>
+              </div>
+              <div class="catalog-tag-desc">Универсальная коробка. Служит для группировки любых элементов и создания сетки макета.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;p&gt;</span>
+                <span class="catalog-tag-role">ПАРАГРАФ</span>
+              </div>
+              <div class="catalog-tag-desc">Абзац текста. Браузер автоматически добавляет отступы сверху и снизу, разделяя мысли.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;h1&gt;–&lt;h6&gt;</span>
+                <span class="catalog-tag-role">ЗАГОЛОВКИ</span>
+              </div>
+              <div class="catalog-tag-desc">Заголовки разных уровней важности. Всегда начинаются с новой строки и выделяются жирным.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;ul&gt; / &lt;ol&gt;</span>
+                <span class="catalog-tag-role">СПИСКИ</span>
+              </div>
+              <div class="catalog-tag-desc">Маркированные и нумерованные списки. Пункты списка <code>&lt;li&gt;</code> тоже блочные элементы!</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;header&gt; / &lt;footer&gt;</span>
+                <span class="catalog-tag-role">СЕМАНТИКА</span>
+              </div>
+              <div class="catalog-tag-desc">Смысловые блоки: шапка сайта с логотипом и подвал с контактами и копирайтом.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;section&gt;</span>
+                <span class="catalog-tag-role">РАЗДЕЛ</span>
+              </div>
+              <div class="catalog-tag-desc">Логический раздел страницы (например: «О нас», «Отзывы», «Каталог товаров»).</div>
+            </div>
+          </div>
+
+          <div style="background:var(--white);border:2px solid var(--border);border-radius:16px;padding:12px 20px;display:flex;align-items:center;gap:14px;">
+            <span class="group-pill bg-yellow" style="font-size:12px;padding:4px 12px;">СОВЕТ</span>
+            <div style="font-size:16px;font-weight:600;color:var(--text);">
+              Блочные теги формируют каркас и скелет всей страницы. Без них сайт превратился бы в одну сплошную строку!
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СТРУКТУРА HTML</span>
+        <span>СТРАНИЦА 05 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 6 — СТРОЧНЫЕ ЭЛЕМЕНТЫ (INLINE)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="5">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · СТРОЧНЫЕ ТЕГИ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">ТИП 2 ИЗ 2 · DISPLAY: INLINE</div>
+            <div class="content-h2">Строчные<br/>элементы</div>
+            <div class="content-section-title">ЖИЗНЬ ВНУТРИ ТЕКСТА</div>
+            <div class="content-body"><span class="text-underline">Он занимает ровно столько места, сколько весит его текст</span> — ни пикселем больше.</div>
+            <div class="content-section-title">БЕЗ РАЗРЫВА СТРОКИ</div>
+            <div class="content-body">Не переносит строку! Несколько строчных тегов встают рядышком друг за другом в одну цепочку, пока хватает места в строке.</div>
+          </div>
+
+          <div class="content-right">
+            <div class="stream-demo-wrap">
+              <div class="stream-header">
+                <span class="stream-header-title">Поток текста со строчными тегами:</span>
+                <span class="group-pill bg-yellow">ПО РАЗМЕРУ СЛОВ</span>
+              </div>
+              <div class="stream-text-box">
+                Это обычный абзац текста, в котором есть <span class="inline-highlight">&lt;span&gt;слово&lt;/span&gt;</span>, затем кликабельная <span class="inline-highlight purple">&lt;a&gt;ссылка&lt;/a&gt;</span> и важное <span class="inline-highlight white">&lt;strong&gt;жирное слово&lt;/strong&gt;</span>. Все они стоят в одной строке!
+              </div>
+            </div>
+
+            <div style="background:var(--purple-soft);border-radius:18px;padding:16px 22px;">
+              <div style="font-size:13px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--black);margin-bottom:4px;">ВАЖНОЕ ОГРАНИЧЕНИЕ:</div>
+              <div style="font-size:17px;font-weight:700;color:var(--black);line-height:1.4;">
+                Строчным элементам <u>нельзя</u> задать <code>width</code> и <code>height</code> — браузер проигнорирует эти свойства, пока мы не изменим их тип через CSS!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СТРОЧНЫЕ ЭЛЕМЕНТЫ</span>
+        <span>СТРАНИЦА 06 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 7 — КАТАЛОГ СТРОЧНЫХ ТЕГОВ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="6">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">БАЗА ТЕГОВ</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · КАТАЛОГ СТРОЧНЫХ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="catalog-wrap">
+          <div class="catalog-top">
+            <div class="content-section-label">ДЕТАЛИ И ОФОРМЛЕНИЕ ТЕКСТА</div>
+            <div class="catalog-title">Главные строчные элементы</div>
+          </div>
+
+          <div class="catalog-grid">
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;span&gt;</span>
+                <span class="catalog-tag-role">ТЕКСТОВЫЙ МАРКЕР</span>
+              </div>
+              <div class="catalog-tag-desc">Нейтральный строчный контейнер. Используется, чтобы покрасить или выделить часть слова.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;a&gt;</span>
+                <span class="catalog-tag-role">ГИПЕРССЫЛКА</span>
+              </div>
+              <div class="catalog-tag-desc">Главный тег интернета! Превращает текст или картинку в ссылку на другой сайт или страницу.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;strong&gt; / &lt;b&gt;</span>
+                <span class="catalog-tag-role">ЖИРНЫЙ ТЕКСТ</span>
+              </div>
+              <div class="catalog-tag-desc">Выделяет важные ключевые фразы жирным начертанием, обращая внимание читателя.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;em&gt; / &lt;i&gt;</span>
+                <span class="catalog-tag-role">КУРСИВ</span>
+              </div>
+              <div class="catalog-tag-desc">Наклонный курсивный шрифт для интонационного ударения или терминов.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;code&gt;</span>
+                <span class="catalog-tag-role">ФРАГМЕНТ КОДА</span>
+              </div>
+              <div class="catalog-tag-desc">Моноширинный шрифт для команд терминала, тегов или переменных прямо в тексте.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;img&gt;</span>
+                <span class="catalog-tag-role">ИЗОБРАЖЕНИЕ</span>
+              </div>
+              <div class="catalog-tag-desc">Одиночный строчно-блочный тег. Встает прямо в текст или в ряд с другими картинками!</div>
+            </div>
+          </div>
+
+          <div style="background:var(--yellow);border-radius:16px;padding:12px 20px;display:flex;align-items:center;gap:14px;">
+            <span class="group-pill bg-dark" style="font-size:12px;padding:4px 12px;">ОБРАТИ ВНИМАНИЕ</span>
+            <div style="font-size:16px;font-weight:700;color:var(--black);">
+              Картинка &lt;img&gt; по умолчанию строчная! Если поставить две картинки подряд — они встанут рядом в одну строку.
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СТРОЧНЫЕ ТЕГИ</span>
+        <span>СТРАНИЦА 07 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 8 — БИТВА КОНЦЕПЦИЙ: МАТРИЦА
+    ══════════════════════════════ -->
+    <div class="slide" data-index="7">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">СРАВНЕНИЕ</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · МАТРИЦА ОТЛИЧИЙ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="matrix-wrap">
+          <div class="catalog-top">
+            <div class="content-section-label">СРАВНИТЕЛЬНАЯ БИТВА</div>
+            <div class="catalog-title">Блок против Строки: 4 главных отличия</div>
+          </div>
+
+          <div class="matrix-grid">
+            <!-- Блочные -->
+            <div class="matrix-col" style="border-color:#9B86D4;">
+              <div class="matrix-hdr">
+                <div class="matrix-hdr-title">Блочные теги (Block)</div>
+                <span class="group-pill bg-purple">100% ШИРИНЫ</span>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">1. ШИРИНА НА ЭКРАНЕ</div>
+                <div class="matrix-row-val">Растягивается на <b>100% всей строки</b></div>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">2. ПОВЕДЕНИЕ В СТРОКЕ</div>
+                <div class="matrix-row-val">Всегда начинается с <b>новой строки</b></div>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">3. РАЗМЕРЫ В CSS</div>
+                <div class="matrix-row-val">Можно задавать и <code>width</code>, и <code>height</code></div>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">4. ЧТО МОЖЕТ СОДЕРЖАТЬ</div>
+                <div class="matrix-row-val">И другие блоки, и строчные теги, и текст</div>
+              </div>
+            </div>
+
+            <!-- Строчные -->
+            <div class="matrix-col" style="border-color:#D0EE22;">
+              <div class="matrix-hdr">
+                <div class="matrix-hdr-title">Строчные теги (Inline)</div>
+                <span class="group-pill bg-yellow">ПО КОНТЕНТУ</span>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">1. ШИРИНА НА ЭКРАНЕ</div>
+                <div class="matrix-row-val">Занимает <b>ровно по ширине текста</b></div>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">2. ПОВЕДЕНИЕ В СТРОКЕ</div>
+                <div class="matrix-row-val">Встает <b>рядом в той же строке</b></div>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">3. РАЗМЕРЫ В CSS</div>
+                <div class="matrix-row-val"><code>width</code> и <code>height</code> <b>не работают</b></div>
+              </div>
+              <div class="matrix-row">
+                <div class="matrix-row-lbl">4. ЧТО МОЖЕТ СОДЕРЖАТЬ</div>
+                <div class="matrix-row-val">Только текст и другие строчные теги</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СРАВНЕНИЕ ТЕГОВ</span>
+        <span>СТРАНИЦА 08 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 9 — ПРАВИЛА ВЛОЖЕННОСТИ + 2 ОБРАЗА
+    ══════════════════════════════ -->
+    <div class="slide" data-index="8">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ПРАВИЛА ВЛОЖЕННОСТИ</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · ПРАВИЛА ВЛОЖЕННОСТИ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col" style="align-items: center;">
+          <!-- Левая колонка: Правила и логика -->
+          <div class="content-card-left" style="justify-content: flex-start; gap: 12px; padding: 24px 30px;">
+            <div class="content-section-label">ЗОЛОТОЕ ПРАВИЛО ВЕРСТКИ</div>
+            <div class="content-h2" style="font-size: 42px; margin-bottom: 6px;">Строка и Блок:<br/>что внутри?</div>
+            
+            <!-- Правило 1: Можно -->
+            <div style="background: #FAFDED; border: 2px solid #A5D6A7; border-radius: 14px; padding: 10px 14px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: #2E7D32; margin-bottom: 3px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>МОЖНО И НУЖНО: СТРОКА В БЛОКЕ</span>
+              </div>
+              <div style="font-family: monospace; font-size: 14px; font-weight: 700; color: var(--black);">&lt;p&gt;Текст со &lt;span&gt;строкой&lt;/span&gt; и &lt;b&gt;акцентом&lt;/b&gt;&lt;/p&gt;</div>
+              <div style="font-size: 12px; font-weight: 500; color: var(--label); margin-top: 2px;">Блочный тег — прочный контейнер, бережно хранящий строчный текст.</div>
+            </div>
+
+            <!-- Правило 2: Нельзя -->
+            <div style="background: #FFF5F5; border: 2px solid #FFCDD2; border-radius: 14px; padding: 10px 14px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: #C62828; margin-bottom: 3px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <span>СТРОГО ЗАПРЕЩЕНО: БЛОК В СТРОКЕ</span>
+              </div>
+              <div style="font-family: monospace; font-size: 14px; font-weight: 700; color: var(--black);">&lt;span&gt;&lt;div&gt;ГРУБЕЙШАЯ ОШИБКА!&lt;/div&gt;&lt;/span&gt;</div>
+              <div style="font-size: 12px; font-weight: 500; color: #8A0000; margin-top: 2px;">У строки нет собственных размеров — она не способна удержать 100% блок!</div>
+            </div>
+
+            <!-- Под капотом браузера -->
+            <div style="background: var(--black); color: var(--white); border-radius: 14px; padding: 12px 16px;">
+              <div style="font-size: 11px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 3px;">ЧТО ДЕЛАЕТ БРАУЗЕР ПОД КАПОТОМ?</div>
+              <div style="font-size: 13px; font-weight: 500; line-height: 1.45; color: rgba(255,255,255,0.9);">
+                Браузер расценит это как синтаксический сбой: <b>насильно разорвёт &lt;span&gt;</b> и выплюнет &lt;div&gt; наружу, сломав всю вёрстку!
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: 2 визуальных образа (Правильно vs Ошибка) -->
+          <div class="content-right" style="justify-content: center; align-items: center;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+              
+              <!-- Карточка 1: Как правильно -->
+              <div style="background: var(--white); border: 2px solid #B8E070; border-radius: 18px; padding: 12px 12px 14px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 24px rgba(60, 120, 20, 0.06);">
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px; padding: 0 2px;">
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: #2E7D32;">КАК НАДО</span>
+                  </div>
+                  <span class="group-pill bg-yellow" style="font-size: 10px; padding: 2px 7px;">СТРОКА В БЛОКЕ</span>
+                </div>
+                <img src="./img/inline-in-block.jpg" alt="Правильно: шкатулка div держит строчные элементы" style="width: 100%; height: 230px; object-fit: cover; border-radius: 12px;" />
+                <div style="margin-top: 8px; text-align: center; width: 100%;">
+                  <div style="font-size: 14px; font-weight: 800; color: var(--black); line-height: 1.3;">
+                    Шкатулка &lt;div&gt; бережёт строки
+                  </div>
+                  <div style="font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 2px; line-height: 1.3;">
+                    Строчные &lt;span&gt;, &lt;b&gt;, &lt;a&gt; уютно и аккуратно уложены в контейнере!
+                  </div>
+                </div>
+              </div>
+
+              <!-- Карточка 2: Как нельзя (Мем) -->
+              <div style="background: var(--white); border: 2px solid #FFCDD2; border-radius: 18px; padding: 12px 12px 14px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 24px rgba(200, 30, 30, 0.06);">
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px; padding: 0 2px;">
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <span style="font-size: 12px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: #C62828;">КАК НЕЛЬЗЯ</span>
+                  </div>
+                  <span class="group-pill" style="font-size: 10px; padding: 2px 7px; background: #FFEBEE; color: #C62828;">БЛОК В СТРОКЕ</span>
+                </div>
+                <img src="./img/meme-span-div.jpg" alt="Ошибка: тяжелый блок div рвет строчный span" style="width: 100%; height: 230px; object-fit: cover; border-radius: 12px;" />
+                <div style="margin-top: 8px; text-align: center; width: 100%;">
+                  <div style="font-size: 14px; font-weight: 800; color: var(--black); line-height: 1.3;">
+                    Попытка впихнуть &lt;div&gt; в &lt;span&gt;
+                  </div>
+                  <div style="font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 2px; line-height: 1.3;">
+                    Бетонный блок &lt;div&gt; разрывает крошечный кошелёк &lt;span&gt; в клочья!
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ПРАВИЛА ВЛОЖЕННОСТИ</span>
+        <span>СТРАНИЦА 09 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 10 — ТЕГ <DIV>: УНИВЕРСАЛЬНЫЙ БЛОК
+    ══════════════════════════════ -->
+    <div class="slide" data-index="9">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · ТЕГ &lt;DIV&gt;</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col" style="align-items: center;">
+          <!-- Левая колонка: объяснение и суть -->
+          <div class="content-card-left" style="justify-content: flex-start; gap: 12px; padding: 24px 30px;">
+            <div class="content-section-label">УНИВЕРСАЛЬНЫЙ БЛОК · DIVISION</div>
+            <div class="content-h2" style="font-size: 42px; margin-bottom: 4px;">Тег &lt;div&gt;:<br/>главная коробка</div>
+            
+            <div class="content-section-title" style="margin-top: 2px;">ЧТО ЭТО ТАКОЕ?</div>
+            <div class="content-body" style="font-size: 18px; line-height: 1.45;">
+              Тег <code>&lt;div&gt;</code> (от англ. <i>division</i> — разделение) — универсальный блочный контейнер. <span class="text-underline">Сам по себе он не несёт смысловой нагрузки и абсолютно невидим в браузере</span>. Его задача — объединять другие теги в единый блок.
+            </div>
+
+            <!-- 3 роли div -->
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 2px;">
+              <div style="background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 12px;">
+                <span class="group-pill bg-yellow" style="font-size: 10px; padding: 3px 8px; flex-shrink: 0;">01. ГРУППИРОВКА</span>
+                <div style="font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.35;">
+                  Объединяет картинку, заголовок и кнопку в единую карточку товара или статью.
+                </div>
+              </div>
+
+              <div style="background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 12px;">
+                <span class="group-pill bg-purple" style="font-size: 10px; padding: 3px 8px; flex-shrink: 0;">02. СТИЛИ В CSS</span>
+                <div style="font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.35;">
+                  Позволяет задать общий фон, тень, границы или flex-сетку для всей группы сразу.
+                </div>
+              </div>
+
+              <div style="background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 12px;">
+                <span class="group-pill bg-dark" style="font-size: 10px; padding: 3px 8px; flex-shrink: 0;">03. СТРУКТУРА</span>
+                <div style="font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.35;">
+                  Делит страницу на удобные зоны: шапка, сайдбар, контентная часть, подвал.
+                </div>
+              </div>
+            </div>
+
+            <!-- Золотая метафора -->
+            <div style="background: var(--yellow); border-radius: 14px; padding: 12px 18px; margin-top: 2px;">
+              <div style="font-size: 11px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: var(--label); margin-bottom: 2px;">ЗОЛОТАЯ МЕТАФОРА ДЛЯ ПАМЯТИ:</div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--black); line-height: 1.35;">
+                Представь прозрачную коробку: пока она пуста — ты видишь пустоту. Но положи внутрь вещи, и ты сможешь перемещать и стилизовать весь ящик целиком!
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: вертикальное изображение во весь контейнер с безопасным нижним отступом -->
+          <div class="content-right" style="justify-content: center; align-items: center;">
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 24px; padding: 14px 16px 16px; width: 100%; display: flex; flex-direction: column; box-shadow: 0 10px 28px rgba(10,10,10,0.06);">
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 4px 10px;">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--label);">
+                  АРХИТЕКТУРА ЭЛЕМЕНТА
+                </div>
+                <span class="group-pill bg-dark" style="font-size: 11px; padding: 3px 10px;">&lt;DIV&gt; В ВЁРСТКЕ</span>
+              </div>
+              
+              <!-- Картинка во всю ширину без полос по бокам и с безопасной высотой -->
+              <div style="width: 100%; height: 380px; border-radius: 16px; overflow: hidden; position: relative; background: #EEEEF8; display: flex; align-items: center; justify-content: center;">
+                <img src="./img/div-container.jpg" alt="Визуальная метафора тега div как прозрачного контейнера" style="width: 100%; height: 100%; object-fit: contain; display: block;" />
+              </div>
+              
+              <div style="background: var(--bg); border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 18px; width: 100%; text-align: center; margin-top: 10px;">
+                <div style="font-size: 16px; font-weight: 800; color: var(--black);">
+                  Прозрачные стенки контейнера &lt;div&gt;
+                </div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 3px; line-height: 1.35;">
+                  Внутри него свободно располагаются заголовок, текст, картинки и кнопки, объединяясь в монолитный модуль.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · БЛОЧНЫЕ ЭЛЕМЕНТЫ</span>
+        <span>СТРАНИЦА 10 / 13</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 11 — ТЕГ <a> И ГИПЕРССЫЛКИ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="10">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · ГИПЕРССЫЛКИ</div>
+        </div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col" style="align-items: stretch; height: 100%;">
+          <!-- Левая колонка: Заголовок + Анатомия с цветной расшифровкой + Поведение -->
+          <div class="content-card-left" style="padding: 26px 30px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div class="content-section-label" style="font-size: 15px; margin-bottom: 4px;">СТРОЧНЫЙ ЭЛЕМЕНТ №1 · ANCHOR</div>
+              <div class="content-h2" style="font-size: 48px; line-height: 1.08; margin-bottom: 8px;">Тег &lt;a&gt;<br/>и гиперссылки</div>
+              <div class="content-body" style="font-size: 19px; line-height: 1.45;">
+                Тег <code>&lt;a&gt;</code> (от <i>anchor</i> — якорь) связывает интернет воедино. <span class="text-underline">Без атрибута <code>href</code> ссылка никуда не ведёт</span>!
+              </div>
+            </div>
+
+            <!-- БЛОК: Анатомия ссылки с подсветкой -->
+            <div style="background: var(--black); border-radius: 14px; padding: 12px 18px; font-family: monospace; font-size: 17px; color: var(--white); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 6px 18px rgba(10,10,10,0.12);">
+              <span>
+                &lt;<span style="color:var(--yellow);font-weight:900;">a</span> 
+                <span style="color:#DFFF4F;font-weight:800;">href</span>=<span style="color:#A8FF9E;">"https://ya.ru"</span> 
+                <span style="color:#C8B8F0;font-weight:800;">target</span>=<span style="color:#E2D9F8;">"_blank"</span>&gt;<span style="color:#FFFFFF;text-decoration:underline;font-weight:700;">Перейти в поиск</span>&lt;/<span style="color:var(--yellow);font-weight:900;">a</span>&gt;
+              </span>
+              <span class="group-pill bg-yellow" style="font-size:11px;padding:3px 9px;">АНАТОМИЯ</span>
+            </div>
+
+            <!-- Разбор по частям: Анатомия -->
+            <div style="display: flex; flex-direction: column; gap: 7px;">
+              <!-- 1. a -->
+              <div style="background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 9px 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="background:var(--black); color:var(--yellow); font-family:monospace; font-weight:900; font-size:14px; padding:3px 9px; border-radius:8px;">&lt;a&gt; ... &lt;/a&gt;</span>
+                  <span style="font-size:16px; font-weight:800; color:var(--black);">Тег-якорь (anchor)</span>
+                </div>
+                <span style="font-size:14px; font-weight:600; color:var(--label);">Парный тег, границы ссылки</span>
+              </div>
+
+              <!-- 2. href -->
+              <div style="background: #FDFFE5; border: 2px solid #D0EE22; border-radius: 12px; padding: 9px 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="background:var(--yellow); color:var(--black); font-family:monospace; font-weight:900; font-size:14px; padding:3px 9px; border-radius:8px;">href="..."</span>
+                  <span style="font-size:16px; font-weight:800; color:var(--black);">Hypertext REFerence</span>
+                </div>
+                <span style="font-size:14px; font-weight:700; color:#4B5B00;">Адрес перехода (обязателен!)</span>
+              </div>
+
+              <!-- 3. target -->
+              <div style="background: #F8F5FF; border: 2px solid var(--purple-soft); border-radius: 12px; padding: 9px 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="background:var(--purple-soft); color:var(--black); font-family:monospace; font-weight:900; font-size:14px; padding:3px 9px; border-radius:8px;">target="_blank"</span>
+                  <span style="font-size:16px; font-weight:800; color:var(--black);">Режим открытия</span>
+                </div>
+                <span style="font-size:14px; font-weight:700; color:#4A2B8B;">Открыть в новой вкладке</span>
+              </div>
+
+              <!-- 4. content -->
+              <div style="background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 9px 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="background:#EDE8D8; color:var(--black); font-family:monospace; font-weight:800; font-size:14px; padding:3px 9px; border-radius:8px;">Текст или Картинка</span>
+                  <span style="font-size:16px; font-weight:800; color:var(--black);">Кликабельная область</span>
+                </div>
+                <span style="font-size:14px; font-weight:600; color:var(--label);">То, на что нажимает юзер</span>
+              </div>
+            </div>
+
+            <!-- Поведение браузера по умолчанию -->
+            <div style="background: rgba(255,255,255,0.9); border: 2px dashed var(--border); border-radius: 14px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;">
+              <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--label);">
+                СТИЛИ БРАУЗЕРА ПО УМОЛЧАНИЮ:
+              </div>
+              <div style="display:flex; align-items:center; gap:14px; font-size:15px; font-weight:800;">
+                <span style="color:#0044CC; text-decoration:underline;">Синяя (новая)</span>
+                <span style="color:#661199; text-decoration:underline;">Фиолетовая (:visited)</span>
+                <span style="background:var(--bg); border:1px solid var(--border); padding:3px 9px; border-radius:6px; font-size:13px; font-family:monospace;">cursor: pointer</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: 4 вида ссылок + Суперсила HTML5 + Факт -->
+          <div class="content-right" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+            <!-- 4 типа ссылок: сетка 2x2 -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div style="background:var(--white); border:2px solid var(--border); border-radius:14px; padding:12px 16px; display:flex; flex-direction:column; gap:3px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">1. ВНЕШНИЙ РЕСУРС</span>
+                  <span class="group-pill bg-yellow" style="font-size:10px; padding:2px 8px;">НОВАЯ ВКЛАДКА</span>
+                </div>
+                <div style="font-size:16px; font-weight:800; color:var(--black); font-family:monospace; margin-top:2px;">href="https://ya.ru"</div>
+                <div style="font-size:13px; font-weight:600; color:var(--label); margin-top:1px;">Всегда добавляем <code>target="_blank"</code></div>
+              </div>
+
+              <div style="background:var(--white); border:2px solid var(--border); border-radius:14px; padding:12px 16px; display:flex; flex-direction:column; gap:3px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">2. СТРАНИЦА САЙТА</span>
+                  <span class="group-pill bg-purple" style="font-size:10px; padding:2px 8px;">НАВИГАЦИЯ</span>
+                </div>
+                <div style="font-size:16px; font-weight:800; color:var(--black); font-family:monospace; margin-top:2px;">href="./catalog.html"</div>
+                <div style="font-size:13px; font-weight:600; color:var(--label); margin-top:1px;">Переход между страницами своего проекта</div>
+              </div>
+
+              <div style="background:var(--white); border:2px solid var(--border); border-radius:14px; padding:12px 16px; display:flex; flex-direction:column; gap:3px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">3. ЯКОРЬ В СЕКЦИЮ</span>
+                  <span class="group-pill bg-yellow" style="font-size:10px; padding:2px 8px;">СКРОЛЛ</span>
+                </div>
+                <div style="font-size:16px; font-weight:800; color:var(--black); font-family:monospace; margin-top:2px;">href="#contacts"</div>
+                <div style="font-size:13px; font-weight:600; color:var(--label); margin-top:1px;">Мгновенный скролл к блоку с <code>id="contacts"</code></div>
+              </div>
+
+              <div style="background:var(--white); border:2px solid var(--border); border-radius:14px; padding:12px 16px; display:flex; flex-direction:column; gap:3px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">4. БЫСТРОЕ ДЕЙСТВИЕ</span>
+                  <span class="group-pill bg-dark" style="font-size:10px; padding:2px 8px;">СВЯЗЬ</span>
+                </div>
+                <div style="font-size:16px; font-weight:800; color:var(--black); font-family:monospace; margin-top:2px;">href="tel:..." / "mailto:..."</div>
+                <div style="font-size:13px; font-weight:600; color:var(--label); margin-top:1px;">Вызов звонка со смартфона или email-клиента</div>
+              </div>
+            </div>
+
+            <!-- Исключение HTML5: оборачиваем div в a -->
+            <div class="rule-card" style="background:#FAF8FF; border:2px solid var(--purple-soft); padding: 18px 22px; gap: 8px; border-radius: 18px;">
+              <div class="rule-card-hdr">
+                <div class="rule-card-title" style="font-size: 17px;">Суперсила &lt;a&gt; в HTML5: Оберни целую карточку!</div>
+                <span class="group-pill bg-purple" style="font-size: 11px; padding: 4px 10px;">СУПЕРИСКЛЮЧЕНИЕ</span>
+              </div>
+              <div class="rule-card-desc" style="font-size: 15px; line-height: 1.45; color: var(--text);">
+                Помнишь наш тег <code>&lt;div&gt;</code>? В HTML5 сделали <b>официальное исключение из правил вложенности</b>: ссылку можно обернуть вокруг целой блочной карточки <code>&lt;div&gt;</code> с картинкой и заголовком! Вся карточка станет единым кликабельным блоком.
+              </div>
+              <div style="background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px 14px; font-family:monospace; font-size:15px; font-weight:700; color:var(--black);">
+                &lt;<span style="color:#7B42BC;">a</span> href="/course/python"&gt; &lt;<span style="color:#4A6B00;">div</span> class="card"&gt;&lt;h3&gt;Python Backend&lt;/h3&gt;&lt;/<span style="color:#4A6B00;">div</span>&gt; &lt;/<span style="color:#7B42BC;">a</span>&gt;
+              </div>
+            </div>
+
+            <!-- Исторический факт -->
+            <div style="background:var(--yellow); border-radius:16px; padding:15px 20px; display:flex; align-items:center; gap:16px;">
+              <span class="group-pill bg-dark" style="font-size: 13px; font-weight: 900; padding: 5px 12px;">ФАКТ</span>
+              <div style="font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.4;">
+                Именно тег &lt;a&gt; создал Всемирную паутину — соединив миллиарды документов планеты в единую мировую гипертекстовую сеть!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СТРОЧНЫЕ ЭЛЕМЕНТЫ</span>
+        <span>СТРАНИЦА 11 / 13</span>
+      </footer>
+    </div>
+
+        <!-- ══════════════════════════════
+         SLIDE 12 — ПРАКТИКА: МОЙ ИНТЕРНЕТ-МАГАЗИН
+    ══════════════════════════════ -->
+    <div class="slide" data-index="11">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ПРАКТИКА</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · МОЙ ИНТЕРНЕТ-МАГАЗИН</div>
+        </div>
+      </header>
+      <div class="slide-content" style="padding: 8px 56px 14px;">
+        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; gap: 8px;">
+
+          <!-- Заголовок -->
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;">
+            <div>
+              <div class="content-section-label" style="font-size: 13px; margin-bottom: 2px;">ПРАКТИЧЕСКОЕ ЗАДАНИЕ · МНОГОСТРАНИЧНЫЙ САЙТ</div>
+              <div style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 34px; line-height: 1.05; color: var(--black);">Давайте вместе создадим интернет-магазин!</div>
+            </div>
+            <div style="flex-shrink: 0; background: var(--black); color: var(--white); border-radius: 16px; padding: 10px 20px; text-align: center;">
+              <div style="font-size: 28px; font-weight: 900; color: var(--yellow); line-height: 1;">~5</div>
+              <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px;">HTML-файлов</div>
+            </div>
+          </div>
+
+          <!-- 2x2 сетка карточек -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; flex: 1; min-height: 0;">
+
+            <!-- ТОП-ЛЕВО: index.html (главная) — ЧЁРНАЯ -->
+            <div style="background: var(--black); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--yellow);">index.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); border-radius: 8px; padding: 4px 10px;">ГЛАВНАЯ СТРАНИЦА</span>
+              </div>
+              <div style="height: 2px; background: rgba(255,255,255,0.1); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h1&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">Название магазина</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">href="dom.html" — Для дома</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">href="auto.html" — Для авто</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">href="tech.html" — Техника</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ТОП-ПРАВО: dom.html -->
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--black);">dom.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 4px 10px;">ДЛЯ ДОМА</span>
+              </div>
+              <div style="height: 2px; background: var(--border); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--black); color: var(--white); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;img&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Фото товара</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--beige); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h3&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Название товара</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;p&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Описание + цена</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">«Подробнее»</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- НИЗ-ЛЕВО: auto.html -->
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--black);">auto.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 4px 10px;">ДЛЯ АВТО</span>
+              </div>
+              <div style="height: 2px; background: var(--border); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--black); color: var(--white); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;img&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Фото товара</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--beige); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h3&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Название товара</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;p&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Описание + цена</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">«Подробнее»</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- НИЗ-ПРАВО: tech.html -->
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--black);">tech.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 4px 10px;">ТЕХНИКА</span>
+              </div>
+              <div style="height: 2px; background: var(--border); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--black); color: var(--white); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;img&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Фото товара</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--beige); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h3&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Название товара</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;p&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Описание + цена</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">«Подробнее»</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /2x2 grid -->
+
+          <!-- Нижняя плашка -->
+          <div style="background: var(--yellow); border-radius: 14px; padding: 11px 22px; display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
+            <span class="group-pill bg-dark" style="font-size: 13px; font-weight: 900; padding: 5px 14px; flex-shrink: 0;">КАК РАБОТАЕТ</span>
+            <div style="font-size: 16px; font-weight: 700; color: var(--black); line-height: 1.35;">
+              На главной жмём на категорию — браузер открывает нужный файл. Там карточки: <code>&lt;div&gt;</code> + <code>&lt;img&gt;</code> + <code>&lt;h3&gt;</code> + <code>&lt;p&gt;</code> + <code>&lt;a&gt;</code>.
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ПРАКТИЧЕСКАЯ РАБОТА</span>
+        <span>СТРАНИЦА 12 / 13</span>
+      </footer>
+    </div>
+
+  <!-- ══════════════════════════════
+         SLIDE 13 — САМОСТОЯТЕЛЬНАЯ РАБОТА: КИНОТЕАТР
+    ══════════════════════════════ -->
+    <div class="slide" data-index="12">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">САМОСТОЯТЕЛЬНАЯ РАБОТА</div></div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 2 · КИНОТЕАТР МЕГАФИЛЬМ</div>
+        </div>
+      </header>
+      <div class="slide-content" style="padding: 8px 56px 14px;">
+        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; gap: 8px;">
+
+          <!-- Заголовок -->
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-shrink: 0;">
+            <div>
+              <div style="display: inline-flex; align-items: center; gap: 10px; background: var(--black); color: var(--white); border-radius: 100px; padding: 6px 18px; margin-bottom: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DFFF4F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">САМОСТОЯТЕЛЬНАЯ РАБОТА</span>
+              </div>
+              <div style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 34px; line-height: 1.05; color: var(--black);">Сверстай сайт кинотеатра <span style="font-style: italic; color: var(--black);">«МегаФильм»!</span></div>
+            </div>
+            <div style="flex-shrink: 0; background: var(--yellow); border-radius: 16px; padding: 10px 20px; text-align: center; border: 2px solid var(--black);">
+              <div style="font-size: 28px; font-weight: 900; color: var(--black); line-height: 1;">4+</div>
+              <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); margin-top: 2px;">HTML-файла</div>
+            </div>
+          </div>
+
+          <!-- 2x2 сетка -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; flex: 1; min-height: 0;">
+
+            <!-- ТОП-ЛЕВО: index.html — ЧЁРНАЯ -->
+            <div style="background: var(--black); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--yellow);">index.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); border-radius: 8px; padding: 4px 10px;">ГЛАВНАЯ</span>
+              </div>
+              <div style="height: 2px; background: rgba(255,255,255,0.1); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h1&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">МегаФильм</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">href="action.html" — Боевики</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">href="comedy.html" — Комедии</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9);">href="cartoon.html" — Мультики</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ТОП-ПРАВО: action.html -->
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--black);">action.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 4px 10px;">БОЕВИКИ</span>
+              </div>
+              <div style="height: 2px; background: var(--border); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--black); color: var(--white); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;img&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Постер фильма</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--beige); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h3&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Название фильма</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;p&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Жанр + год выхода</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">«Купить билет»</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- НИЗ-ЛЕВО: comedy.html -->
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--black);">comedy.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 4px 10px;">КОМЕДИИ</span>
+              </div>
+              <div style="height: 2px; background: var(--border); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--black); color: var(--white); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;img&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Постер фильма</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--beige); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h3&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Название фильма</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;p&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Жанр + год выхода</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">«Купить билет»</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- НИЗ-ПРАВО: cartoon.html -->
+            <div style="background: var(--white); border: 2px solid var(--border); border-radius: 20px; padding: 20px 26px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="font-family: monospace; font-size: 22px; font-weight: 900; color: var(--black);">cartoon.html</div>
+                <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 4px 10px;">МУЛЬТИКИ</span>
+              </div>
+              <div style="height: 2px; background: var(--border); border-radius: 1px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--black); color: var(--white); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;img&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Постер фильма</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--beige); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;h3&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Название фильма</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--purple-soft); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;p&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">Жанр + год выхода</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-family: monospace; font-size: 17px; font-weight: 900; background: var(--yellow); color: var(--black); border-radius: 8px; padding: 5px 12px; flex-shrink: 0;">&lt;a&gt;</span>
+                  <span style="font-size: 18px; font-weight: 700; color: var(--text);">«Купить билет»</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /2x2 grid -->
+
+          <!-- Нижняя плашка -->
+          <div style="background: var(--black); border-radius: 14px; padding: 11px 22px; display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
+            <span class="group-pill" style="font-size: 13px; font-weight: 900; padding: 5px 14px; flex-shrink: 0; background: var(--yellow); color: var(--black);">ТВОЯ ЗАДАЧА</span>
+            <div style="font-size: 16px; font-weight: 700; color: var(--white); line-height: 1.35;">
+              Создай 4 HTML-файла по этой схеме. На главной — название и ссылки на жанры. На каждой странице — минимум 2–3 карточки фильмов с постером, заголовком, описанием и кнопкой «Купить билет».
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · САМОСТОЯТЕЛЬНАЯ РАБОТА</span>
+        <span>СТРАНИЦА 13 / 13</span>
+      </footer>
+    </div>
+
+  </div><!-- /viewport -->
+
+  <!-- ── LOUPE LENS ── -->
+  <div class="magnifier-lens" id="magnifier">
+    <div class="magnifier-inner" id="magnifierInner"></div>
+  </div>
+
+  <!-- ── NAV BAR ── -->
+  <nav class="nav-bar">
+    <button class="nav-btn" id="btnPrev" title="Назад (←)">&#8592;</button>
+    <button class="nav-btn" id="btnLoupe" title="Лупа (L / Z)">
+      <img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа" />
+    </button>
+    <button class="nav-btn" id="btnNext" title="Вперёд (→)">&#8594;</button>
+  </nav>
+
+  <script>
+    /* ══════════════════════════════
+       NAVIGATION & DYNAMIC SYNC
+    ══════════════════════════════ */
+    const slides  = Array.from(document.querySelectorAll('.slide'));
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const total   = slides.length;
+    let current   = 0;
+
+    function goTo(idx) {
+      if (idx < 0 || idx >= total) return;
+      const prev = current;
+      const dir = idx > prev ? 1 : -1;
+
+      slides[prev].classList.remove('active');
+      slides[prev].classList.add('exit');
+      setTimeout(() => slides[prev].classList.remove('exit'), 420);
+
+      current = idx;
+      slides[current].classList.add('active');
+
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+
+      if (loupeActive) {
+        setTimeout(syncLoupeSlide, 50);
+      }
+    }
+
+    btnPrev.addEventListener('click', () => goTo(current - 1));
+    btnNext.addEventListener('click', () => goTo(current + 1));
+    btnPrev.disabled = true;
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+    });
+
+    /* Touch / Swipe */
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend',   e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+    });
+
+    /* ══════════════════════════════
+       LOUPE / MAGNIFIER LOGIC
+    ══════════════════════════════ */
+    const magnifier      = document.getElementById('magnifier');
+    const magnifierInner = document.getElementById('magnifierInner');
+    const btnLoupe       = document.getElementById('btnLoupe');
+    const loupeRadius    = 45; // 90px diameter / 2
+    const loupeZoom      = 2.0;
+    let   loupeActive    = false;
+    let   mouseX         = window.innerWidth / 2;
+    let   mouseY         = window.innerHeight / 2;
+    let   rafId          = null;
+
+    function syncLoupeSlide() {
+      if (!loupeActive) return;
+      const activeSlide = slides[current];
+      magnifierInner.style.width = window.innerWidth + 'px';
+      magnifierInner.style.height = window.innerHeight + 'px';
+      magnifierInner.innerHTML = `
+        <div class="${activeSlide.className}" style="opacity:1 !important;transform:none !important;position:absolute;inset:0;pointer-events:none;">
+          ${activeSlide.innerHTML}
+        </div>
+      `;
+    }
+
+    function updateLoupeTransform() {
+      rafId = null;
+      if (!loupeActive) return;
+      magnifier.style.transform = `translate3d(${mouseX - loupeRadius}px, ${mouseY - loupeRadius}px, 0)`;
+
+      /* КРИТИЧЕСКАЯ МАТЕМАТИКА ТРАНСФОРМАЦИИ — НЕ МЕНЯТЬ */
+      magnifierInner.style.transformOrigin = `${mouseX}px ${mouseY}px`;
+      const tx = loupeRadius - mouseX;
+      const ty = loupeRadius - mouseY;
+      magnifierInner.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${loupeZoom})`;
+    }
+
+    function toggleLoupe() {
+      loupeActive = !loupeActive;
+      if (loupeActive) {
+        document.body.classList.add('magnifier-mode');
+        btnLoupe.classList.add('active');
+        magnifier.classList.add('active');
+        magnifier.style.display = 'block';
+        syncLoupeSlide();
+        updateLoupeTransform();
+      } else {
+        document.body.classList.remove('magnifier-mode');
+        btnLoupe.classList.remove('active');
+        magnifier.classList.remove('active');
+        magnifier.style.display = 'none';
+      }
+    }
+
+    btnLoupe.addEventListener('click', toggleLoupe);
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (loupeActive && !rafId) {
+        rafId = requestAnimationFrame(updateLoupeTransform);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (loupeActive) syncLoupeSlide();
+    });
+
+    document.addEventListener('keydown', e => {
+      const key = e.key.toLowerCase();
+      if (key === 'l' || key === 'z' || key === 'д' || key === 'з') toggleLoupe();
+      if (e.key === 'Escape' && loupeActive) toggleLoupe();
+    });
+  </script>
+<script src="/mobile-block.js"></script>
+</body>
+</html>

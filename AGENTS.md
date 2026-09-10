@@ -7,7 +7,10 @@
 
 ## 1. ОБЩИЕ ПРАВИЛА
 
-- Каждый урок — отдельный `index.html` файл в папке `month-X/lesson-Y/`
+- **ИМЕНОВАНИЕ ФАЙЛОВ УРОКОВ (СТРОГО И ОБЯЗАТЕЛЬНО)**:
+  - Каждый урок называется строго **`lesson-Y.html`** и лежит в папке `month-X/lesson-Y/` (например: `month-1/lesson-1/lesson-1.html`, `month-1/lesson-2/lesson-2.html`).
+  - ❌ **СТРОГО ЗАПРЕЩЕНО называть файлы уроков `index.html`** внутри папок `lesson-Y/`!
+  - `index.html` используется **только** на верхних уровнях: в корне проекта (`presentation/index.html`) и в папке каждого месяца (`month-X/index.html`) как страницы навигации и меню.
 - Презентация должна быть полностью **self-contained** (всё в одном файле)
 - **Не использовать внешние JS-библиотеки** (Reveal.js и т.п.)
 - Навигация: клавиши `←` `→`, кнопки на экране, свайп на touch-устройствах
@@ -28,11 +31,20 @@
   - **Активация**: клавиша `L` (или `Z`, работает и на русской раскладке `Д`), а также отдельная кнопка с иконкой лупы в панели навигации (`.nav-bar`). Выход — повторное нажатие `L` или `Esc`.
   - **Параметры**: радиус ~45px (~1 см на экране), зум `2.0x`.
   - **Поведение**: курсор скрывается, его заменяет увеличивающая круглая линза с ярким акцентным ободком (`--yellow` + `--black`) и точечным прицелом (маркер 6px) строго по центру. Преподаватель может наводить её на отдельные слова, теги, атрибуты и фрагменты кода, используя её как точную указку с мгновенным увеличением.
+- **СТРОГИЙ ЗАПРЕТ НА СИСТЕМНЫЕ ЭМОДЗИ (NO SYSTEM EMOJIS — СТРОГО И ОБЯЗАТЕЛЬНО)**:
+  - ❌ **СТРОГО ЗАПРЕЩЕНО использовать системные эмодзи** (`🔍`, `&#128269;`, `💻`, `🚀`, `💡`, `📌`, `🔥` и т.п.) в интерфейсе, кнопках навигации и на слайдах! В разных операционных системах (macOS, Windows, Linux, мобильные устройства) системные эмодзи рендерятся непредсказуемо, ломают аккуратный стиль, выглядят непрофессионально и нарушают цветовую палитру.
+  - ✅ **ВСЕ иконки, иллюстрации и логотипы мы создаём сами**:
+    - Через инструмент `generate_image` (генерация уникальных картинок и иконок).
+    - Либо чистый inline SVG в фирменных цветах (`--black`, `--yellow`, stroke/fill).
+  - **ОБЩИЕ АССЕТЫ ПРОЕКТА (`/assets/icons/`)**:
+    - Глобальные иконки и логотипы, которые используются во всех уроках (например, кастомная иконка лупы `loupe.png`), хранятся в корне проекта в общей папке `assets/icons/`.
+    - Подключение из любого урока: `<img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа">` (также допускается локальная копия `img/loupe.png`).
 - **Генерировать изображения** через инструмент `generate_image` если нужны:
   - Логотипы программ (VS Code, Sublime Text, WebStorm и т.д.)
+  - Иконки интерфейса (кнопки, лупы, бейджи)
   - Иллюстрации концепций
   - Фото рабочей атмосферы разработчика
-  Сохранять их в папку урока и подключать через `<img src="./имя.png">`
+  - Общие ассеты сохранять в `/assets/icons/`, а материалы конкретного урока — в папку урока (`month-X/lesson-Y/img/`) и подключать через `<img src="...">`
 
 ---
 
@@ -687,8 +699,8 @@ body {
 .header-right { text-align: right; }
 .header-lesson{ font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
 
-/* CONTENT AREA */
-.slide-content { flex: 1; padding: 24px 48px; display: flex; align-items: center; }
+/* CONTENT AREA — ОБЯЗАТЕЛЕН отступ снизу (padding-bottom: 20px), чтобы карточки контента не прилипали к футеру! */
+.slide-content { flex: 1; padding: 14px 56px 20px; display: flex; align-items: center; overflow: hidden; min-height: 0; }
 
 /* FOOTER
    ⚠️ padding-right ОБЯЗАТЕЛЬНО минимум 260px, чтобы текст не перекрывался кнопками навигации!
@@ -801,11 +813,8 @@ body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !
 <div class="nav-bar">
   <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
   <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы / указки (L / Z)">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="7"></circle>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      <circle cx="11" cy="11" r="2.5" fill="currentColor"></circle>
-    </svg>
+    <!-- ⚠️ ЗАПРЕЩЕНО писать системные эмодзи вроде &#128269; или 🔍! Используем кастомную иконку: -->
+    <img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа" />
   </button>
   <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
 </div>
@@ -1107,13 +1116,13 @@ presentation/
   month-1/
     index.html           ← навигация по урокам месяца
     lesson-1/
-      index.html
+      lesson-1.html      ← презентация урока (НЕ index.html!)
       img/               ← сгенерированные изображения
     lesson-2/
-      index.html
+      lesson-2.html      ← презентация урока (НЕ index.html!)
       img/
     lesson-3/
-      index.html
+      lesson-3.html      ← презентация урока (НЕ index.html!)
       img/
   month-2/ ...
   month-3/ ...
@@ -1124,7 +1133,7 @@ presentation/
 
 ## 11. МОБИЛЬНЫЙ БЛОКИРОВЩИК (ОБЯЗАТЕЛЬНО)
 
-Все страницы курса — навигационные (`index.html` месяцев) и презентации (`lesson-X/index.html`) — **обязаны** подключать файл `/mobile-block.js`.
+Все страницы курса — навигационные (`index.html` месяцев) и презентации (`lesson-X/lesson-X.html`) — **обязаны** подключать файл `/mobile-block.js`.
 
 Этот скрипт показывает fullscreen-оверлей «Открой на компьютере» при ширине экрана **< 960px**, блокируя скролл страницы. При возврате к десктопному размеру оверлей автоматически скрывается.
 
@@ -1135,7 +1144,7 @@ presentation/
 ```
 
 > ⚠️ Путь всегда **абсолютный** `/mobile-block.js` — он работает корректно для любого уровня вложенности
-> (`/month-1/lesson-2/index.html`, `/month-3/lesson-5/index.html` и т.д.).
+> (`/month-1/lesson-2/lesson-2.html`, `/month-3/lesson-5/lesson-5.html` и т.д.).
 
 ### Что делает скрипт:
 - Инжектирует CSS-стили и HTML-оверлей прямо в `<body>` через JS — **не нужно ничего писать в HTML**
