@@ -15,9 +15,30 @@
 - **Не использовать внешние JS-библиотеки** (Reveal.js и т.п.)
 - Навигация: клавиши `←` `→`, кнопки на экране, свайп на touch-устройствах
 - Шрифты грузить через Google Fonts (embed в `<head>`)
-- **ТОН ПОВЕСТВОВАНИЯ (ВАЖНО)**: Презентация ведётся **от лица преподавателя** (пользователя) напрямую к ученику.
-  - ❌ ЗАПРЕЩЕНО писать от 3-го лица: «Вместе с преподавателем», «Ученик делает задание», «Учитель объясняет».
-  - ✅ ПИСАТЬ НАПРЯМУЮ: «Сейчас мы вместе сверстаем...», «Практикуемся вместе», «А теперь твоя очередь!».
+- **ТОН ПОВЕСТВОВАНИЯ И СТРОГОЕ ОБРАЩЕНИЕ НА «ВЫ» (СТРОГО И ОБЯЗАТЕЛЬНО)**:
+  - Презентация ведётся **от лица преподавателя** напрямую к ученикам.
+  - ❌ **СТРОГО ЗАПРЕЩЕНО писать от 3-го лица**: «Вместе с преподавателем», «Ученик делает задание», «Учитель объясняет».
+  - ❌ **СТРОГО ЗАПРЕЩЕНО фамильярное обращение на «ты»**: «Твоё задание», «Твоя очередь», «Твой проект», «Твой любимый фильм», «У тебя всё получится», «Сделай», «Создай», «Открой», «Выбери», «Оберни», «Попробуй».
+  - ✅ **ВСЕГДА ОБРАЩАТЬСЯ НА «ВЫ» (вежливо, уважительно, профессионально)**:
+    - «Ваше задание», «Ваша очередь!», «Ваша задача», «Ваш проект», «Ваш любимый фильм», «У вас всё получится!», «Практикуемся вместе».
+    - Все глаголы формулируются в вежливом / множественном повелительном наклонении: «Создайте», «Откройте», «Выберите», «Оберните», «Сделайте», «Проверьте», «Экспериментируйте».
+- **ПРИНЦИП «TALK, DO NOT READ» (СЛАЙД — ЭТО ПОДСКАЗКА ДЛЯ СПИКЕРА, А НЕ СУФЛЁР)**:
+  - ❌ **СТРОГО ЗАПРЕЩЕНО заполнять слайды полотнами текста**, сплошными длинными абзацами и теоретическими параграфами, которые спикер вынужден читать с экрана.
+  - ✅ Слайд служит **визуальной подсказкой и ментальной картой (cue cards / visual anchors)** для преподавателя.
+  - На слайде размещаются: крупные ключевые термины, теги, емкие тезисы (2–5 слов), визуальные схемы и блоки кода.
+  - Это освобождает преподавателя: он может смотреть на учеников, говорить в живой манере, спокойно и размеренно, не привязываясь к чтению слайда.
+  - Когда вводятся комплексные темы (например, синтаксис CSS, селекторы, классы, ID, фигурные скобки и свойства) — слайд даёт **широкий структурный обзор** (шпаргалку-карту), а всю глубину, логику и нюансы преподаватель объясняет сам устно и на практике.
+- **ПРИНЦИП «SHOW, DO NOT JUST TELL» (ВИЗУАЛИЗАЦИЯ И МЕТАФОРЫ ВМЕСТО СУХОЙ ТЕОРИИ)**:
+  - ❌ Ученики быстро забывают сухие правила, списки определений и абстрактные концепции.
+  - ✅ **Они отлично запоминают истории, метафоры и наглядные картинки**. Всегда использовать сильные визуальные образы и примеры из реальной жизни:
+    - *Контрасты «ДО / ПОСЛЕ»*: сырой текст vs аккуратный список; черно-белый скелет HTML vs стильный сайт с CSS.
+    - *Жизненные метафоры*: HTML — это скелет/стены дома, CSS — интерьер и отделка; `<ul>` — список покупок / ингредиенты, `<ol>` — шаги рецепта / инструкция / топ-чарт; 3 способа CSS: inline — ценник на одежде, `<link>` — единый каталог гардероба.
+    - *Реальные интерфейсы*: показывать, как абстрактный тег превращается в живой элемент (например, `<ul> <li> <a>` в навигационную шапку сайта).
+  - Слайд должен радовать глаз, показывать код рядом с результатом и стимулировать диалог.
+- **СТРОГОЕ СОБЛЮДЕНИЕ ПРОГРАММЫ (НЕ ЗАБЕГАТЬ ВПЕРЁД ПО МАТЕРИАЛУ — СТРОГО И ОБЯЗАТЕЛЬНО)**:
+  - ❌ **СТРОГО ЗАПРЕЩЕНО использовать в учебном коде теги, свойства и концепции, которые ученики ещё не проходили** (например, использовать `padding`, `margin`, `flexbox`, `grid`, позиционирование в стилях до уроков, где эти темы изучаются).
+  - Ученик должен понимать и уметь воспроизвести каждую строчку кода на слайде! Если в уроке изучаются только списки и базовые свойства CSS (`color`, `background`, `border-radius`, `font-size`, `font-weight`), то в примерах ученика присутствуют **ТОЛЬКО** они.
+  - Любые отступы (`padding` / `margin`) вводятся строго в соответствующем уроке о блочной модели (Box Model).
 - **ЗАПРЕТ НА ДАТУ И ВРЕМЯ (СТРОГО И ОБЯЗАТЕЛЬНО)**:
   - ❌ **ЗАПРЕЩЕНО указывать дату и время** на презентациях (никаких дат публикации вроде «07 сентября 2026 г.», дат в шапках слайдов, текущего времени или привязок к конкретному году).
   - Презентации должны быть **универсальными и вечно актуальными** для любых потоков и годов обучения.
@@ -39,6 +60,30 @@
   - **ОБЩИЕ АССЕТЫ ПРОЕКТА (`/assets/icons/`)**:
     - Глобальные иконки и логотипы, которые используются во всех уроках (например, кастомная иконка лупы `loupe.png`), хранятся в корне проекта в общей папке `assets/icons/`.
     - Подключение из любого урока: `<img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа">` (также допускается локальная копия `img/loupe.png`).
+- **ОФОРМЛЕНИЕ БЛОКОВ КОДА (СТРОГО КАК В РЕАЛЬНОМ РЕДАКТОРЕ / СВЕРХУ ВНИЗ — ОБЯЗАТЕЛЬНО)**:
+  - ❌ **СТРОГО ЗАПРЕЩЕНО вытягивать код в одну сплошную горизонтальную строку** или допускать, чтобы браузер схлопывал переносы строк в пробелы!
+  - ✅ **Свойство `white-space: pre;` (или `white-space: pre-wrap;`) ОБЯЗАТЕЛЬНО для `.code-box`**! Код должен читаться **строго сверху вниз**, строка за строкой, с правильной лесенкой отступов (индексацией в 2 пробела для дочерних тегов).
+  - ✅ **Вёрстка окна редактора (`.editor-frame`)**: блок кода оформляется как настоящее окно редактора VS Code / macOS:
+    - Верхняя тёмная плашка `.editor-topbar` с тремя цветными точками окна (`.dot.red`, `.dot.yellow`, `.dot.green`) и вкладкой с именем файла (например, `index.html`, `style.css`).
+    - Моноширинный стек шрифтов: `'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace`.
+    - Яркая семантическая подсветка: теги (`.c-tag`), атрибуты (`.c-attr`), значения (`.c-str`), селекторы (`.c-sel`), свойства (`.c-prop`), значения (`.c-val`), комментарии (`.c-com`).
+- **ВЁРСТКА ТИТУЛЬНОГО СЛАЙДА (ЗАПРЕТ НА НАЛОЖЕНИЯ И ЗАЩИТА ОТ КНОПОК НАВИГАЦИИ)**:
+  - ❌ **СТРОГО ЗАПРЕЩЕНО использовать `position: absolute; bottom: 0;` для `.title-bottom`** или задавать `position: relative;` для `.s-title` без `height: 100%`! Это ломает поток, приводит к наложению слогана и ID курса прямо поверх карточек Agenda и оставляет гигантскую пустую дыру внизу экрана.
+  - ⚠️ **ОТСТУП СПРАВА В `.title-bottom` ОБЯЗАТЕЛЬНО МИНИМУМ 280px (`padding: 0 280px 28px 56px;`)**!
+    - Кнопки навигации `.nav-bar` зафиксированы в правом нижнем углу экрана (`bottom: 16px; right: 36px;`, общая ширина блока ~234px).
+    - Если в `.title-bottom` оставить обычный `padding-right: 56px`, слоган «ИЗУЧАЙ. КОД. СОЗДАВАЙ.» оказывается **прямо под кнопками навигации**, прячась за ними!
+    - Отступ `padding-right: 280px` сдвигает слоган левее, гарантируя идеальную читаемость и чистый зазор перед кнопками.
+  - ✅ Титульный слайд `.s-title` — это **полноэкранный flex-контейнер на всю высоту 100vh**:
+    ```css
+    .s-title {
+      position: absolute; inset: 0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .title-top    { display: flex; justify-content: space-between; align-items: flex-start; padding: 32px 56px 0; flex-shrink: 0; }
+    .title-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 20px; }
+    .title-bottom { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 280px 28px 56px; flex-shrink: 0; }
+    ```
+  - Это полностью исключает наслоения, гарантирует равномерное заполнение пространства и видимость всех элементов.
 - **Генерировать изображения** через инструмент `generate_image` если нужны:
   - Логотипы программ (VS Code, Sublime Text, WebStorm и т.д.)
   - Иконки интерфейса (кнопки, лупы, бейджи)
@@ -641,6 +686,73 @@
 }
 ```
 
+### Editor-frame (Окно редактора кода в стиле VS Code)
+**Обязательно для демонстрации любого кода!** Предотвращает схлопывание строк, сохраняет отступы и создаёт аутентичную атмосферу рабочего инструмента разработчика.
+
+```html
+<div class="editor-frame">
+  <div class="editor-topbar">
+    <div class="editor-dots">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+    </div>
+    <span class="editor-tab">index.html</span>
+  </div>
+  <div class="code-box"><span class="c-tag">&lt;ul&gt;</span>
+  <span class="c-tag">&lt;li&gt;</span>Молоко<span class="c-tag">&lt;/li&gt;</span>
+  <span class="c-tag">&lt;li&gt;</span>Хлопья<span class="c-tag">&lt;/li&gt;</span>
+<span class="c-tag">&lt;/ul&gt;</span></div>
+</div>
+```
+
+```css
+.editor-frame {
+  background: var(--code-bg, #12131A);
+  border-radius: 14px;
+  border: 1.5px solid #2B2C42;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.editor-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px;
+  background: #181926;
+  border-bottom: 1px solid #2B2C42;
+}
+.editor-dots { display: flex; gap: 6px; align-items: center; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.red    { background: #FF5F56; }
+.dot.yellow { background: #FFBD2E; }
+.dot.green  { background: #27C93F; }
+
+.editor-tab {
+  font-size: 12px; font-weight: 700; color: #8B949E;
+  font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+  letter-spacing: 0.05em;
+}
+.code-box {
+  background: var(--code-bg, #12131A); border-radius: 14px; padding: 16px 20px;
+  font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+  font-size: 16px; line-height: 1.6; color: #F0F0FF;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4); overflow-x: auto;
+  white-space: pre; /* СТРОГО ОБЯЗАТЕЛЬНО: предотвращает вытягивание кода в одну горизонтальную линию */
+  tab-size: 2;
+}
+.editor-frame .code-box {
+  border-radius: 0;
+  box-shadow: none;
+}
+/* Подсветка синтаксиса */
+.code-box .c-tag  { color: #FF7B72; font-weight: bold; }
+.code-box .c-attr { color: #79C0FF; }
+.code-box .c-str  { color: #A5D6FF; }
+.code-box .c-sel  { color: #FFA657; font-weight: bold; }
+.code-box .c-prop { color: #7EE787; }
+.code-box .c-val  { color: #DFFF4F; }
+.code-box .c-com  { color: #8B949E; font-style: italic; }
+```
+
 ---
 
 ## 7. ШАБЛОН CSS-БАЗЫ (начинать каждый файл с этого)
@@ -754,6 +866,62 @@ body {
 .agenda-text {
   font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.35;
 }
+
+/* TITLE SLIDE (СТРОГО FLEX-КОНТЕЙНЕР НА ВСЮ ВЫСОТУ, БЕЗ АБСОЛЮТНЫХ НАЛОЖЕНИЙ) */
+.s-title {
+  position: absolute; inset: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.title-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 32px 56px 0; flex-shrink: 0;
+}
+.title-center {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px 20px; width: 100%; max-width: 1360px; margin: 0 auto;
+}
+.title-bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding: 0 280px 28px 56px; /* ⚠️ padding-right 280px СТРОГО ОБЯЗАТЕЛЕН, чтобы слоган не уходил под кнопки навигации (.nav-bar)! */
+  flex-shrink: 0;
+}
+
+/* CODE BOXES & REAL EDITOR (ВСЕГДА СВЕРХУ ВНИЗ, white-space: pre) */
+.editor-frame {
+  background: var(--code-bg, #12131A);
+  border-radius: 14px;
+  border: 1.5px solid #2B2C42;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.editor-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px;
+  background: #181926;
+  border-bottom: 1px solid #2B2C42;
+}
+.editor-dots { display: flex; gap: 6px; align-items: center; }
+.editor-tab {
+  font-size: 12px; font-weight: 700; color: #8B949E;
+  font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+  letter-spacing: 0.05em;
+}
+.code-box {
+  background: var(--code-bg, #12131A); border-radius: 14px; padding: 16px 20px;
+  font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+  font-size: 16px; line-height: 1.6; color: #F0F0FF;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4); overflow-x: auto;
+  white-space: pre; /* СТРОГО ОБЯЗАТЕЛЬНО: код сверху вниз, без горизонтального схлопывания */
+  tab-size: 2;
+}
+.editor-frame .code-box { border-radius: 0; box-shadow: none; }
+.code-box .c-tag  { color: #FF7B72; font-weight: bold; }
+.code-box .c-attr { color: #79C0FF; }
+.code-box .c-str  { color: #A5D6FF; }
+.code-box .c-sel  { color: #FFA657; font-weight: bold; }
+.code-box .c-prop { color: #7EE787; }
+.code-box .c-val  { color: #DFFF4F; }
+.code-box .c-com  { color: #8B949E; font-style: italic; }
 
 /* NAV BUTTONS */
 .nav-bar {
@@ -1100,7 +1268,14 @@ month-1/lesson-1/
 - [ ] **Системные эмодзи НЕ использованы** — вместо них SVG-иконки или сгенерированные изображения
 - [ ] Все иконки в карточках — либо inline SVG, либо `<img src="./img/...">` из папки `img/`
 - [ ] Каждый тип слайда соответствует одному из типов в разделе 5
-- [ ] Все тексты по-русски (если не указано иное)
+- [ ] **Соблюдён принцип «Talk, Do Not Read»**: на слайдах НЕТ простыней текста и длинных абзацев; только крупные ключевые слова, теги, маркеры и тезисы (2–5 слов), служащие визуальной шпаргалкой для живой речи спикера
+- [ ] **Соблюдён принцип «Show, Do Not Just Tell»**: материал подан через наглядные визуальные примеры, схемы, метафоры («до/после», код + превью UI) и сценарии из реальной разработки
+- [ ] **Код отображается строго сверху вниз**: в `.code-box` обязательно задано `white-space: pre;`, код разбит построчно с 2-пробельными отступами, НЕТ вытягивания в одну горизонтальную полоску
+- [ ] **Блоки кода оформлены через `.editor-frame`**: добавлена верхняя панель `.editor-topbar` с цветными точками и именем файла (аутентичный вид редактора VS Code)
+- [ ] **Титульный слайд без наслоений**: `.s-title` свёрстан как flex-колонка на 100vh (`justify-content: space-between;`), `.title-bottom` не наезжает на карточки Agenda, внизу нет пустой дыры
+- [ ] **Слоган на титульном слайде не перекрыт кнопками навигации**: у `.title-bottom` обязательно задан `padding-right: 280px`, надпись «ИЗУЧАЙ. КОД. СОЗДАВАЙ.» сдвинута левее блока кнопок `.nav-bar` и полностью видна
+- [ ] **Строгое обращение к ученику на «ВЫ»**: на всех слайдах исключены «ты», «твоё», «твоя», «твой», «у тебя». Используется только уважительное обращение: «Ваше задание», «Ваша очередь», «У вас всё получится!», глаголы: «Создайте», «Откройте», «Выберите», «Сделайте»
+- [ ] **Строгое следование программе курса (не забегать вперёд)**: в учебном коде используются только те свойства и теги, которые уже пройдены (никаких `padding`, `margin`, `flexbox` в стилях учеников до соответствующих тем)
 - [ ] **Подключён `/mobile-block.js`** перед `</body>` — для блокировки открытия на мобильных устройствах
 
 ---
