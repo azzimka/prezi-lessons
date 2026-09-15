@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Урок 4 — HTML-формы и поля ввода | Месяц 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --border:      #E0E0EE;
+      --text:        #1A1A1A;
+      --muted:       #888899;
+      --label:       #555566;
+      --code-bg:     #12131A;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── VIEWPORT ── */
+    .viewport { flex: 1; position: relative; overflow: hidden; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateX(80px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit   { opacity: 0; transform: translateX(-80px); }
+
+    /* ── HEADER ── */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 24px 56px 0; flex-shrink: 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 18px; }
+    .burger { display: flex; flex-direction: column; gap: 6px; }
+    .burger span { display: block; width: 32px; height: 4px; background: var(--black); border-radius: 2px; }
+    .brand-title { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .brand-sub   { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .header-right { text-align: right; }
+    .header-lesson { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+
+    /* ── CONTENT AREA ── */
+    .slide-content {
+      flex: 1; padding: 14px 56px 20px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-height: 0;
+    }
+
+    /* ── FOOTER ── */
+    .slide-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 260px 20px 56px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-bar {
+      position: fixed; bottom: 16px; right: 36px;
+      display: flex; gap: 12px; z-index: 100;
+    }
+    .nav-btn {
+      width: 58px; height: 58px; background: var(--white);
+      border: 2px solid var(--border); border-radius: 16px;
+      font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.06);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-btn:hover    { background: var(--black); color: var(--white); border-color: var(--black); }
+    .nav-btn:active   { transform: scale(0.95); }
+    .nav-btn:disabled { opacity: 0.25; pointer-events: none; box-shadow: none; }
+    .nav-btn.active   { background: var(--yellow) !important; color: var(--black) !important; border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(223,255,79,0.45); }
+    .nav-btn-icon {
+      width: 28px; height: 28px; object-fit: contain; display: block;
+      pointer-events: none; transition: transform 0.2s, filter 0.2s;
+    }
+    .nav-btn:hover .nav-btn-icon { filter: brightness(0) invert(1); }
+    .nav-btn.active .nav-btn-icon { filter: none; transform: scale(1.08); }
+
+    /* ── LOUPE MODE ── */
+    .magnifier-lens {
+      position: fixed; top: 0; left: 0;
+      width: 90px; height: 90px; border-radius: 50%;
+      border: 3px solid var(--black);
+      box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
+      pointer-events: none; overflow: hidden; z-index: 9999;
+      display: none; background: var(--bg); will-change: transform;
+    }
+    .magnifier-lens.active { display: block; }
+    .magnifier-lens::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 7px; height: 7px; background: var(--yellow);
+      border: 1.5px solid var(--black); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 10;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .magnifier-inner { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+    body.magnifier-mode, body.magnifier-mode * { cursor: none !important; }
+    body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !important; }
+
+    /* ════════════════════════════════
+       TITLE SLIDE
+    ════════════════════════════════ */
+    .s-title {
+      position: absolute; inset: 0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .title-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 32px 56px 0; flex-shrink: 0;
+    }
+    .title-brand { display: flex; align-items: center; gap: 18px; }
+    .title-brand-name { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .title-brand-sub  { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .title-date-label { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: right; }
+    .title-date-val   { font-size: 22px; font-weight: 800; color: var(--black); text-align: right; margin-top: 2px; }
+    .title-center {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 1360px; margin: 0 auto; padding: 20px;
+    }
+    .title-badge {
+      background: var(--black); color: var(--white); border-radius: 100px;
+      padding: 8px 26px; font-size: 14px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .title-badge::before { content: '●'; color: var(--yellow); }
+    .title-main-line {
+      font-weight: 900; font-size: 84px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .accent-lines-row { display: flex; align-items: center; gap: 24px; margin: 6px 0; }
+    .accent-line { height: 5px; width: 90px; background: var(--yellow); flex-shrink: 0; border-radius: 3px; }
+    .title-italic-line {
+      font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+      font-size: 100px; letter-spacing: -0.02em; color: var(--black); line-height: 1;
+    }
+    .title-third-line {
+      font-weight: 900; font-size: 84px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .title-subtitle { font-size: 24px; font-weight: 500; color: var(--muted); margin-top: 18px; }
+    .title-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 280px 28px 56px; flex-shrink: 0;
+    }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; margin-top: 6px; }
+    .title-slogan { text-align: right; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .deco-circles { position: absolute; top: 16px; right: 56px; pointer-events: none; }
+    .deco-circle-lg { width: 340px; height: 340px; border: 2px solid rgba(10,10,10,0.1); border-radius: 50%; }
+    .deco-circle-sm { width: 220px; height: 220px; border: 2px solid rgba(10,10,10,0.07); border-radius: 50%; position: absolute; top: 60px; left: 60px; }
+
+    /* ════ TOC ════ */
+    .toc-wrap { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+    .toc-heading { display: flex; align-items: center; gap: 16px; font-weight: 900; font-size: 36px; letter-spacing: -0.01em; text-transform: uppercase; }
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .toc-item { display: flex; align-items: center; gap: 18px; padding: 14px 22px; border-radius: 14px; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; }
+    .toc-num { font-size: 19px; font-weight: 900; min-width: 28px; }
+    .toc-white  { background: var(--white); border: 1px solid var(--border); color: var(--black); }
+    .toc-yellow { background: var(--yellow); color: var(--black); }
+    .toc-beige  { background: var(--beige); border: 1px solid #E0D8C0; color: var(--black); }
+    .toc-purple { background: var(--purple-soft); color: var(--black); }
+    .toc-black  { background: var(--black); color: var(--white); }
+
+    /* ════ SECTION DIVIDER ════ */
+    .section-divider-content {
+      display: flex; align-items: center; gap: 40px;
+      width: 100%; max-width: 900px; margin: 0 auto;
+    }
+    .section-num-box {
+      width: 100px; height: 100px;
+      background: var(--yellow); border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 42px; color: var(--black); flex-shrink: 0;
+    }
+    .section-divider-text { display: flex; flex-direction: column; gap: 12px; }
+    .section-divider-title {
+      font-weight: 900; font-size: 48px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.1;
+    }
+    .section-divider-sub { font-weight: 500; font-size: 20px; color: var(--muted); }
+    .section-divider-line { width: 80px; height: 5px; background: var(--yellow); border-radius: 3px; }
+
+    /* ════ CONTENT 2-COL ════ */
+    .content-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; width: 100%; height: 100%; align-items: stretch; }
+    .content-card-left {
+      background: rgba(200,184,240,0.15); border-radius: 24px; padding: 30px 36px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .content-section-label { font-weight: 800; font-size: 16px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .content-h2 {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 34px; line-height: 1.15;
+      letter-spacing: -0.02em; color: var(--black); margin-bottom: 16px;
+      white-space: nowrap;
+    }
+    .content-section-title { font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; margin-top: 12px; }
+    .content-body { font-weight: 500; font-size: 20px; line-height: 1.5; color: var(--text); }
+    .text-underline { text-decoration: underline; text-underline-offset: 4px; }
+    .content-right { display: flex; flex-direction: column; gap: 16px; height: 100%; justify-content: center; }
+
+    /* ════ QUOTE ════ */
+    .quote-content {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; width: 100%; max-width: 900px; margin: 0 auto; gap: 24px;
+    }
+    .quote-mark { font-family: 'Playfair Display', serif; font-size: 80px; color: var(--yellow); line-height: 0.5; }
+    .quote-text {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 44px; font-weight: 700; line-height: 1.3; color: var(--black);
+    }
+    .quote-line { width: 60px; height: 5px; background: var(--yellow); border-radius: 3px; }
+    .quote-label { font-weight: 800; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+    /* ════ COMPARISON ════ */
+    .comparison-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+      width: 100%; height: 100%; align-items: stretch;
+    }
+    .compare-card {
+      border-radius: 24px; padding: 32px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .compare-card.before { background: var(--white); border: 2px solid var(--purple-soft); }
+    .compare-card.after  { background: var(--white); border: 2px solid var(--yellow); box-shadow: 0 8px 24px rgba(223,255,79,0.15); }
+    .compare-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 6px 16px; border-radius: 100px; width: fit-content;
+    }
+    .compare-label.before-label { background: var(--purple-soft); color: var(--black); }
+    .compare-label.after-label  { background: var(--yellow); color: var(--black); }
+    .compare-title { font-weight: 900; font-size: 28px; color: var(--black); text-transform: uppercase; }
+    .compare-body { font-size: 18px; font-weight: 500; color: var(--text); line-height: 1.5; }
+    .compare-rule { font-size: 15px; font-weight: 700; color: var(--label); line-height: 1.45; }
+
+    /* ════ CATALOG GRID ════ */
+    .catalog-wrap { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    .catalog-top { display: flex; flex-direction: column; gap: 6px; }
+    .catalog-title {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 36px; letter-spacing: -0.02em; color: var(--black);
+      white-space: nowrap;
+    }
+    .catalog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .catalog-item {
+      background: var(--white); border: 2px solid var(--border); border-radius: 18px;
+      padding: 18px 22px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .catalog-tag-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .catalog-tag-name {
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+      font-weight: 900; font-size: 20px; color: var(--black);
+    }
+    .catalog-tag-role {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--label); background: var(--bg); padding: 3px 10px; border-radius: 6px;
+    }
+    .catalog-tag-desc { font-size: 16px; font-weight: 500; color: var(--muted); line-height: 1.4; }
+
+    /* ════ EDITOR FRAME ════ */
+    .editor-frame {
+      background: var(--code-bg); border-radius: 14px;
+      border: 1.5px solid #2B2C42; overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .editor-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px; background: #181926; border-bottom: 1px solid #2B2C42;
+    }
+    .editor-dots { display: flex; gap: 6px; align-items: center; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red    { background: #FF5F56; }
+    .dot.yellow { background: #FFBD2E; }
+    .dot.green  { background: #27C93F; }
+    .editor-tab {
+      font-size: 12px; font-weight: 700; color: #8B949E;
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+      letter-spacing: 0.05em;
+    }
+    .code-box {
+      padding: 16px 20px;
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+      font-size: 15px; line-height: 1.6; color: #F0F0FF;
+      white-space: pre; tab-size: 2; overflow-x: auto;
+    }
+    .editor-frame .code-box { border-radius: 0; }
+    .c-tag  { color: #FF7B72; font-weight: bold; }
+    .c-attr { color: #79C0FF; }
+    .c-str  { color: #A5D6FF; }
+    .c-sel  { color: #FFA657; font-weight: bold; }
+    .c-prop { color: #7EE787; }
+    .c-val  { color: #DFFF4F; }
+    .c-com  { color: #8B949E; font-style: italic; }
+
+    /* ════ PHOTO CARD ════ */
+    .photo-card { flex: 1; border-radius: 24px; overflow: hidden; position: relative; min-height: 0; }
+    .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-label {
+      position: absolute; bottom: 16px; left: 16px; background: var(--white);
+      padding: 8px 18px; border-radius: 10px; font-size: 16px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--black);
+    }
+
+    /* ════ TAGS CARD ════ */
+    .tags-card { background: var(--yellow); border-radius: 24px; padding: 26px 32px; flex-shrink: 0; }
+    .tags-label { font-size: 18px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--label); margin-bottom: 14px; }
+    .tags-pills { display: flex; flex-wrap: wrap; gap: 12px; }
+    .tag-pill { background: rgba(255,255,255,0.75); border-radius: 100px; padding: 10px 22px; font-size: 21px; font-weight: 700; color: var(--black); }
+
+    /* ════ GROUP PILL ════ */
+    .group-pill { font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; }
+    .group-pill.bg-purple { background: var(--purple-soft); color: var(--black); }
+    .group-pill.bg-yellow { background: var(--yellow); color: var(--black); }
+    .group-pill.bg-dark   { background: var(--black); color: var(--white); }
+
+    /* ════ INFO CARD ════ */
+    .info-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 20px;
+      padding: 20px 24px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .info-card-title { font-size: 17px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .info-card-body { font-size: 16px; font-weight: 500; line-height: 1.45; color: var(--label); }
+
+    /* ════ PRACTICE ════ */
+    .practice-left {
+      background: rgba(200,184,240,0.15); border-radius: 24px; padding: 30px 36px;
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+    .step-badge-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .step-badge {
+      display: flex; align-items: center; gap: 12px; background: var(--white);
+      border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 20px; width: 100%;
+    }
+    .step-num {
+      width: 38px; height: 38px; background: var(--black); color: var(--white);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 18px; flex-shrink: 0;
+    }
+    .step-text { font-size: 18px; font-weight: 700; color: var(--black); }
+    .checklist-col { display: flex; flex-direction: column; gap: 12px; height: 100%; justify-content: center; }
+    .check-item {
+      background: var(--white); border: 2px solid var(--border); border-radius: 18px;
+      padding: 16px 22px; display: flex; align-items: center; gap: 18px; transition: transform 0.2s;
+    }
+    .check-item:hover { transform: translateX(6px); }
+    .check-icon {
+      width: 36px; height: 36px; border-radius: 10px; background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 18px; flex-shrink: 0;
+    }
+    .check-text { font-size: 18px; font-weight: 700; color: var(--black); }
+    .check-sub  { font-size: 15px; font-weight: 500; color: var(--label); margin-top: 2px; }
+
+    /* ════ WIREFRAME CARD ════ */
+    .wireframe-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 24px;
+      padding: 30px; display: flex; flex-direction: column; gap: 14px; height: 100%; justify-content: center;
+    }
+    .wireframe-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 12px; border-bottom: 2px dashed var(--border);
+    }
+    .wireframe-row {
+      display: flex; align-items: center; gap: 16px; padding: 10px 18px;
+      border-radius: 14px; border: 1.5px dashed var(--border); background: var(--bg);
+    }
+    .wireframe-tag {
+      font-family: 'SF Mono', Consolas, monospace; font-weight: 900; font-size: 17px;
+      background: var(--yellow); padding: 4px 12px; border-radius: 8px; color: var(--black); flex-shrink: 0;
+    }
+    .wireframe-info { font-size: 17px; font-weight: 700; color: var(--black); }
+    .wireframe-sub  { font-size: 14px; font-weight: 500; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+
+    <!-- ══════════════════════════════
+         SLIDE 1 — TITLE
+    ══════════════════════════════ -->
+    <div class="slide s-title active" data-index="0">
+      <div class="deco-circles">
+        <div class="deco-circle-lg"></div>
+        <div class="deco-circle-sm"></div>
+      </div>
+      <div class="title-top">
+        <div class="title-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="title-brand-name">ВЕБ-КУРС</div>
+            <div class="title-brand-sub">ОСНОВЫ РАЗРАБОТКИ</div>
+          </div>
+        </div>
+        <div>
+          <div class="title-date-label">ФОРМАТ ОБУЧЕНИЯ</div>
+          <div class="title-date-val">ПРАКТИЧЕСКИЙ КУРС</div>
+        </div>
+      </div>
+      <div class="title-center">
+        <div class="title-badge">ФОРМЫ И ВВОД ДАННЫХ</div>
+        <div class="title-main-line">HTML</div>
+        <div class="accent-lines-row">
+          <div class="accent-line"></div>
+          <div class="title-italic-line">формы</div>
+          <div class="accent-line"></div>
+        </div>
+        <div class="title-third-line">И ПОЛЯ ВВОДА</div>
+        <div class="title-subtitle">Учимся получать данные от пользователя</div>
+      </div>
+      <div class="title-bottom">
+        <div>
+          <div class="title-id-label">ID КУРСА</div>
+          <div class="title-id-val">WEB-HTML-DEV</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <div>
+            <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+            <div class="title-slogan-accents">
+              <div class="slogan-dash"></div>
+              <div class="slogan-dash-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 2 — TABLE OF CONTENTS
+    ══════════════════════════════ -->
+    <div class="slide" data-index="1">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · HTML-ФОРМЫ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="toc-wrap">
+          <div class="toc-heading">
+            <div class="burger" style="gap:5px;"><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span></div>
+            СОДЕРЖАНИЕ УРОКА
+          </div>
+          <div class="toc-grid">
+            <div class="toc-item toc-white"><span class="toc-num">01</span> Зачем нужны формы</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">02</span> Тег &lt;form&gt; — контейнер</div>
+            <div class="toc-item toc-white"><span class="toc-num">03</span> &lt;input&gt; и &lt;label&gt; — связка</div>
+            <div class="toc-item toc-beige"><span class="toc-num">04</span> Типы полей: password, email, tel</div>
+            <div class="toc-item toc-purple"><span class="toc-num">05</span> Checkbox и Radio</div>
+            <div class="toc-item toc-white"><span class="toc-num">06</span> Textarea и Select</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">07</span> Отправка и валидация</div>
+            <div class="toc-item toc-black"><span class="toc-num">08</span> Практика: форма кинотеатра</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ОСНОВЫ HTML</span>
+        <span>СТРАНИЦА 02 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 3 — SECTION DIVIDER: ФОРМЫ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="2">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ВВЕДЕНИЕ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="section-divider-content">
+          <div class="section-num-box">01</div>
+          <div class="section-divider-text">
+            <div class="section-divider-title">ЗАЧЕМ<br/>НУЖНЫ ФОРМЫ</div>
+            <div class="section-divider-line"></div>
+            <div class="section-divider-sub">От «показываем» информацию к «получаем» её от пользователя</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 03 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 4 — CONTENT: МЕТАФОРА + <form>
+    ══════════════════════════════ -->
+    <div class="slide" data-index="3">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ТЕГ FORM</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">НОВАЯ КОНЦЕПЦИЯ</div>
+            <div class="content-h2">Тег &lt;form&gt;</div>
+            <div class="content-section-title">МЕТАФОРА</div>
+            <div class="content-body"><span class="text-underline">Почтовый конверт</span> — оборачивает все поля в единую «посылку» для отправки на сервер.</div>
+            <div class="content-section-title">АТРИБУТЫ</div>
+            <div class="content-body"><span class="text-underline">action</span> — куда летит посылка. <span class="text-underline">method</span> — как упакована (GET / POST).</div>
+            <!-- HTTP - это сетевой протокол -->
+            <div style="margin-top:14px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:14px;color:var(--label);background:rgba(255,255,255,0.7);padding:6px 14px;border-radius:8px;display:inline-block;">
+              &lt;!-- HTTP — это сетевой протокол --&gt;
+            </div>
+          </div>
+          <div class="content-right">
+            <div class="photo-card">
+              <img src="./img/hero-forms.jpg" alt="Форма регистрации на экране"/>
+              <div class="photo-label">ФОРМЫ ВВОДА</div>
+            </div>
+            <div class="tags-card">
+              <div class="tags-label">КЛЮЧЕВЫЕ ТЕГИ УРОКА</div>
+              <div class="tags-pills">
+                <span class="tag-pill">&lt;form&gt;</span>
+                <span class="tag-pill">&lt;input&gt;</span>
+                <span class="tag-pill">&lt;label&gt;</span>
+                <span class="tag-pill">&lt;button&gt;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 04 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 5 — CONTENT: <input> + <label>
+    ══════════════════════════════ -->
+    <div class="slide" data-index="4">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · INPUT И LABEL</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">ВВОД ДАННЫХ</div>
+            <div class="content-h2">&lt;input&gt; и &lt;label&gt;</div>
+            <div class="content-section-title">ОДИНОЧНЫЙ ТЕГ</div>
+            <div class="content-body"><span class="text-underline">&lt;input&gt; — непарный</span>, без закрывающего тега. Вы уже знаете это со 2-го урока!</div>
+            <div class="content-section-title">СВЯЗКА FOR ↔ ID</div>
+            <div class="content-body">Нажимаете на текст метки — <span class="text-underline">курсор сам прыгает в поле</span>. Это и есть доступность.</div>
+          </div>
+          <div class="content-right">
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <span class="editor-tab">index.html</span>
+              </div>
+              <div class="code-box"><span class="c-tag">&lt;form&gt;</span>
+
+  <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"username"</span><span class="c-tag">&gt;</span>Имя:<span class="c-tag">&lt;/label&gt;</span>
+  <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"text"</span>
+         <span class="c-attr">id</span>=<span class="c-str">"username"</span>
+         <span class="c-attr">placeholder</span>=<span class="c-str">"Введите имя"</span><span class="c-tag">&gt;</span>
+
+<span class="c-tag">&lt;/form&gt;</span></div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">PLACEHOLDER vs VALUE</div>
+              <div class="info-card-body">placeholder — серая подсказка, исчезает при вводе. value — реальное значение поля.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 05 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 6 — QUOTE
+    ══════════════════════════════ -->
+    <div class="slide" data-index="5">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ДОСТУПНОСТЬ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="quote-content">
+          <div class="quote-mark">«</div>
+          <div class="quote-text">Каждому полю —<br/>свою метку &lt;label&gt;</div>
+          <div class="quote-line"></div>
+          <div class="quote-label">ЗОЛОТОЕ ПРАВИЛО ДОСТУПНОСТИ</div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 06 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 7 — SECTION DIVIDER: ТИПЫ ПОЛЕЙ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="6">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ТИПЫ INPUT</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="section-divider-content">
+          <div class="section-num-box">02</div>
+          <div class="section-divider-text">
+            <div class="section-divider-title">ТИПЫ ПОЛЕЙ<br/>И УМНЫЙ БРАУЗЕР</div>
+            <div class="section-divider-line"></div>
+            <div class="section-divider-sub">Одно слово в type — и поле меняет всё поведение</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 07 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 8 — CATALOG: ТИПЫ INPUT
+    ══════════════════════════════ -->
+    <div class="slide" data-index="7">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · КАТАЛОГ ТИПОВ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="catalog-wrap">
+          <div class="catalog-top">
+            <div class="content-section-label">ЗАМЕНА ОДНОГО СЛОВА В TYPE</div>
+            <div class="catalog-title">Типы полей &lt;input&gt;</div>
+          </div>
+          <div class="catalog-grid">
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">password</span>
+                <span class="catalog-tag-role">БЕЗОПАСНОСТЬ</span>
+              </div>
+              <div class="catalog-tag-desc">Скрывает символы точками</div>
+            </div>
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">email</span>
+                <span class="catalog-tag-role">ПРОВЕРКА</span>
+              </div>
+              <div class="catalog-tag-desc">Браузер ищет @ и домен</div>
+            </div>
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">tel</span>
+                <span class="catalog-tag-role">МОБИЛЬНЫЙ</span>
+              </div>
+              <div class="catalog-tag-desc">Цифровая клавиатура на телефоне</div>
+            </div>
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">number</span>
+                <span class="catalog-tag-role">ТОЛЬКО ЧИСЛА</span>
+              </div>
+              <div class="catalog-tag-desc">Возраст, количество, цена</div>
+            </div>
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">color</span>
+                <span class="catalog-tag-role">ПАЛИТРА</span>
+              </div>
+              <div class="catalog-tag-desc">Открывает выбор цвета</div>
+            </div>
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">date</span>
+                <span class="catalog-tag-role">КАЛЕНДАРЬ</span>
+              </div>
+              <div class="catalog-tag-desc">Встроенный выбор даты</div>
+            </div>
+          </div>
+          <div style="background:var(--yellow);border-radius:16px;padding:12px 20px;display:flex;align-items:center;gap:14px;">
+            <span class="group-pill bg-dark" style="font-size:12px;padding:4px 12px;">СОВЕТ</span>
+            <div style="font-size:16px;font-weight:700;color:var(--black);">
+              Всё это работает без единой строчки JavaScript — браузер делает всё сам!
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 08 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 9 — COMPARISON: CHECKBOX vs RADIO
+    ══════════════════════════════ -->
+    <div class="slide" data-index="8">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ВЫБОР ВАРИАНТОВ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="comparison-grid">
+          <!-- CHECKBOX -->
+          <div class="compare-card before">
+            <div class="compare-label before-label">CHECKBOX · ФЛАЖОК</div>
+            <div class="compare-title">Сколько угодно</div>
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <span class="editor-tab">index.html</span>
+              </div>
+              <div class="code-box"><span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"checkbox"</span>
+       <span class="c-attr">id</span>=<span class="c-str">"html"</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"html"</span><span class="c-tag">&gt;</span>HTML<span class="c-tag">&lt;/label&gt;</span>
+
+<span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"checkbox"</span>
+       <span class="c-attr">id</span>=<span class="c-str">"css"</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"css"</span><span class="c-tag">&gt;</span>CSS<span class="c-tag">&lt;/label&gt;</span></div>
+            </div>
+            <div class="compare-rule">Список покупок — берёте всё, что нужно</div>
+          </div>
+          <!-- RADIO -->
+          <div class="compare-card after">
+            <div class="compare-label after-label">RADIO · ПЕРЕКЛЮЧАТЕЛЬ</div>
+            <div class="compare-title">Строго один</div>
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <span class="editor-tab">index.html</span>
+              </div>
+              <div class="code-box"><span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"radio"</span>
+       <span class="c-attr">name</span>=<span class="c-str">"size"</span> <span class="c-attr">id</span>=<span class="c-str">"s"</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"s"</span><span class="c-tag">&gt;</span>S<span class="c-tag">&lt;/label&gt;</span>
+
+<span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"radio"</span>
+       <span class="c-attr">name</span>=<span class="c-str">"size"</span> <span class="c-attr">id</span>=<span class="c-str">"m"</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"m"</span><span class="c-tag">&gt;</span>M<span class="c-tag">&lt;/label&gt;</span></div>
+            </div>
+            <div class="compare-rule">Старое радио — одна станция, остальные выключаются. Ключ: одинаковый <strong>name</strong>!</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 09 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 10 — CONTENT: TEXTAREA + SELECT
+    ══════════════════════════════ -->
+    <div class="slide" data-index="9">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · TEXTAREA И SELECT</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">РАСШИРЕННЫЕ ЭЛЕМЕНТЫ</div>
+            <div class="content-h2">Текст и списки</div>
+            <div class="content-section-title">TEXTAREA</div>
+            <div class="content-body"><span class="text-underline">Парный тег</span> — многострочное поле. Для отзывов, комментариев, адреса доставки.</div>
+            <div class="content-section-title">SELECT + OPTION</div>
+            <div class="content-body"><span class="text-underline">Выпадающий список</span> — выбор города, страны, тарифа. Компактнее, чем пачка radio.</div>
+          </div>
+          <div class="content-right">
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <span class="editor-tab">index.html</span>
+              </div>
+              <div class="code-box"><span class="c-com">&lt;!-- Многострочное поле --&gt;</span>
+<span class="c-tag">&lt;textarea</span> <span class="c-attr">id</span>=<span class="c-str">"msg"</span>
+  <span class="c-attr">placeholder</span>=<span class="c-str">"Ваш отзыв..."</span><span class="c-tag">&gt;</span>
+<span class="c-tag">&lt;/textarea&gt;</span>
+
+<span class="c-com">&lt;!-- Выпадающий список --&gt;</span>
+<span class="c-tag">&lt;select</span> <span class="c-attr">id</span>=<span class="c-str">"city"</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;option&gt;</span>Москва<span class="c-tag">&lt;/option&gt;</span>
+  <span class="c-tag">&lt;option&gt;</span>Алматы<span class="c-tag">&lt;/option&gt;</span>
+  <span class="c-tag">&lt;option&gt;</span>Ташкент<span class="c-tag">&lt;/option&gt;</span>
+<span class="c-tag">&lt;/select&gt;</span></div>
+            </div>
+            <div style="background:var(--purple-soft);border-radius:18px;padding:16px 22px;">
+              <div style="font-size:13px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--black);margin-bottom:4px;">ЗАПОМНИТЕ</div>
+              <div style="font-size:17px;font-weight:700;color:var(--black);line-height:1.4;">&lt;textarea&gt; — <u>парный</u> тег (с закрывающим). &lt;input&gt; — <u>одиночный</u>.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 10 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 11 — SECTION DIVIDER: ОТПРАВКА
+    ══════════════════════════════ -->
+    <div class="slide" data-index="10">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ФИНАЛ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="section-divider-content">
+          <div class="section-num-box">03</div>
+          <div class="section-divider-text">
+            <div class="section-divider-title">ОТПРАВКА<br/>И СТИЛИЗАЦИЯ</div>
+            <div class="section-divider-line"></div>
+            <div class="section-divider-sub">Кнопка submit, атрибут required и базовый CSS</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 11 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 12 — CONTENT: SUBMIT + REQUIRED
+    ══════════════════════════════ -->
+    <div class="slide" data-index="11">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ОТПРАВКА</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">ЗАВЕРШЕНИЕ ФОРМЫ</div>
+            <div class="content-h2">Кнопка и проверка</div>
+            <div class="content-section-title">BUTTON SUBMIT</div>
+            <div class="content-body">Кнопка отправки — <span class="text-underline">собирает все поля и отправляет</span> форму целиком.</div>
+            <div class="content-section-title">REQUIRED — МАГИЯ HTML5</div>
+            <div class="content-body">Браузер <span class="text-underline">сам не даст отправить пустое поле</span> и покажет предупреждение. Без JavaScript!</div>
+          </div>
+          <div class="content-right">
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <span class="editor-tab">index.html</span>
+              </div>
+              <div class="code-box"><span class="c-tag">&lt;form&gt;</span>
+
+  <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"email"</span><span class="c-tag">&gt;</span>Email:<span class="c-tag">&lt;/label&gt;</span>
+  <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"email"</span>
+         <span class="c-attr">id</span>=<span class="c-str">"email"</span>
+         <span class="c-attr">required</span><span class="c-tag">&gt;</span>
+
+  <span class="c-tag">&lt;button</span> <span class="c-attr">type</span>=<span class="c-str">"submit"</span><span class="c-tag">&gt;</span>
+    Отправить
+  <span class="c-tag">&lt;/button&gt;</span>
+
+<span class="c-tag">&lt;/form&gt;</span></div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">ЧТО ДЕЛАЕТ REQUIRED</div>
+              <div class="info-card-body">Попробуйте нажать «Отправить» с пустым полем — браузер покажет: «Заполните это поле».</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 12 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 13 — CONTENT: CSS СТИЛИЗАЦИЯ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="12">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · CSS ФОРМЫ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">ТОЛЬКО ПРОЙДЕННЫЕ СВОЙСТВА</div>
+            <div class="content-h2">Стилизация формы</div>
+            <div class="content-section-title">ЧТО МОЖЕМ ИСПОЛЬЗОВАТЬ</div>
+            <div class="content-body" style="font-size:18px;">
+              <span class="text-underline">width</span> и <span class="text-underline">height</span> — размеры полей.<br/>
+              <span class="text-underline">border</span> и <span class="text-underline">border-radius</span> — рамка и скругление.<br/>
+              <span class="text-underline">background</span> — фон кнопки и полей.<br/>
+              <span class="text-underline">color</span>, <span class="text-underline">font-size</span>, <span class="text-underline">font-weight</span> — текст.
+            </div>
+          </div>
+          <div class="content-right">
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <span class="editor-tab">style.css</span>
+              </div>
+              <div class="code-box"><span class="c-sel">input</span> {
+  <span class="c-prop">width</span>: <span class="c-val">100%</span>;
+  <span class="c-prop">height</span>: <span class="c-val">40px</span>;
+  <span class="c-prop">border</span>: <span class="c-val">2px solid #ccc</span>;
+  <span class="c-prop">border-radius</span>: <span class="c-val">8px</span>;
+  <span class="c-prop">font-size</span>: <span class="c-val">16px</span>;
+}
+
+<span class="c-sel">button</span> {
+  <span class="c-prop">background</span>: <span class="c-val">#0A0A0A</span>;
+  <span class="c-prop">color</span>: <span class="c-val">#FFFFFF</span>;
+  <span class="c-prop">border</span>: <span class="c-val">none</span>;
+  <span class="c-prop">border-radius</span>: <span class="c-val">10px</span>;
+  <span class="c-prop">font-size</span>: <span class="c-val">18px</span>;
+  <span class="c-prop">font-weight</span>: <span class="c-val">700</span>;
+}</div>
+            </div>
+            <div style="background:var(--beige);border-radius:18px;padding:16px 22px;">
+              <div style="font-size:13px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--label);margin-bottom:4px;">ВАЖНО</div>
+              <div style="font-size:17px;font-weight:700;color:var(--black);line-height:1.4;">padding и margin мы изучим позже — пока обходимся без них!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
+        <span>СТРАНИЦА 13 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 14 — PRACTICE: СОВМЕСТНАЯ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="13">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">СОВМЕСТНАЯ ПРАКТИКА</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ПРАКТИКУМ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="practice-left">
+            <div>
+              <div class="content-section-label">ДЕЛАЕМ ВМЕСТЕ</div>
+              <div class="content-h2" style="font-size:26px;margin-bottom:14px;">Регистрация в кинотеатре</div>
+              <div class="content-body" style="font-size:19px;line-height:1.5;">
+                Сейчас мы вместе создадим форму входа в онлайн-кинотеатр. Свяжем все изученные теги воедино!
+              </div>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">ПЛАН ДЕЙСТВИЙ:</div>
+              <div class="step-badge-row">
+                <div class="step-badge">
+                  <div class="step-num">1</div>
+                  <div class="step-text">Создаём &lt;form&gt; и добавляем &lt;input&gt; для логина и email</div>
+                </div>
+                <div class="step-badge">
+                  <div class="step-num">2</div>
+                  <div class="step-text">Добавляем type=&quot;password&quot; и галочку «Запомнить меня»</div>
+                </div>
+                <div class="step-badge">
+                  <div class="step-num">3</div>
+                  <div class="step-text">Ставим required и кнопку &lt;button type=&quot;submit&quot;&gt;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wireframe-card">
+            <div class="wireframe-header">
+              <span class="group-pill bg-yellow">АНАТОМИЯ ФОРМЫ</span>
+              <span style="font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;">Макет страницы</span>
+            </div>
+            <div class="wireframe-row">
+              <span class="wireframe-tag">&lt;form&gt;</span>
+              <div>
+                <div class="wireframe-info">Контейнер всей формы</div>
+                <div class="wireframe-sub">Оборачивает все поля</div>
+              </div>
+            </div>
+            <div class="wireframe-row">
+              <span class="wireframe-tag">&lt;input text&gt;</span>
+              <div>
+                <div class="wireframe-info">Логин / имя пользователя</div>
+                <div class="wireframe-sub">label + input + placeholder</div>
+              </div>
+            </div>
+            <div class="wireframe-row">
+              <span class="wireframe-tag">&lt;input email&gt;</span>
+              <div>
+                <div class="wireframe-info">Адрес электронной почты</div>
+                <div class="wireframe-sub">Браузер проверит @ автоматически</div>
+              </div>
+            </div>
+            <div class="wireframe-row">
+              <span class="wireframe-tag">&lt;input pass&gt;</span>
+              <div>
+                <div class="wireframe-info">Пароль (скрыт точками)</div>
+                <div class="wireframe-sub">type="password" + required</div>
+              </div>
+            </div>
+            <div class="wireframe-row">
+              <span class="wireframe-tag">&lt;checkbox&gt;</span>
+              <div>
+                <div class="wireframe-info">«Запомнить меня»</div>
+                <div class="wireframe-sub">Галочка + label</div>
+              </div>
+            </div>
+            <div class="wireframe-row">
+              <span class="wireframe-tag">&lt;button&gt;</span>
+              <div>
+                <div class="wireframe-info">Войти</div>
+                <div class="wireframe-sub">type="submit" — отправка формы</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СОВМЕСТНАЯ ПРАКТИКА</span>
+        <span>СТРАНИЦА 14 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 15 — PRACTICE: САМОСТОЯТЕЛЬНАЯ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="14">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">САМОСТОЯТЕЛЬНАЯ РАБОТА</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 4 · ПРАКТИКУМ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="practice-left" style="background:rgba(223,255,79,0.25);">
+            <div>
+              <div class="content-section-label">ВАША ОЧЕРЕДЬ</div>
+              <div class="content-h2" style="font-size:34px;margin-bottom:14px;">Заказ пиццы</div>
+              <div class="content-body" style="font-size:19px;line-height:1.5;">
+                А теперь ваша очередь! Создайте форму заказа пиццы в вашей любимой пиццерии.
+              </div>
+            </div>
+            <div style="background:var(--white);border:2px solid var(--border);border-radius:20px;padding:24px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                <span class="group-pill bg-yellow" style="font-size:13px;">ТАЙМИНГ: 15–20 МИНУТ</span>
+                <span style="font-size:14px;font-weight:800;color:var(--black);text-transform:uppercase;">БЕЗ ПОДСКАЗОК</span>
+              </div>
+              <div style="font-size:17px;font-weight:600;color:var(--text);line-height:1.45;">
+                Ваша цель: применить все пройденные теги форм и увидеть результат в браузере!
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-col">
+            <div class="check-item">
+              <div class="check-icon">1</div>
+              <div>
+                <div class="check-text">Имя и телефон через &lt;input&gt;</div>
+                <div class="check-sub">type="text" и type="tel" + label для каждого</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">2</div>
+              <div>
+                <div class="check-text">Размер пиццы через &lt;input type="radio"&gt;</div>
+                <div class="check-sub">S / M / L — одинаковый name="size" у всей группы</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">3</div>
+              <div>
+                <div class="check-text">Начинки через &lt;input type="checkbox"&gt;</div>
+                <div class="check-sub">Грибы, пепперони, оливки — выбирайте сколько угодно</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">4</div>
+              <div>
+                <div class="check-text">Адрес доставки через &lt;textarea&gt;</div>
+                <div class="check-sub">Многострочное поле для полного адреса</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">5</div>
+              <div>
+                <div class="check-text">Кнопка «Заказать» + required</div>
+                <div class="check-sub">&lt;button type="submit"&gt; и обязательные поля</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · САМОСТОЯТЕЛЬНАЯ РАБОТА</span>
+        <span>СТРАНИЦА 15 / 15</span>
+      </footer>
+    </div>
+
+  </div><!-- /viewport -->
+
+  <!-- Navigation -->
+  <div class="nav-bar">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <circle cx="11" cy="11" r="2.5" fill="currentColor"></circle>
+      </svg>
+    </button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
+  </div>
+
+  <!-- Loupe -->
+  <div id="magnifierLens" class="magnifier-lens">
+    <div id="magnifierInner" class="magnifier-inner"></div>
+  </div>
+
+  <script>
+    const slides  = document.querySelectorAll('.slide');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const total   = slides.length;
+    let current   = 0;
+
+    function goTo(index) {
+      if (index < 0 || index >= total) return;
+      const dir = index > current ? 1 : -1;
+      const prev = current;
+
+      slides[prev].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      slides[prev].style.opacity = '0';
+      slides[prev].style.transform = dir > 0 ? 'translateX(-80px)' : 'translateX(80px)';
+      slides[prev].classList.remove('active');
+
+      setTimeout(() => {
+        slides[prev].style.transition = '';
+        slides[prev].style.transform  = 'translateX(80px)';
+        slides[prev].style.opacity    = '';
+      }, 420);
+
+      current = index;
+      slides[current].style.transition = '';
+      slides[current].style.transform  = dir > 0 ? 'translateX(80px)' : 'translateX(-80px)';
+      slides[current].style.opacity    = '0';
+      slides[current].classList.add('active');
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        slides[current].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+        slides[current].style.transform  = 'translateX(0)';
+        slides[current].style.opacity    = '1';
+      }));
+
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+
+      if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    /* ── LOUPE / MAGNIFIER ── */
+    const lens = document.getElementById('magnifierLens');
+    const magnifierInner = document.getElementById('magnifierInner');
+    const btnLoupe = document.getElementById('btnLoupe');
+    const navBar = document.querySelector('.nav-bar');
+
+    let isLoupeActive = false;
+    const loupeRadius = 45;
+    const loupeZoom = 2.0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let rafId = null;
+
+    function syncLoupeSlide() {
+      if (!isLoupeActive) return;
+      const activeSlide = slides[current];
+      magnifierInner.style.width = window.innerWidth + 'px';
+      magnifierInner.style.height = window.innerHeight + 'px';
+      magnifierInner.innerHTML = `
+        <div class="${activeSlide.className}" style="opacity:1 !important;transform:none !important;position:absolute;inset:0;pointer-events:none;">
+          ${activeSlide.innerHTML}
+        </div>
+      `;
+    }
+
+    function updateLoupeTransform() {
+      rafId = null;
+      if (!isLoupeActive) return;
+      lens.style.transform = `translate3d(${mouseX - loupeRadius}px, ${mouseY - loupeRadius}px, 0)`;
+      magnifierInner.style.transformOrigin = `${mouseX}px ${mouseY}px`;
+      const tx = loupeRadius - mouseX;
+      const ty = loupeRadius - mouseY;
+      magnifierInner.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${loupeZoom})`;
+    }
+
+    function toggleMagnifier() {
+      isLoupeActive = !isLoupeActive;
+      if (isLoupeActive) {
+        document.body.classList.add('magnifier-mode');
+        btnLoupe.classList.add('active');
+        lens.classList.add('active');
+        lens.style.display = 'block';
+        syncLoupeSlide();
+        updateLoupeTransform();
+      } else {
+        document.body.classList.remove('magnifier-mode');
+        btnLoupe.classList.remove('active');
+        lens.classList.remove('active');
+        lens.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (isLoupeActive && !rafId) {
+        rafId = requestAnimationFrame(updateLoupeTransform);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (isLoupeActive) syncLoupeSlide();
+    });
+
+    navBar.addEventListener('mouseenter', () => {
+      if (isLoupeActive) lens.style.display = 'none';
+    });
+    navBar.addEventListener('mouseleave', () => {
+      if (isLoupeActive) lens.style.display = 'block';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z') {
+        toggleMagnifier();
+      }
+      if (e.key === 'Escape' && isLoupeActive) {
+        toggleMagnifier();
+      }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+    });
+  </script>
+<script src="/mobile-block.js"></script>
+</body>
+</html>
