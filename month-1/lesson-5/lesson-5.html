@@ -369,6 +369,56 @@
     }
     .check-text { font-size: 18px; font-weight: 700; color: var(--black); }
     .check-sub  { font-size: 15px; font-weight: 500; color: var(--label); margin-top: 2px; }
+
+    /* ════ A11Y / ACCESSIBILITY SLIDE ════ */
+    .a11y-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+      width: 100%; height: 100%; align-items: stretch;
+    }
+    .a11y-col {
+      display: flex; flex-direction: column; gap: 10px; height: 100%; justify-content: center;
+    }
+    .a11y-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 18px;
+      padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .a11y-card-title {
+      font-size: 15px; font-weight: 800; letter-spacing: 0.03em;
+      text-transform: uppercase; color: var(--black); display: flex; align-items: center; justify-content: space-between;
+    }
+    .a11y-card-body {
+      font-size: 13.5px; font-weight: 500; line-height: 1.45; color: var(--text);
+    }
+    .a11y-pill-row {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px;
+    }
+    .a11y-pill {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 6px; background: var(--bg); color: var(--label);
+    }
+    .a11y-audio-contrast {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;
+    }
+    .a11y-audio-item {
+      padding: 8px 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 3px;
+    }
+    .a11y-audio-item.bad {
+      background: #FFF2F2; border: 1.5px solid #FFD4D4;
+    }
+    .a11y-audio-item.good {
+      background: #F2FFF0; border: 1.5px solid #D1F7CA;
+    }
+    .a11y-audio-tag {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .a11y-audio-item.bad .a11y-audio-tag { color: #C92A2A; }
+    .a11y-audio-item.good .a11y-audio-tag { color: #2B8A3E; }
+    .a11y-audio-speech {
+      font-size: 13.5px; font-weight: 700; color: var(--black); font-family: 'SF Mono', monospace;
+    }
+    .a11y-audio-desc {
+      font-size: 11.5px; font-weight: 500; color: var(--label); line-height: 1.35;
+    }
   </style>
 </head>
 <body>
@@ -454,7 +504,7 @@
             <div class="toc-item toc-white"><span class="toc-num">03</span> Координатная сетка и доступность</div>
             <div class="toc-item toc-beige"><span class="toc-num">04</span> Словарь тегов: английские корни</div>
             <div class="toc-item toc-purple"><span class="toc-num">05</span> Базовый синтаксис и разметка в коде</div>
-            <div class="toc-item toc-white"><span class="toc-num">06</span> Семантика: thead, tbody, tfoot</div>
+            <div class="toc-item toc-white"><span class="toc-num">06</span> Семантика и a11y: thead, tbody, scope</div>
             <div class="toc-item toc-yellow"><span class="toc-num">07</span> Объединение ячеек: colspan и rowspan</div>
             <div class="toc-item toc-black"><span class="toc-num">08</span> Практикум: расписание киносеансов</div>
           </div>
@@ -462,7 +512,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 02 / 14</span>
+        <span>СТРАНИЦА 02 / 15</span>
       </footer>
     </div>
 
@@ -489,7 +539,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 03 / 14</span>
+        <span>СТРАНИЦА 03 / 15</span>
       </footer>
     </div>
 
@@ -571,7 +621,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 04 / 14</span>
+        <span>СТРАНИЦА 04 / 15</span>
       </footer>
     </div>
 
@@ -614,7 +664,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 05 / 14</span>
+        <span>СТРАНИЦА 05 / 15</span>
       </footer>
     </div>
 
@@ -660,7 +710,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 06 / 14</span>
+        <span>СТРАНИЦА 06 / 15</span>
       </footer>
     </div>
 
@@ -687,7 +737,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 07 / 14</span>
+        <span>СТРАНИЦА 07 / 15</span>
       </footer>
     </div>
 
@@ -785,7 +835,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 08 / 14</span>
+        <span>СТРАНИЦА 08 / 15</span>
       </footer>
     </div>
 
@@ -846,7 +896,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 09 / 14</span>
+        <span>СТРАНИЦА 09 / 15</span>
       </footer>
     </div>
 
@@ -869,12 +919,7 @@
             <div class="content-body">
               Как в веб-странице есть header, main и footer, так и в таблице выделяют 3 понятные части.
             </div>
-            <div class="content-section-title">Зачем делить таблицу:</div>
-            <div class="content-body" style="font-size:18px;line-height:1.55;">
-              • <strong>Шапка не теряется:</strong> когда вы листаете длинный список, названия колонок всегда перед глазами.<br/>
-              • <strong>Итоги не путаются:</strong> строка «Итого» не перемешается со строками обычных товаров.<br/>
-              • <strong>Порядок для браузера:</strong> легко оформлять стилями шапку, тело и подвал по отдельности.
-            </div>
+            
             <div style="margin-top:auto;padding:12px 16px;background:var(--white);border-radius:12px;border-left:5px solid var(--black);">
               <div style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">ПРАКТИЧЕСКИЙ ШАГ</div>
               <div style="font-size:15px;font-weight:700;color:var(--black);line-height:1.35;">
@@ -912,7 +957,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 10 / 14</span>
+        <span>СТРАНИЦА 10 / 15</span>
       </footer>
     </div>
 
@@ -997,14 +1042,160 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 11 / 14</span>
+        <span>СТРАНИЦА 11 / 15</span>
       </footer>
     </div>
 
     <!-- ══════════════════════════════
-         SLIDE 12 — COLSPAN И ROWSPAN
+         SLIDE 12 — ВЕБ-ДОСТУПНОСТЬ И СКРИНРИДЕРЫ
     ══════════════════════════════ -->
     <div class="slide" data-index="11">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · ВЕБ-ДОСТУПНОСТЬ (A11Y)</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="a11y-grid">
+
+          <!-- Левая колонка: Что такое скринридеры + Визуальная vs Семантическая вёрстка -->
+          <div class="a11y-col">
+            <div style="margin-bottom:2px;">
+              <div class="content-section-label">ИНКЛЮЗИВНЫЙ ВЕБ · A11Y</div>
+              <div class="content-h2">Скринридеры и вёрстка</div>
+            </div>
+
+            <!-- Блок 1: Что такое скринридер -->
+            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);">
+              <div class="a11y-card-title">
+                <span>1. Что такое Скринридер (Screen Reader)?</span>
+                <span class="group-pill bg-purple" style="font-size:11px;padding:3px 10px;">ГОЛОС САЙТА</span>
+              </div>
+              <div class="a11y-card-body">
+                Специальная программа экранного доступа для незрячих и слабовидящих людей. Читает <strong>HTML-дерево</strong> сайта и озвучивает его синтезатором речи в наушники.
+              </div>
+              <div class="a11y-pill-row">
+                <span class="a11y-pill">VoiceOver (Mac/iOS)</span>
+                <span class="a11y-pill">NVDA (Windows)</span>
+                <span class="a11y-pill">TalkBack (Android)</span>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--label);margin-top:2px;">
+                ⌨ Управление только с клавиатуры: клавиша Tab, стрелки и шорткаты — мышь не используется!
+              </div>
+            </div>
+
+            <!-- Блок 2: Два типа верстки -->
+            <div class="a11y-card" style="border-left:5px solid var(--yellow);">
+              <div class="a11y-card-title">
+                <span>2. Визуальная vs Семантическая вёрстка</span>
+                <span class="group-pill bg-yellow" style="font-size:11px;padding:3px 10px;">КОНТРАСТ</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px;">
+                <div style="background:var(--bg);border-radius:10px;padding:10px 12px;">
+                  <div style="font-size:13px;font-weight:800;color:var(--black);">Визуальная (CSS)</div>
+                  <div style="font-size:12px;font-weight:500;color:var(--label);margin-top:3px;line-height:1.4;">
+                    Красиво для глаз зрячего: цвета, шрифты, отступы. <strong>Скринридер полностью игнорирует CSS-стили!</strong>
+                  </div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:10px 12px;">
+                  <div style="font-size:13px;font-weight:800;color:var(--black);">Семантическая (HTML)</div>
+                  <div style="font-size:12px;font-weight:500;color:var(--label);margin-top:3px;line-height:1.4;">
+                    Понятная структура для роботов. Если верстать без семантики — в наушниках пользователя будет <strong>«каша»</strong>.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Блок 4: Базовые правила вне таблиц -->
+            <div class="a11y-card" style="border-left:5px solid var(--black);padding:12px 18px;">
+              <div class="a11y-card-title" style="font-size:13.5px;">
+                <span>4. Базовые правила доступности в HTML:</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:600;color:var(--text);">
+                <div>• <strong>Картинки &lt;img&gt;:</strong> всегда заполняйте <code>alt="..."</code> — без описания скринридер не сможет её озвучить.</div>
+                <div>• <strong>Кнопки и ссылки:</strong> используйте <code>&lt;button&gt;</code> и <code>&lt;a&gt;</code>, а не <code>&lt;div onclick&gt;</code> (для фокуса клавишей Tab).</div>
+                <div>• <strong>Ориентиры:</strong> теги <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code> дают мгновенную навигацию.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: Доступность в таблицах (caption, th, scope) + Аудио-контраст -->
+          <div class="a11y-col">
+            <div style="margin-bottom:2px;">
+              <div class="content-section-label">ПРАКТИКА ТАБЛИЦ · SCOPE</div>
+              <div class="content-h2">Доступность в таблицах</div>
+            </div>
+
+            <!-- Блок 3: Инструменты табличной доступности -->
+            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);">
+              <div class="a11y-card-title">
+                <span>3. Специфика таблиц (a11y для таблиц):</span>
+                <span class="group-pill bg-purple" style="font-size:11px;padding:3px 10px;">СТАНДАРТ W3C</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:500;color:var(--text);line-height:1.4;">
+                <div>
+                  <strong>&lt;caption&gt;</strong> — название таблицы: скринридер сразу озвучивает тему таблицы при входе.
+                </div>
+                <div>
+                  <strong>&lt;th&gt; вместо &lt;td&gt;</strong> — объявляет ячейку заголовком, меняя логику озвучивания.
+                </div>
+                <div>
+                  <strong>Атрибут scope</strong> (зона действия / зона ответственности):
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+                    <div style="background:var(--bg);padding:7px 10px;border-radius:8px;font-size:12px;">
+                      <code>scope="col"</code> — заголовок всего <strong>столбца</strong> (действует вниз &darr;)
+                    </div>
+                    <div style="background:var(--bg);padding:7px 10px;border-radius:8px;font-size:12px;">
+                      <code>scope="row"</code> — заголовок всей <strong>строки</strong> (действует вправо &rarr;)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Наглядный микро-пример и аудио-контраст -->
+            <div class="a11y-card" style="border-left:5px solid var(--yellow);background:rgba(223,255,79,0.12);">
+              <div class="a11y-card-title">
+                <span>Что слышит пользователь в наушниках?</span>
+                <span class="group-pill bg-yellow" style="font-size:11px;padding:3px 10px;">АУДИО-КОНТРАСТ</span>
+              </div>
+
+              <!-- Микро-код таблицы -->
+              <div style="background:var(--code-bg);border-radius:10px;padding:8px 12px;color:#F0F0FF;font-family:'SF Mono',monospace;font-size:12px;line-height:1.45;">
+                <div>&lt;tr&gt;&lt;th <span class="c-attr">scope</span>=<span class="c-str">"col"</span>&gt;Name&lt;/th&gt;&lt;th <span class="c-attr">scope</span>=<span class="c-str">"col"</span>&gt;Age&lt;/th&gt;&lt;/tr&gt;</div>
+                <div>&lt;tr&gt;&lt;th <span class="c-attr">scope</span>=<span class="c-str">"row"</span>&gt;Knocky&lt;/th&gt;&lt;td&gt;16&lt;/td&gt;&lt;/tr&gt;</div>
+              </div>
+
+              <div class="a11y-audio-contrast">
+                <div class="a11y-audio-item bad">
+                  <div class="a11y-audio-tag">✕ БЕЗ АТРИБУТА SCOPE</div>
+                  <div class="a11y-audio-speech">«Шестнадцать»</div>
+                  <div class="a11y-audio-desc">Робот скажет просто «16» — пользователь не понимает, чей это возраст или вес.</div>
+                </div>
+                <div class="a11y-audio-item good">
+                  <div class="a11y-audio-tag">✓ С АТРИБУТОМ SCOPE</div>
+                  <div class="a11y-audio-speech">«Knocky, Age: 16»</div>
+                  <div class="a11y-audio-desc">Робот связывает строку и колонку: «Knocky, Age: 16» — полная ясность!</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 12 / 15</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 13 — COLSPAN И ROWSPAN
+    ══════════════════════════════ -->
+    <div class="slide" data-index="12">
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
@@ -1071,14 +1262,14 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 12 / 14</span>
+        <span>СТРАНИЦА 13 / 15</span>
       </footer>
     </div>
 
     <!-- ══════════════════════════════
-         SLIDE 13 — ПРАКТИКУМ: КИНОСЕАНСЫ
+         SLIDE 14 — ПРАКТИКУМ: КИНОСЕАНСЫ
     ══════════════════════════════ -->
-    <div class="slide" data-index="12">
+    <div class="slide" data-index="13">
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
@@ -1141,14 +1332,14 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
-        <span>СТРАНИЦА 13 / 14</span>
+        <span>СТРАНИЦА 14 / 15</span>
       </footer>
     </div>
 
     <!-- ══════════════════════════════
-         SLIDE 14 — САМОСТОЯТЕЛЬНАЯ РАБОТА
+         SLIDE 15 — САМОСТОЯТЕЛЬНАЯ РАБОТА
     ══════════════════════════════ -->
-    <div class="slide" data-index="13">
+    <div class="slide" data-index="14">
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
@@ -1218,7 +1409,7 @@
       </div>
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · САМОСТОЯТЕЛЬНАЯ РАБОТА</span>
-        <span>СТРАНИЦА 14 / 14</span>
+        <span>СТРАНИЦА 15 / 15</span>
       </footer>
     </div>
 
