@@ -294,6 +294,10 @@
     .c-tag  { color: #FF7B72; font-weight: bold; }
     .c-attr { color: #79C0FF; }
     .c-str  { color: #A5D6FF; }
+    .c-comment { color: #8B949E; font-style: italic; }
+    .c-prop { color: #79C0FF; }
+    .c-val  { color: #A5D6FF; }
+    .c-sel  { color: #FFA657; font-weight: bold; }
 
     /* ════ VISUAL & CARDS ════ */
     .photo-card { flex: 1; border-radius: 24px; overflow: hidden; position: relative; min-height: 0; }
@@ -1047,7 +1051,7 @@
     </div>
 
     <!-- ══════════════════════════════
-         SLIDE 12 — ВЕБ-ДОСТУПНОСТЬ И СКРИНРИДЕРЫ
+         SLIDE 12 — СТИЛИЗАЦИЯ И ДОСТУПНОСТЬ
     ══════════════════════════════ -->
     <div class="slide" data-index="11">
       <header class="slide-header">
@@ -1055,130 +1059,130 @@
           <div class="burger"><span></span><span></span><span></span></div>
           <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
         </div>
-        <div class="header-right"><div class="header-lesson">УРОК 5 · ВЕБ-ДОСТУПНОСТЬ (A11Y)</div></div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СТИЛИ И ДОСТУПНОСТЬ (A11Y)</div></div>
       </header>
       <div class="slide-content">
         <div class="a11y-grid">
 
-          <!-- Левая колонка: Что такое скринридеры + Визуальная vs Семантическая вёрстка -->
+          <!-- Левая колонка: Блок кода со стилизацией CSS + Визуальный vs Семантический слой -->
           <div class="a11y-col">
             <div style="margin-bottom:2px;">
-              <div class="content-section-label">интернет для всех людей без исключений · A11Y</div>
-              <div class="content-h2">Скринридеры и вёрстка</div>
+              <div class="content-section-label">ВИЗУАЛЬНЫЙ СЛОЙ · ОФОРМЛЕНИЕ ДЛЯ ГЛАЗ</div>
+              <div class="content-h2">Стилизация таблиц в CSS</div>
             </div>
 
-            <!-- Блок 1: Что такое скринридер -->
-            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);">
-              <div class="a11y-card-title">
-                <span>1. Что такое Скринридер (Screen Reader)?</span>
-                <span class="group-pill bg-purple" style="font-size:11px;padding:3px 10px;">ГОЛОС САЙТА</span>
-              </div>
-              <div class="a11y-card-body">
-                Специальная программа экранного доступа для незрячих и слабовидящих людей. Читает <strong>HTML-дерево</strong> сайта и озвучивает его синтезатором речи в наушники.
-              </div>
-              <div class="a11y-pill-row">
-                <span class="a11y-pill">VoiceOver (Mac/iOS)</span>
-                <span class="a11y-pill">NVDA (Windows)</span>
-                <span class="a11y-pill">TalkBack (Android)</span>
-              </div>
-              <div style="font-size:12px;font-weight:700;color:var(--label);margin-top:2px;">
-                ⌨ Управление только с клавиатуры: клавиша Tab, стрелки и шорткаты — мышь не используется!
-              </div>
-            </div>
-
-            <!-- Блок 2: Два типа верстки -->
-            <div class="a11y-card" style="border-left:5px solid var(--yellow);">
-              <div class="a11y-card-title">
-                <span>2. Визуальная vs Семантическая вёрстка</span>
-                <span class="group-pill bg-yellow" style="font-size:11px;padding:3px 10px;">КОНТРАСТ</span>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px;">
-                <div style="background:var(--bg);border-radius:10px;padding:10px 12px;">
-                  <div style="font-size:13px;font-weight:800;color:var(--black);">Визуальная (CSS)</div>
-                  <div style="font-size:12px;font-weight:500;color:var(--label);margin-top:3px;line-height:1.4;">
-                    Красиво для глаз зрячего: цвета, шрифты, отступы. <strong>Скринридер полностью игнорирует CSS-стили!</strong>
-                  </div>
+            <!-- Редактор кода: Основные CSS-свойства таблиц -->
+            <div class="editor-frame">
+              <div class="editor-topbar">
+                <div class="editor-dots">
+                  <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
                 </div>
-                <div style="background:var(--bg);border-radius:10px;padding:10px 12px;">
-                  <div style="font-size:13px;font-weight:800;color:var(--black);">Семантическая (HTML)</div>
-                  <div style="font-size:12px;font-weight:500;color:var(--label);margin-top:3px;line-height:1.4;">
-                    Понятная структура для роботов. Если верстать без семантики — в наушниках пользователя будет <strong>«каша»</strong>.
-                  </div>
-                </div>
+                <span class="editor-tab">table-styles.css</span>
               </div>
+              <div class="code-box" style="font-size:11.5px;line-height:1.42;padding:10px 14px;"><span class="c-comment">/* 1. Главное свойство: убираем двойные рамки и зазоры */</span>
+<span class="c-sel">table</span> {
+  <span class="c-prop">border-collapse</span>: <span class="c-val">collapse</span>; <span class="c-comment">/* Склеивает границы в одну линию */</span>
+  <span class="c-prop">width</span>: <span class="c-val">100%</span>;
+  <span class="c-prop">background-color</span>: <span class="c-val">#f0f0f0</span>; <span class="c-comment">/* Цвет фона всей таблицы */</span>
+}
+
+<span class="c-comment">/* Альтернатива: если зазоры НУЖНЫ (не с collapse) */</span>
+<span class="c-comment">/* table { border-spacing: 5px; } */</span>
+
+<span class="c-comment">/* 2. Рамки для таблицы и всех ячеек */</span>
+<span class="c-sel">table</span>, <span class="c-sel">th</span>, <span class="c-sel">td</span> {
+  <span class="c-prop">border</span>: <span class="c-val">1px solid black</span>;
+}
+
+<span class="c-comment">/* 3. Внутренние отступы (современная замена cellpadding) */</span>
+<span class="c-sel">th</span>, <span class="c-sel">td</span> {
+  <span class="c-prop">padding</span>: <span class="c-val">10px 15px</span>;
+}
+
+<span class="c-comment">/* 4. Стилизация шапки */</span>
+<span class="c-sel">th</span> {
+  <span class="c-prop">background-color</span>: <span class="c-val">#e0e0e0</span>;
+  <span class="c-prop">text-align</span>: <span class="c-val">left</span>;
+}</div>
             </div>
 
-            <!-- Блок 4: Базовые правила вне таблиц -->
-            <div class="a11y-card" style="border-left:5px solid var(--black);padding:12px 18px;">
-              <div class="a11y-card-title" style="font-size:13.5px;">
-                <span>4. Базовые правила доступности в HTML:</span>
+            <!-- Разница: Визуальная vs Семантическая верстка -->
+            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);padding:10px 14px;gap:3px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;font-weight:800;color:var(--black);text-transform:uppercase;">Визуальная (CSS) vs Семантическая (HTML)</span>
+                <span class="group-pill bg-purple" style="font-size:10px;padding:2px 8px;">ГЛАЗА VS УШИ</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:600;color:var(--text);">
-                <div>• <strong>Картинки &lt;img&gt;:</strong> всегда заполняйте <code>alt="..."</code> — без описания скринридер не сможет её озвучить.</div>
-                <div>• <strong>Кнопки и ссылки:</strong> используйте <code>&lt;button&gt;</code> и <code>&lt;a&gt;</code>, а не <code>&lt;div onclick&gt;</code> (для фокуса клавишей Tab).</div>
-                <div>• <strong>Ориентиры:</strong> теги <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code> дают мгновенную навигацию.</div>
+              <div style="font-size:11.5px;font-weight:500;color:var(--label);line-height:1.35;">
+                CSS создаёт красоту для глаз зрячего пользователя. Но <strong>скринридеры полностью игнорируют CSS-стили</strong> — для них критически важна правильная семантика HTML!
               </div>
             </div>
           </div>
 
-          <!-- Правая колонка: Доступность в таблицах (caption, th, scope) + Аудио-контраст -->
+          <!-- Правая колонка: Доступность в таблицах (caption, th, scope) + Скринридеры -->
           <div class="a11y-col">
             <div style="margin-bottom:2px;">
-              <div class="content-section-label">ПРАКТИКА ТАБЛИЦ · SCOPE</div>
-              <div class="content-h2">Доступность в таблицах</div>
+              <div class="content-section-label">СЕМАНТИЧЕСКИЙ СЛОЙ · ДОСТУПНОСТЬ A11Y</div>
+              <div class="content-h2">Скринридеры и a11y</div>
             </div>
 
-            <!-- Блок 3: Инструменты табличной доступности -->
-            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);">
-              <div class="a11y-card-title">
-                <span>3. Специфика таблиц (a11y для таблиц):</span>
-                <span class="group-pill bg-purple" style="font-size:11px;padding:3px 10px;">СТАНДАРТ W3C</span>
+            <!-- Блок 1: Что такое скринридер -->
+            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);padding:10px 14px;gap:4px;">
+              <div class="a11y-card-title" style="font-size:13px;">
+                <span>1. Что такое Скринридер (Screen Reader)?</span>
+                <span class="group-pill bg-purple" style="font-size:10px;padding:2px 8px;">ГОЛОС САЙТА</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:500;color:var(--text);line-height:1.4;">
-                <div>
-                  <strong>&lt;caption&gt;</strong> — название таблицы: скринридер сразу озвучивает тему таблицы при входе.
-                </div>
-                <div>
-                  <strong>&lt;th&gt; вместо &lt;td&gt;</strong> — объявляет ячейку заголовком, меняя логику озвучивания.
-                </div>
-                <div>
-                  <strong>Атрибут scope</strong> (зона действия / зона ответственности):
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-                    <div style="background:var(--bg);padding:7px 10px;border-radius:8px;font-size:12px;">
-                      <code>scope="col"</code> — заголовок всего <strong>столбца</strong> (действует вниз &darr;)
-                    </div>
-                    <div style="background:var(--bg);padding:7px 10px;border-radius:8px;font-size:12px;">
-                      <code>scope="row"</code> — заголовок всей <strong>строки</strong> (действует вправо &rarr;)
-                    </div>
-                  </div>
-                </div>
+              <div style="font-size:11.5px;font-weight:500;color:var(--text);line-height:1.35;">
+                Программа экранного доступа для незрячих и слабовидящих людей. Читает <strong>HTML-дерево</strong> и озвучивает синтезатором речи. Навигация только с клавиатуры (клавиша <code>Tab</code>, стрелки) — без мыши!
+              </div>
+              <div class="a11y-pill-row" style="margin-top:0;">
+                <span class="a11y-pill" style="font-size:10px;padding:2px 6px;">VoiceOver (Mac/iOS)</span>
+                <span class="a11y-pill" style="font-size:10px;padding:2px 6px;">NVDA (Windows)</span>
+                <span class="a11y-pill" style="font-size:10px;padding:2px 6px;">TalkBack (Android)</span>
               </div>
             </div>
 
-            <!-- Наглядный микро-пример и аудио-контраст -->
-            <div class="a11y-card" style="border-left:5px solid var(--yellow);background:rgba(223,255,79,0.12);">
-              <div class="a11y-card-title">
+            <!-- Блок 3: a11y в таблицах -->
+            <div class="a11y-card" style="border-left:5px solid var(--yellow);padding:10px 14px;gap:4px;">
+              <div class="a11y-card-title" style="font-size:13px;">
+                <span>3. Доступность в таблицах (a11y):</span>
+                <span class="group-pill bg-yellow" style="font-size:10px;padding:2px 8px;">СТАНДАРТ W3C</span>
+              </div>
+              <div style="font-size:11.5px;font-weight:500;color:var(--text);line-height:1.35;">
+                • <code>&lt;caption&gt;</code> — имя таблицы: озвучивается первым при входе.<br/>
+                • <code>&lt;th&gt;</code> вместо <code>&lt;td&gt;</code> — объявляет ячейку заголовком.<br/>
+                • <strong>Атрибут scope</strong>: <code>scope="col"</code> (весь столбец ↓) и <code>scope="row"</code> (вся строка →).
+              </div>
+            </div>
+
+            <!-- Аудио-контраст -->
+            <div class="a11y-card" style="border-left:5px solid var(--black);background:rgba(223,255,79,0.1);padding:10px 14px;gap:4px;">
+              <div class="a11y-card-title" style="font-size:13px;">
                 <span>Что слышит пользователь в наушниках?</span>
-                <span class="group-pill bg-yellow" style="font-size:11px;padding:3px 10px;">АУДИО-КОНТРАСТ</span>
+                <span class="group-pill bg-dark" style="font-size:10px;padding:2px 8px;">АУДИО-КОНТРАСТ</span>
               </div>
-
-              <!-- Микро-код таблицы -->
-              <div style="background:var(--code-bg);border-radius:10px;padding:8px 12px;color:#F0F0FF;font-family:'SF Mono',monospace;font-size:12px;line-height:1.45;">
-                <div>&lt;tr&gt;&lt;th <span class="c-attr">scope</span>=<span class="c-str">"col"</span>&gt;Name&lt;/th&gt;&lt;th <span class="c-attr">scope</span>=<span class="c-str">"col"</span>&gt;Age&lt;/th&gt;&lt;/tr&gt;</div>
-                <div>&lt;tr&gt;&lt;th <span class="c-attr">scope</span>=<span class="c-str">"row"</span>&gt;Knocky&lt;/th&gt;&lt;td&gt;16&lt;/td&gt;&lt;/tr&gt;</div>
+              <div class="a11y-audio-contrast" style="margin-top:0;">
+                <div class="a11y-audio-item bad" style="padding:6px 10px;">
+                  <div class="a11y-audio-tag" style="font-size:10px;">✕ БЕЗ SCOPE</div>
+                  <div class="a11y-audio-speech" style="font-size:12px;">«Шестнадцать»</div>
+                  <div class="a11y-audio-desc" style="font-size:11px;">Робот скажет просто «16» — непонятно, чей это возраст.</div>
+                </div>
+                <div class="a11y-audio-item good" style="padding:6px 10px;">
+                  <div class="a11y-audio-tag" style="font-size:10px;">✓ С АТРИБУТОМ SCOPE</div>
+                  <div class="a11y-audio-speech" style="font-size:12px;">«Knocky, Age: 16»</div>
+                  <div class="a11y-audio-desc" style="font-size:11px;">Робот связывает строку и колонку — полная ясность!</div>
+                </div>
               </div>
+            </div>
 
-              <div class="a11y-audio-contrast">
-                <div class="a11y-audio-item bad">
-                  <div class="a11y-audio-tag">✕ БЕЗ АТРИБУТА SCOPE</div>
-                  <div class="a11y-audio-speech">«Шестнадцать»</div>
-                  <div class="a11y-audio-desc">Робот скажет просто «16» — пользователь не понимает, чей это возраст или вес.</div>
-                </div>
-                <div class="a11y-audio-item good">
-                  <div class="a11y-audio-tag">✓ С АТРИБУТОМ SCOPE</div>
-                  <div class="a11y-audio-speech">«Knocky, Age: 16»</div>
-                  <div class="a11y-audio-desc">Робот связывает строку и колонку: «Knocky, Age: 16» — полная ясность!</div>
-                </div>
+            <!-- Блок 4: Базовые правила a11y -->
+            <div class="a11y-card" style="border-left:5px solid var(--purple-soft);padding:8px 14px;gap:2px;">
+              <div style="font-size:11.5px;font-weight:700;color:var(--black);">
+                4. Базовые правила вне таблиц:
+              </div>
+              <div style="font-size:11px;font-weight:500;color:var(--label);line-height:1.35;">
+                • <code>&lt;img alt="..."&gt;</code> — всегда заполняйте описание картинки.<br/>
+                • <code>&lt;button&gt;</code> и <code>&lt;a&gt;</code> (а не <code>&lt;div&gt;</code>) — для фокуса клавишей <code>Tab</code>.<br/>
+                • Ориентиры <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code> для быстрой навигации.
               </div>
             </div>
 
