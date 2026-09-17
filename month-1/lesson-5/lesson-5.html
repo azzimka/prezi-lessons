@@ -510,7 +510,7 @@
             <div class="toc-item toc-purple"><span class="toc-num">05</span> Базовый синтаксис и разметка в коде</div>
             <div class="toc-item toc-white"><span class="toc-num">06</span> Семантика и a11y: thead, tbody, scope</div>
             <div class="toc-item toc-yellow"><span class="toc-num">07</span> Объединение ячеек: colspan и rowspan</div>
-            <div class="toc-item toc-black"><span class="toc-num">08</span> Практикум: расписание киносеансов</div>
+            <div class="toc-item toc-black"><span class="toc-num">08</span> Практикум: турнирная таблица CS2</div>
           </div>
         </div>
       </div>
@@ -1271,7 +1271,7 @@
     </div>
 
     <!-- ══════════════════════════════
-         SLIDE 14 — ПРАКТИКУМ: КИНОСЕАНСЫ
+         SLIDE 14 — ПРАКТИКУМ: ТУРНИРНАЯ ТАБЛИЦА
     ══════════════════════════════ -->
     <div class="slide" data-index="13">
       <header class="slide-header">
@@ -1286,9 +1286,9 @@
           <div class="practice-left">
             <div>
               <div class="content-section-label">СОВМЕСТНАЯ РАБОТА</div>
-              <div class="content-h2">Афиша кинотеатра</div>
+              <div class="content-h2" style="font-size:27px;">Турнирная таблица киберспорта</div>
               <div class="content-body" style="font-size:19px;line-height:1.5;">
-                Создадим вместе таблицу сеансов кинотеатра с правильной структурой &lt;thead&gt;, &lt;tbody&gt; и информативным &lt;caption&gt;.
+                Создадим вместе таблицу турнира с правильной структурой &lt;thead&gt;, &lt;tbody&gt; и информативным &lt;caption&gt;.
               </div>
             </div>
             <div style="background:var(--white);border:2px solid var(--border);border-radius:20px;padding:24px;">
@@ -1296,8 +1296,8 @@
                 <span class="group-pill bg-purple" style="font-size:13px;">ТАЙМИНГ: 15 МИНУТ</span>
                 <span style="font-size:14px;font-weight:800;color:var(--black);text-transform:uppercase;">ВМЕСТЕ С КОДОМ</span>
               </div>
-              <div style="font-size:17px;font-weight:600;color:var(--text);line-height:1.45;">
-                Закрепим связку table + caption + tr + th + td на реальном интерфейсе расписания!
+              <div style="font-size:16px;font-weight:600;color:var(--text);line-height:1.45;">
+                Закрепим связку table + caption + tr + th + td на реальном интерфейсе турнирной сетки!
               </div>
             </div>
           </div>
@@ -1307,28 +1307,28 @@
               <div class="check-icon">1</div>
               <div>
                 <div class="check-text">Контейнер &lt;table&gt; и &lt;caption&gt;</div>
-                <div class="check-sub">Задайте имя таблицы: «Расписание сеансов на сегодня»</div>
+                <div class="check-sub">Задайте имя таблицы: «Групповой этап чемпионата по CS2»</div>
               </div>
             </div>
             <div class="check-item">
               <div class="check-icon">2</div>
               <div>
                 <div class="check-text">Шапка &lt;thead&gt; с тегами &lt;th&gt;</div>
-                <div class="check-sub">Колонки: Фильм, Зал, Время начала, Стоимость</div>
+                <div class="check-sub">Колонки: Команда, Матчи, Победы/Поражения, Очки</div>
               </div>
             </div>
             <div class="check-item">
               <div class="check-icon">3</div>
               <div>
-                <div class="check-text">Тело &lt;tbody&gt; с 3 фильмами</div>
-                <div class="check-sub">Заполните строки &lt;tr&gt; и обычные ячейки &lt;td&gt;</div>
+                <div class="check-text">Тело &lt;tbody&gt; с 3 командами</div>
+                <div class="check-sub">Заполните строки &lt;tr&gt; и ячейки &lt;td&gt; (команды NAVI, FaZe, Spirit)</div>
               </div>
             </div>
             <div class="check-item">
               <div class="check-icon">4</div>
               <div>
-                <div class="check-text">Подвал &lt;tfoot&gt; со скидками</div>
-                <div class="check-sub">Объедините ячейки через colspan="4" для примечания кассы</div>
+                <div class="check-text">Подвал &lt;tfoot&gt; с призовым фондом</div>
+                <div class="check-sub">Объедините ячейки через colspan="4" для надписи: «Общий призовой фонд турнира: $1,000,000»</div>
               </div>
             </div>
           </div>
