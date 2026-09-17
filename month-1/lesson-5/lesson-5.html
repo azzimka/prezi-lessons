@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Урок 5 — Таблицы в HTML и структура данных | Месяц 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --border:      #E0E0EE;
+      --text:        #1A1A1A;
+      --muted:       #888899;
+      --label:       #555566;
+      --code-bg:     #12131A;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── VIEWPORT ── */
+    .viewport { flex: 1; position: relative; overflow: hidden; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateX(80px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit   { opacity: 0; transform: translateX(-80px); }
+
+    /* ── HEADER ── */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 24px 56px 0; flex-shrink: 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 18px; }
+    .burger { display: flex; flex-direction: column; gap: 6px; }
+    .burger span { display: block; width: 32px; height: 4px; background: var(--black); border-radius: 2px; }
+    .brand-title { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .brand-sub   { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .header-right { text-align: right; }
+    .header-lesson { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+
+    /* ── CONTENT AREA ── */
+    .slide-content {
+      flex: 1; padding: 14px 56px 20px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-height: 0;
+    }
+
+    /* ── FOOTER ── */
+    .slide-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 260px 20px 56px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-bar {
+      position: fixed; bottom: 16px; right: 36px;
+      display: flex; gap: 12px; z-index: 100;
+    }
+    .nav-btn {
+      width: 58px; height: 58px; background: var(--white);
+      border: 2px solid var(--border); border-radius: 16px;
+      font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.06);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-btn:hover    { background: var(--black); color: var(--white); border-color: var(--black); }
+    .nav-btn:active   { transform: scale(0.95); }
+    .nav-btn:disabled { opacity: 0.25; pointer-events: none; box-shadow: none; }
+    .nav-btn.active   { background: var(--yellow) !important; color: var(--black) !important; border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(223,255,79,0.45); }
+
+    /* ── LOUPE MODE ── */
+    .magnifier-lens {
+      position: fixed; top: 0; left: 0;
+      width: 90px; height: 90px; border-radius: 50%;
+      border: 3px solid var(--black);
+      box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
+      pointer-events: none; overflow: hidden; z-index: 9999;
+      display: none; background: var(--bg); will-change: transform;
+    }
+    .magnifier-lens.active { display: block; }
+    .magnifier-lens::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 7px; height: 7px; background: var(--yellow);
+      border: 1.5px solid var(--black); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 10;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .magnifier-inner { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+    body.magnifier-mode, body.magnifier-mode * { cursor: none !important; }
+    body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !important; }
+
+    /* ════ TITLE SLIDE ════ */
+    .s-title {
+      position: absolute; inset: 0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .title-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 32px 56px 0; flex-shrink: 0;
+    }
+    .title-brand { display: flex; align-items: center; gap: 18px; }
+    .title-brand-name { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .title-brand-sub  { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .title-date-label { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: right; }
+    .title-date-val   { font-size: 22px; font-weight: 800; color: var(--black); text-align: right; margin-top: 2px; }
+    .title-center {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 1360px; margin: 0 auto; padding: 20px;
+    }
+    .title-badge {
+      background: var(--black); color: var(--white); border-radius: 100px;
+      padding: 8px 26px; font-size: 14px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .title-badge::before { content: '●'; color: var(--yellow); }
+    .title-main-line {
+      font-weight: 900; font-size: 84px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .accent-lines-row { display: flex; align-items: center; gap: 24px; margin: 6px 0; }
+    .accent-line { height: 5px; width: 90px; background: var(--yellow); flex-shrink: 0; border-radius: 3px; }
+    .title-italic-line {
+      font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+      font-size: 100px; letter-spacing: -0.02em; color: var(--black); line-height: 1;
+    }
+    .title-third-line {
+      font-weight: 900; font-size: 84px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .title-subtitle { font-size: 24px; font-weight: 500; color: var(--muted); margin-top: 18px; }
+    .title-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 280px 28px 56px; flex-shrink: 0;
+    }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; margin-top: 6px; }
+    .title-slogan { text-align: right; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .deco-circles { position: absolute; top: 16px; right: 56px; pointer-events: none; }
+    .deco-circle-lg { width: 340px; height: 340px; border: 2px solid rgba(10,10,10,0.1); border-radius: 50%; }
+    .deco-circle-sm { width: 220px; height: 220px; border: 2px solid rgba(10,10,10,0.07); border-radius: 50%; position: absolute; top: 60px; left: 60px; }
+
+    /* ════ TOC ════ */
+    .toc-wrap { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+    .toc-heading { display: flex; align-items: center; gap: 16px; font-weight: 900; font-size: 36px; letter-spacing: -0.01em; text-transform: uppercase; }
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .toc-item { display: flex; align-items: center; gap: 18px; padding: 14px 22px; border-radius: 14px; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; }
+    .toc-num { font-size: 19px; font-weight: 900; min-width: 28px; }
+    .toc-white  { background: var(--white); border: 1px solid var(--border); color: var(--black); }
+    .toc-yellow { background: var(--yellow); color: var(--black); }
+    .toc-beige  { background: var(--beige); border: 1px solid #E0D8C0; color: var(--black); }
+    .toc-purple { background: var(--purple-soft); color: var(--black); }
+    .toc-black  { background: var(--black); color: var(--white); }
+
+    /* ════ SECTION DIVIDER ════ */
+    .section-divider-content {
+      display: flex; align-items: center; gap: 40px;
+      width: 100%; max-width: 900px; margin: 0 auto;
+    }
+    .section-num-box {
+      width: 100px; height: 100px;
+      background: var(--yellow); border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 42px; color: var(--black); flex-shrink: 0;
+    }
+    .section-divider-text { display: flex; flex-direction: column; gap: 12px; }
+    .section-divider-title {
+      font-weight: 900; font-size: 48px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.1;
+    }
+    .section-divider-sub { font-weight: 500; font-size: 20px; color: var(--muted); }
+    .section-divider-line { width: 80px; height: 5px; background: var(--yellow); border-radius: 3px; }
+
+    /* ════ CONTENT 2-COL ════ */
+    .content-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; width: 100%; height: 100%; align-items: stretch; }
+    .content-card-left {
+      background: rgba(200,184,240,0.15); border-radius: 24px; padding: 30px 36px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .content-section-label { font-weight: 800; font-size: 16px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .content-h2 {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 32px; line-height: 1.15;
+      letter-spacing: -0.02em; color: var(--black); margin-bottom: 16px;
+      white-space: nowrap;
+    }
+    .content-section-title { font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); margin-bottom: 6px; margin-top: 12px; }
+    .content-body { font-weight: 500; font-size: 20px; line-height: 1.5; color: var(--text); }
+    .content-right { display: flex; flex-direction: column; gap: 16px; height: 100%; justify-content: center; }
+
+    /* ════ COMPARISON ════ */
+    .comparison-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+      width: 100%; height: 100%; align-items: stretch;
+    }
+    .compare-card {
+      border-radius: 24px; padding: 32px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .compare-card.before { background: var(--white); border: 2px solid var(--purple-soft); }
+    .compare-card.after  { background: var(--white); border: 2px solid var(--yellow); box-shadow: 0 8px 24px rgba(223,255,79,0.15); }
+    .compare-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 6px 16px; border-radius: 100px; width: fit-content;
+    }
+    .compare-label.before-label { background: var(--purple-soft); color: var(--black); }
+    .compare-label.after-label  { background: var(--yellow); color: var(--black); }
+    .compare-title { font-weight: 900; font-size: 26px; color: var(--black); text-transform: uppercase; }
+    .compare-body { font-size: 18px; font-weight: 500; color: var(--text); line-height: 1.5; }
+    .compare-rule { font-size: 15px; font-weight: 700; color: var(--label); line-height: 1.45; }
+
+    /* ════ CATALOG / GLOSSARY ════ */
+    .catalog-wrap { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    .catalog-top { display: flex; flex-direction: column; gap: 6px; }
+    .catalog-title {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 34px; letter-spacing: -0.02em; color: var(--black);
+      white-space: nowrap;
+    }
+    .catalog-subtitle { font-size: 15px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .catalog-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .catalog-item {
+      background: var(--white); border: 2px solid var(--border); border-radius: 18px;
+      padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; transition: transform 0.2s;
+    }
+    .catalog-item:hover { transform: translateY(-3px); }
+    .catalog-tag-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .catalog-tag-name {
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+      font-weight: 900; font-size: 20px; color: var(--black);
+    }
+    .catalog-tag-role {
+      font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--label); background: var(--bg); padding: 3px 8px; border-radius: 6px;
+    }
+    .catalog-full-name { font-size: 13px; font-weight: 800; color: var(--black); letter-spacing: 0.04em; text-transform: uppercase; }
+    .catalog-tag-desc { font-size: 15px; font-weight: 500; color: var(--muted); line-height: 1.35; }
+
+    /* ════ EDITOR FRAME ════ */
+    .editor-frame {
+      background: var(--code-bg); border-radius: 14px;
+      border: 1.5px solid #2B2C42; overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .editor-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px; background: #181926; border-bottom: 1px solid #2B2C42;
+    }
+    .editor-dots { display: flex; gap: 6px; align-items: center; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red    { background: #FF5F56; }
+    .dot.yellow { background: #FFBD2E; }
+    .dot.green  { background: #27C93F; }
+    .editor-tab {
+      font-size: 12px; font-weight: 700; color: #8B949E;
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+      letter-spacing: 0.05em;
+    }
+    .code-box {
+      padding: 16px 20px;
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+      font-size: 15px; line-height: 1.6; color: #F0F0FF;
+      white-space: pre; tab-size: 2; overflow-x: auto;
+    }
+    .editor-frame .code-box { border-radius: 0; }
+    .c-tag  { color: #FF7B72; font-weight: bold; }
+    .c-attr { color: #79C0FF; }
+    .c-str  { color: #A5D6FF; }
+
+    /* ════ VISUAL & CARDS ════ */
+    .photo-card { flex: 1; border-radius: 24px; overflow: hidden; position: relative; min-height: 0; }
+    .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-label {
+      position: absolute; bottom: 16px; left: 16px; background: var(--white);
+      padding: 8px 18px; border-radius: 10px; font-size: 15px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--black);
+    }
+
+    .info-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 20px;
+      padding: 20px 24px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .info-card-title { font-size: 17px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .info-card-body { font-size: 16px; font-weight: 500; line-height: 1.45; color: var(--label); }
+
+    .group-pill { font-size: 14px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; width: fit-content; }
+    .group-pill.bg-yellow { background: var(--yellow); color: var(--black); }
+    .group-pill.bg-purple { background: var(--purple-soft); color: var(--black); }
+    .group-pill.bg-dark   { background: var(--black); color: var(--white); }
+
+    /* ════ CUSTOM TABLE VISUAL DEMO ════ */
+    .demo-table-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 24px;
+      padding: 24px; display: flex; flex-direction: column; gap: 14px; height: 100%; justify-content: center;
+    }
+    .demo-table-legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+    .legend-item {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 12px;
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 4px 12px; border-radius: 8px;
+    }
+    .legend-col  { background: rgba(200, 184, 240, 0.4); border: 1px solid var(--purple-soft); }
+    .legend-row  { background: rgba(223, 255, 79, 0.4); border: 1px solid var(--yellow); }
+    .legend-cell { background: var(--black); color: var(--white); }
+
+    .live-demo-table {
+      width: 100%; border-collapse: collapse; text-align: left; font-size: 15px;
+    }
+    .live-demo-table caption {
+      font-weight: 800; font-size: 15px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 10px; text-align: left; color: var(--black);
+    }
+    .live-demo-table th, .live-demo-table td {
+      border: 1.5px solid var(--border); padding: 12px 16px;
+    }
+    .live-demo-table th {
+      background: var(--bg); font-weight: 800; text-transform: uppercase; font-size: 13px; letter-spacing: 0.06em;
+    }
+    .live-demo-table .col-highlight { background: rgba(200, 184, 240, 0.25); }
+    .live-demo-table .row-highlight { background: rgba(223, 255, 79, 0.22); }
+    .live-demo-table .cell-highlight {
+      background: var(--yellow); font-weight: 800; color: var(--black);
+      outline: 2px solid var(--black); position: relative;
+    }
+
+    /* ════ PRACTICE STYLES ════ */
+    .practice-left {
+      background: rgba(200,184,240,0.15); border-radius: 24px; padding: 30px 36px;
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+    .checklist-col { display: flex; flex-direction: column; gap: 12px; height: 100%; justify-content: center; }
+    .check-item {
+      background: var(--white); border: 2px solid var(--border); border-radius: 18px;
+      padding: 16px 22px; display: flex; align-items: center; gap: 18px; transition: transform 0.2s;
+    }
+    .check-item:hover { transform: translateX(6px); }
+    .check-icon {
+      width: 36px; height: 36px; border-radius: 10px; background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 18px; flex-shrink: 0;
+    }
+    .check-text { font-size: 18px; font-weight: 700; color: var(--black); }
+    .check-sub  { font-size: 15px; font-weight: 500; color: var(--label); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+
+    <!-- ══════════════════════════════
+         SLIDE 1 — TITLE
+    ══════════════════════════════ -->
+    <div class="slide s-title active" data-index="0">
+      <div class="deco-circles">
+        <div class="deco-circle-lg"></div>
+        <div class="deco-circle-sm"></div>
+      </div>
+
+      <div class="title-top">
+        <div class="title-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="title-brand-name">ВЕБ-КУРС</div>
+            <div class="title-brand-sub">ОСНОВЫ РАЗРАБОТКИ</div>
+          </div>
+        </div>
+        <div>
+          <div class="title-date-label">ФОРМАТ ОБУЧЕНИЯ</div>
+          <div class="title-date-val">ПРАКТИЧЕСКИЙ КУРС</div>
+        </div>
+      </div>
+
+      <div class="title-center">
+        <div class="title-badge">ТЕМА УРОКА · HTML5</div>
+        <div class="title-main-line">ТАБЛИЦЫ</div>
+        <div class="accent-lines-row">
+          <div class="accent-line"></div>
+          <div class="title-italic-line">в HTML-коде</div>
+          <div class="accent-line"></div>
+        </div>
+        <div class="title-third-line">СТРУКТУРА И ДАННЫЕ</div>
+        <div class="title-subtitle">Организация двумерных сеток данных, семантика и словарь тегов</div>
+      </div>
+
+      <div class="title-bottom">
+        <div>
+          <div class="title-id-label">ID КУРСА</div>
+          <div class="title-id-val">WEB-HTML-DEV</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <div>
+            <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+            <div class="title-slogan-accents">
+              <div class="slogan-dash"></div>
+              <div class="slogan-dash-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 2 — TABLE OF CONTENTS
+    ══════════════════════════════ -->
+    <div class="slide" data-index="1">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СОДЕРЖАНИЕ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="toc-wrap">
+          <div class="toc-heading">
+            <div class="burger" style="gap:5px;"><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span></div>
+            СОДЕРЖАНИЕ УРОКА
+          </div>
+          <div class="toc-grid">
+            <div class="toc-item toc-white"><span class="toc-num">01</span> Что такое таблица: строки и столбцы</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">02</span> Документ 1800 года: история таблиц</div>
+            <div class="toc-item toc-white"><span class="toc-num">03</span> Координатная сетка и доступность</div>
+            <div class="toc-item toc-beige"><span class="toc-num">04</span> Когда НЕЛЬЗЯ использовать таблицы</div>
+            <div class="toc-item toc-purple"><span class="toc-num">05</span> Словарь тегов: английские корни</div>
+            <div class="toc-item toc-white"><span class="toc-num">06</span> Базовый синтаксис и разметка в коде</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">07</span> Семантика: thead, tbody, tfoot</div>
+            <div class="toc-item toc-black"><span class="toc-num">08</span> Практикум: расписание киносеансов</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 02 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 3 — SECTION DIVIDER: 01
+    ══════════════════════════════ -->
+    <div class="slide" data-index="2">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СЕКЦИЯ 01</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="section-divider-content">
+          <div class="section-num-box">01</div>
+          <div class="section-divider-text">
+            <div class="section-divider-title">ЧТО ТАКОЕ ТАБЛИЦА</div>
+            <div class="section-divider-line"></div>
+            <div class="section-divider-sub">Двумерная система координат: строки, столбцы и взаимосвязь данных</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 03 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 4 — ПОНЯТИЕ ТАБЛИЦЫ (Пункт 1 плана)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="3">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · АНАТОМИЯ СЕТКИ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">КОНЦЕПЦИЯ ТАБЛИЦЫ</div>
+            <div class="content-h2">Строки и столбцы</div>
+            <div class="content-body">
+              Таблица — это структурированный набор данных, состоящий из строк и столбцов.
+            </div>
+            <div class="content-section-title">Мгновенная взаимосвязь</div>
+            <div class="content-body" style="font-size:18px;">
+              Она позволяет быстро и безошибочно сопоставлять разные типы данных: имя человека, его возраст и время тренировки в бассейне.
+            </div>
+            <div style="margin-top:20px;">
+              <span class="group-pill bg-yellow">СТРОКА × СТОЛБЕЦ = ЯЧЕЙКА</span>
+            </div>
+          </div>
+
+          <div class="demo-table-card">
+            <div class="demo-table-legend">
+              <span class="legend-item legend-col">Вертикаль: Столбец</span>
+              <span class="legend-item legend-row">Горизонталь: Строка</span>
+              <span class="legend-item legend-cell">Пересечение: Ячейка</span>
+            </div>
+
+            <table class="live-demo-table">
+              <caption>Расписание тренировок в бассейне</caption>
+              <thead>
+                <tr>
+                  <th>Ученик</th>
+                  <th>Возраст</th>
+                  <th>День недели</th>
+                  <th class="col-highlight">Время занятия</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Алексей Смирнов</td>
+                  <td>16 лет</td>
+                  <td>Понедельник</td>
+                  <td class="col-highlight">09:00 - 10:30</td>
+                </tr>
+                <tr class="row-highlight">
+                  <td>Мария Иванова</td>
+                  <td>15 лет</td>
+                  <td>Среда</td>
+                  <td class="cell-highlight">14:00 - 15:30 ★</td>
+                </tr>
+                <tr>
+                  <td>Дмитрий Орлов</td>
+                  <td>17 лет</td>
+                  <td>Пятница</td>
+                  <td class="col-highlight">18:00 - 19:30</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="info-card" style="padding:14px 18px;margin-top:auto;">
+              <div class="info-card-title" style="font-size:14px;">Обратите внимание</div>
+              <div class="info-card-body" style="font-size:14px;">
+                Каждая ячейка получает смысл только благодаря координатам своего столбца и своей строки.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 04 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 5 — ИСТОРИЯ: ПЕРЕПИСЬ 1800 ГОДА (Пункт 2 плана)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="4">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · ИСТОРИЯ ТАБЛИЦ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="photo-card" style="border: 2px solid var(--border);">
+            <img src="./img/1800-census.jpg" alt="Документ переписи США 1800 года"/>
+            <div class="photo-label">ПЕРЕПИСЬ НАСЕЛЕНИЯ США · 1800 ГОД</div>
+          </div>
+
+          <div class="content-card-left" style="background:var(--white);border:2px solid var(--border);">
+            <div class="content-section-label">ИСТОРИЧЕСКИЙ КОНТЕКСТ</div>
+            <div class="content-h2">Таблицы старше веба</div>
+            <div class="content-body">
+              Люди систематизируют информацию таблицами уже сотни лет. Этот архивный документ переписи в США 1800 года наглядно показывает привычный нам табличный формат.
+            </div>
+            <div class="content-section-title">Принцип преемственности</div>
+            <div class="content-body" style="font-size:18px;">
+              Создатели HTML включили теги таблиц в стандарт не случайно: вебу требовался надежный и универсальный способ публикации структурированных отчетов.
+            </div>
+            <div class="info-card" style="margin-top:20px;background:var(--bg);border-color:var(--border);">
+              <div class="info-card-title" style="font-size:15px;">Вывод для разработчика</div>
+              <div class="info-card-body" style="font-size:15px;">
+                Таблица в вебе сохраняет ту же логику, что и 200 лет назад на бумаге — строгость, прозрачность и порядок.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 05 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 6 — КООРДИНАТНАЯ СЕТКА И ДОСТУПНОСТЬ (Пункт 3 плана)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="5">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · КООРДИНАТНАЯ СЕТКА</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">КАК РАБОТАЕТ ТАБЛИЦА</div>
+            <div class="content-h2">Жёсткая структура</div>
+            <div class="content-body">
+              Смысл таблицы — в её строгой координатной сетке. Информацию легко интерпретировать, визуально сопоставляя заголовки строк и столбцов.
+            </div>
+            <div class="info-card" style="margin-top:16px;border-color:var(--yellow);background:var(--white);">
+              <div class="info-card-title" style="font-size:15px;">Интерактивная задача</div>
+              <div class="info-card-body" style="font-size:15px;">
+                Найдите в таблице справа личное местоимение <strong>3-го лица</strong>, с полом <strong>♀</strong>, выступающее в роли <strong>объекта</strong>.
+              </div>
+              <div style="font-size:14px;font-weight:800;color:var(--black);margin-top:6px;">
+                Пересечение строки «3 Лицо / ♀» и столбца «Объект» даёт ответ: «её»!
+              </div>
+            </div>
+            <div class="content-section-title" style="margin-top:14px;">Доступность (Accessibility)</div>
+            <div class="content-body" style="font-size:16px;">
+              При корректной семантической разметке скринридеры озвучивают заголовки ячеек незрячим пользователям без потери контекста.
+            </div>
+          </div>
+
+          <div class="photo-card" style="border:2px solid var(--border);background:#12131A;display:flex;align-items:center;justify-content:center;padding:12px;">
+            <img src="./img/personal-pronouns.png" alt="Таблица местоимений" style="object-fit:contain;border-radius:14px;"/>
+            <div class="photo-label">ПРИМЕР: ДВУМЕРНАЯ СИСТЕМА КООРДИНАТ</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 06 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 7 — АНТИПАТТЕРНЫ ВЕРСТКИ (Пункт 4 плана)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="6">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · ПРАВИЛА ИСПОЛЬЗОВАНИЯ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="comparison-grid">
+          <div class="compare-card before">
+            <span class="compare-label before-label">✕ АНТИПАТТЕРН 90-Х ГОДОВ</span>
+            <div class="compare-title">Таблицы для каркаса сайта</div>
+            <div class="compare-body">
+              Категорически запрещено использовать &lt;table&gt; для построения сетки макета страницы (например, размещать меню &lt;nav&gt; в ячейке таблицы).
+            </div>
+            <div class="compare-rule">
+              • Разрушает доступность для скринридеров<br/>
+              • Лишает страницу адаптивности на смартфонах<br/>
+              • Превращает HTML в нечитаемый мусорный код
+            </div>
+          </div>
+
+          <div class="compare-card after">
+            <span class="compare-label after-label">✓ СОВРЕМЕННЫЙ СТАНДАРТ</span>
+            <div class="compare-title">Только табличные данные</div>
+            <div class="compare-body">
+              Используйте &lt;table&gt; строго по прямому назначению: расписания, прайс-листы, бухгалтерские отчеты и сводная аналитика.
+            </div>
+            <div class="compare-rule">
+              • Для макета страницы: семантические теги &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;<br/>
+              • Для расположения блоков: свойства CSS (Flexbox и Grid)<br/>
+              • Для данных: строгая и чистая разметка &lt;table&gt;
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 07 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 8 — SECTION DIVIDER: 02
+    ══════════════════════════════ -->
+    <div class="slide" data-index="7">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СЕКЦИЯ 02</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="section-divider-content">
+          <div class="section-num-box">02</div>
+          <div class="section-divider-text">
+            <div class="section-divider-title">СЛОВАРЬ И ТЕГИ</div>
+            <div class="section-divider-line"></div>
+            <div class="section-divider-sub">Английские корни аббревиатур и синтаксические правила построения</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 08 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 9 — СЛОВАРЬ ТЕГОВ ТАБЛИЦЫ (Пункт 5 плана)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="8">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СЛОВАРЬ ТЕГОВ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="catalog-wrap">
+          <div class="catalog-top">
+            <div class="catalog-title">Словарь тегов таблицы</div>
+            <div class="catalog-subtitle">РАСШИФРОВКА АНГЛИЙСКИХ НАЗВАНИЙ ДЛЯ ЛЕГКОГО ЗАПОМИНАНИЯ</div>
+          </div>
+          <div class="catalog-grid">
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;table&gt;</span>
+                <span class="catalog-tag-role">КОНТЕЙНЕР</span>
+              </div>
+              <div class="catalog-full-name">Table = Таблица</div>
+              <div class="catalog-tag-desc">Главный внешний контейнер, открывающий и закрывающий всю таблицу.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;tr&gt;</span>
+                <span class="catalog-tag-role">СТРОКА</span>
+              </div>
+              <div class="catalog-full-name">Table Row = Строка</div>
+              <div class="catalog-tag-desc">Горизонтальный ряд. Все ячейки живут строго внутри тега &lt;tr&gt;.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;th&gt;</span>
+                <span class="catalog-tag-role">ЗАГОЛОВОК</span>
+              </div>
+              <div class="catalog-full-name">Table Header = Шапка ячейки</div>
+              <div class="catalog-tag-desc">Ячейка-заголовок колонки. Текст внутри жирный и центрирован.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;td&gt;</span>
+                <span class="catalog-tag-role">ДАННЫЕ</span>
+              </div>
+              <div class="catalog-full-name">Table Data = Данные</div>
+              <div class="catalog-tag-desc">Стандартная ячейка с фактическими данными (текст, числа, ссылки).</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;caption&gt;</span>
+                <span class="catalog-tag-role">ПОДПИСЬ</span>
+              </div>
+              <div class="catalog-full-name">Caption = Заголовок таблицы</div>
+              <div class="catalog-tag-desc">Официальное название таблицы. Всегда пишется сразу после &lt;table&gt;.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;thead&gt;</span>
+                <span class="catalog-tag-role">ШАПКА</span>
+              </div>
+              <div class="catalog-full-name">Table Head = Голова</div>
+              <div class="catalog-tag-desc">Группирует строки верхних заголовков колонок таблицы.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;tbody&gt;</span>
+                <span class="catalog-tag-role">ТЕЛО</span>
+              </div>
+              <div class="catalog-full-name">Table Body = Тело</div>
+              <div class="catalog-tag-desc">Основной массив данных, где находятся рабочие строки таблицы.</div>
+            </div>
+
+            <div class="catalog-item">
+              <div class="catalog-tag-row">
+                <span class="catalog-tag-name">&lt;tfoot&gt;</span>
+                <span class="catalog-tag-role">ПОДВАЛ</span>
+              </div>
+              <div class="catalog-full-name">Table Foot = Подвал</div>
+              <div class="catalog-tag-desc">Итоговая строка таблицы (суммы, результаты или примечания).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 09 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 10 — БАЗОВЫЙ СИНТАКСИС В КОДЕ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="9">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СИНТАКСИС КОДА</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="editor-frame">
+            <div class="editor-topbar">
+              <div class="editor-dots">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              </div>
+              <span class="editor-tab">schedule.html</span>
+            </div>
+            <div class="code-box"><span class="c-tag">&lt;table&gt;</span>
+  <span class="c-tag">&lt;caption&gt;</span>График тренировок<span class="c-tag">&lt;/caption&gt;</span>
+  <span class="c-tag">&lt;tr&gt;</span>
+    <span class="c-tag">&lt;th&gt;</span>День<span class="c-tag">&lt;/th&gt;</span>
+    <span class="c-tag">&lt;th&gt;</span>Время<span class="c-tag">&lt;/th&gt;</span>
+  <span class="c-tag">&lt;/tr&gt;</span>
+  <span class="c-tag">&lt;tr&gt;</span>
+    <span class="c-tag">&lt;td&gt;</span>Понедельник<span class="c-tag">&lt;/td&gt;</span>
+    <span class="c-tag">&lt;td&gt;</span>10:00 - 11:30<span class="c-tag">&lt;/td&gt;</span>
+  <span class="c-tag">&lt;/tr&gt;</span>
+  <span class="c-tag">&lt;tr&gt;</span>
+    <span class="c-tag">&lt;td&gt;</span>Среда<span class="c-tag">&lt;/td&gt;</span>
+    <span class="c-tag">&lt;td&gt;</span>14:00 - 15:30<span class="c-tag">&lt;/td&gt;</span>
+  <span class="c-tag">&lt;/tr&gt;</span>
+<span class="c-tag">&lt;/table&gt;</span></div>
+          </div>
+
+          <div class="content-card-left" style="background:var(--white);border:2px solid var(--border);">
+            <div class="content-section-label">ПРАВИЛА ПОСТРОЕНИЯ</div>
+            <div class="content-h2">Строка первична</div>
+            <div class="content-body" style="font-size:19px;">
+              В HTML нельзя просто объявить столбец. Вся таблица верстается строго <strong>по строкам</strong> сверху вниз.
+            </div>
+            <div class="content-section-title">Три золотых закона:</div>
+            <div class="content-body" style="font-size:17px;line-height:1.6;">
+              1. Ячейка никогда не существует вне строки &lt;tr&gt;.<br/>
+              2. В каждой строке должно быть одинаковое количество ячеек.<br/>
+              3. Заголовки &lt;th&gt; автоматически выделяются жирным начертанием.
+            </div>
+            <div style="margin-top:auto;">
+              <span class="group-pill bg-purple">СИНТАКСИС БЕЗ ОШИБОК</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 10 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 11 — СЕМАНТИЧЕСКИЕ БЛОКИ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="10">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СЕМАНТИКА ТАБЛИЦЫ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">АРХИТЕКТУРА ДАННЫХ</div>
+            <div class="content-h2">Смысловые зоны</div>
+            <div class="content-body">
+              Как веб-страница делится на header, main и footer, так и сложная таблица делится на 3 семантических блока.
+            </div>
+            <div class="content-section-title">Зачем это нужно:</div>
+            <div class="content-body" style="font-size:18px;">
+              • Позволяет браузеру фиксировать шапку при длинном скролле данных.<br/>
+              • При печати страницы шапка &lt;thead&gt; повторяется на каждом листе бумаги.<br/>
+              • Скринридеры точно отличают служебные итоги от основных данных.
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;height:100%;justify-content:center;">
+            <div class="info-card" style="border-left:6px solid var(--purple-soft);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="catalog-tag-name">&lt;thead&gt;</span>
+                <span class="group-pill bg-purple" style="font-size:11px;">ШАПКА</span>
+              </div>
+              <div class="info-card-body">Содержит строку с заголовочными ячейками &lt;th&gt;, определяющими структуру каждого столбца.</div>
+            </div>
+
+            <div class="info-card" style="border-left:6px solid var(--yellow);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="catalog-tag-name">&lt;tbody&gt;</span>
+                <span class="group-pill bg-yellow" style="font-size:11px;">ОСНОВНОЙ МАССИВ</span>
+              </div>
+              <div class="info-card-body">Основное хранилище строк &lt;tr&gt; с контентом &lt;td&gt;. Может содержать десятки и сотни записей.</div>
+            </div>
+
+            <div class="info-card" style="border-left:6px solid var(--black);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="catalog-tag-name">&lt;tfoot&gt;</span>
+                <span class="group-pill bg-dark" style="font-size:11px;">ИТОГИ И ПОДВАЛ</span>
+              </div>
+              <div class="info-card-body">Строки с суммарными результатами, примечаниями или датой обновления таблицы.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 11 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 12 — COLSPAN И ROWSPAN
+    ══════════════════════════════ -->
+    <div class="slide" data-index="11">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · ОБЪЕДИНЕНИЕ ЯЧЕЕК</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="content-card-left">
+            <div class="content-section-label">СЛОЖНЫЕ СЕТКИ</div>
+            <div class="content-h2">Объединение ячеек</div>
+            <div class="content-body">
+              Когда ячейка должна занять место нескольких соседей, используются атрибуты <strong>colspan</strong> и <strong>rowspan</strong>.
+            </div>
+            <div class="content-section-title">Атрибут colspan (Column Span)</div>
+            <div class="content-body" style="font-size:18px;">
+              Растягивает ячейку по горизонтали на несколько <strong>столбцов</strong>: &lt;th colspan="2"&gt;.
+            </div>
+            <div class="content-section-title">Атрибут rowspan (Row Span)</div>
+            <div class="content-body" style="font-size:18px;">
+              Растягивает ячейку по вертикали на несколько <strong>строк</strong>: &lt;td rowspan="2"&gt;.
+            </div>
+          </div>
+
+          <div class="demo-table-card">
+            <div class="catalog-subtitle" style="margin-bottom:6px;">ПРИМЕР РАБОТЫ АТРИБУТОВ В ЖИВОЙ ТАБЛИЦЕ</div>
+            <table class="live-demo-table" style="font-size:14px;">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="background:var(--yellow);color:var(--black);">Категория (rowspan="2")</th>
+                  <th colspan="2" style="background:var(--purple-soft);text-align:center;">Параметры (colspan="2")</th>
+                </tr>
+                <tr>
+                  <th>Тариф</th>
+                  <th>Стоимость</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="2" style="font-weight:700;">Бассейн (rowspan="2")</td>
+                  <td>Утренний</td>
+                  <td>1 500 ₽</td>
+                </tr>
+                <tr>
+                  <td>Безлимитный</td>
+                  <td>3 500 ₽</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="font-weight:700;background:var(--bg);">Итоговый абонемент (colspan="2")</td>
+                  <td style="font-weight:800;background:var(--yellow);">4 500 ₽</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="info-card" style="padding:12px 16px;margin-top:auto;">
+              <div class="info-card-title" style="font-size:13px;">Важное правило баланса</div>
+              <div class="info-card-body" style="font-size:13px;">
+                Объединённая ячейка «съедает» место следующих ячеек в строке или соседних строках — лишние теги удаляются!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 12 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 13 — ПРАКТИКУМ: КИНОСЕАНСЫ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="12">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · СОВМЕСТНЫЙ ПРАКТИКУМ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="practice-left">
+            <div>
+              <div class="content-section-label">СОВМЕСТНАЯ РАБОТА</div>
+              <div class="content-h2">Афиша кинотеатра</div>
+              <div class="content-body" style="font-size:19px;line-height:1.5;">
+                Создадим вместе таблицу сеансов кинотеатра с правильной структурой &lt;thead&gt;, &lt;tbody&gt; и информативным &lt;caption&gt;.
+              </div>
+            </div>
+            <div style="background:var(--white);border:2px solid var(--border);border-radius:20px;padding:24px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                <span class="group-pill bg-purple" style="font-size:13px;">ТАЙМИНГ: 15 МИНУТ</span>
+                <span style="font-size:14px;font-weight:800;color:var(--black);text-transform:uppercase;">ВМЕСТЕ С КОДОМ</span>
+              </div>
+              <div style="font-size:17px;font-weight:600;color:var(--text);line-height:1.45;">
+                Закрепим связку table + caption + tr + th + td на реальном интерфейсе расписания!
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-col">
+            <div class="check-item">
+              <div class="check-icon">1</div>
+              <div>
+                <div class="check-text">Контейнер &lt;table&gt; и &lt;caption&gt;</div>
+                <div class="check-sub">Задайте имя таблицы: «Расписание сеансов на сегодня»</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">2</div>
+              <div>
+                <div class="check-text">Шапка &lt;thead&gt; с тегами &lt;th&gt;</div>
+                <div class="check-sub">Колонки: Фильм, Зал, Время начала, Стоимость</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">3</div>
+              <div>
+                <div class="check-text">Тело &lt;tbody&gt; с 3 фильмами</div>
+                <div class="check-sub">Заполните строки &lt;tr&gt; и обычные ячейки &lt;td&gt;</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">4</div>
+              <div>
+                <div class="check-text">Подвал &lt;tfoot&gt; со скидками</div>
+                <div class="check-sub">Объедините ячейки через colspan="4" для примечания кассы</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТАБЛИЦЫ В HTML</span>
+        <span>СТРАНИЦА 13 / 14</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 14 — САМОСТОЯТЕЛЬНАЯ РАБОТА
+    ══════════════════════════════ -->
+    <div class="slide" data-index="13">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 5 · САМОСТОЯТЕЛЬНО</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="content-two-col">
+          <div class="practice-left" style="background:rgba(223,255,79,0.25);">
+            <div>
+              <div class="content-section-label">ВАША ОЧЕРЕДЬ</div>
+              <div class="content-h2">Таблица прайс-листа</div>
+              <div class="content-body" style="font-size:19px;line-height:1.5;">
+                Теперь ваша очередь! Создайте прайс-лист абонементов для фитнес-клуба или школы плавания.
+              </div>
+            </div>
+            <div style="background:var(--white);border:2px solid var(--border);border-radius:20px;padding:24px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                <span class="group-pill bg-yellow" style="font-size:13px;">ТАЙМИНГ: 20 МИНУТ</span>
+                <span style="font-size:14px;font-weight:800;color:var(--black);text-transform:uppercase;">БЕЗ ПОДСКАЗОК</span>
+              </div>
+              <div style="font-size:17px;font-weight:600;color:var(--text);line-height:1.45;">
+                Примените изученные теги, объедините ячейки и проверьте отображение в браузере!
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-col">
+            <div class="check-item">
+              <div class="check-icon">1</div>
+              <div>
+                <div class="check-text">Создайте файл pricing.html</div>
+                <div class="check-sub">Базовый скелет HTML5 + заголовок документа</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">2</div>
+              <div>
+                <div class="check-text">Таблица с &lt;caption&gt; и &lt;thead&gt;</div>
+                <div class="check-sub">Колонки: Тариф, Срок действия, Включенные опции, Цена</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">3</div>
+              <div>
+                <div class="check-text">Минимум 3 тарифа в &lt;tbody&gt;</div>
+                <div class="check-sub">«Базовый», «Стандарт», «Премиум VIP» с описаниями</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">4</div>
+              <div>
+                <div class="check-text">Используйте атрибут colspan или rowspan</div>
+                <div class="check-sub">Объедините строки для категорий или строку итоговой акции</div>
+              </div>
+            </div>
+            <div class="check-item">
+              <div class="check-icon">5</div>
+              <div>
+                <div class="check-text">Подвал &lt;tfoot&gt; с контактами</div>
+                <div class="check-sub">Укажите условия возврата или телефон отдела продаж</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · САМОСТОЯТЕЛЬНАЯ РАБОТА</span>
+        <span>СТРАНИЦА 14 / 14</span>
+      </footer>
+    </div>
+
+  </div><!-- /viewport -->
+
+  <!-- Navigation -->
+  <div class="nav-bar">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <circle cx="11" cy="11" r="2.5" fill="currentColor"></circle>
+      </svg>
+    </button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
+  </div>
+
+  <!-- Loupe -->
+  <div id="magnifierLens" class="magnifier-lens">
+    <div id="magnifierInner" class="magnifier-inner"></div>
+  </div>
+
+  <script>
+    const slides  = document.querySelectorAll('.slide');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const total   = slides.length;
+    let current   = 0;
+
+    function goTo(index) {
+      if (index < 0 || index >= total) return;
+      const dir = index > current ? 1 : -1;
+      const prev = current;
+
+      slides[prev].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      slides[prev].style.opacity = '0';
+      slides[prev].style.transform = dir > 0 ? 'translateX(-80px)' : 'translateX(80px)';
+      slides[prev].classList.remove('active');
+
+      setTimeout(() => {
+        slides[prev].style.transition = '';
+        slides[prev].style.transform  = 'translateX(80px)';
+        slides[prev].style.opacity    = '';
+      }, 420);
+
+      current = index;
+      slides[current].style.transition = '';
+      slides[current].style.transform  = dir > 0 ? 'translateX(80px)' : 'translateX(-80px)';
+      slides[current].style.opacity    = '0';
+      slides[current].classList.add('active');
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        slides[current].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+        slides[current].style.transform  = 'translateX(0)';
+        slides[current].style.opacity    = '1';
+      }));
+
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+
+      if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    /* ── LOUPE / MAGNIFIER ── */
+    const lens = document.getElementById('magnifierLens');
+    const magnifierInner = document.getElementById('magnifierInner');
+    const btnLoupe = document.getElementById('btnLoupe');
+    const navBar = document.querySelector('.nav-bar');
+
+    let isLoupeActive = false;
+    const loupeRadius = 45;
+    const loupeZoom = 2.0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let rafId = null;
+
+    function syncLoupeSlide() {
+      if (!isLoupeActive) return;
+      const activeSlide = slides[current];
+      magnifierInner.style.width = window.innerWidth + 'px';
+      magnifierInner.style.height = window.innerHeight + 'px';
+      magnifierInner.innerHTML = `
+        <div class="${activeSlide.className}" style="opacity:1 !important;transform:none !important;position:absolute;inset:0;pointer-events:none;">
+          ${activeSlide.innerHTML}
+        </div>
+      `;
+    }
+
+    function updateLoupeTransform() {
+      rafId = null;
+      if (!isLoupeActive) return;
+      lens.style.transform = `translate3d(${mouseX - loupeRadius}px, ${mouseY - loupeRadius}px, 0)`;
+      magnifierInner.style.transformOrigin = `${mouseX}px ${mouseY}px`;
+      const tx = loupeRadius - mouseX;
+      const ty = loupeRadius - mouseY;
+      magnifierInner.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${loupeZoom})`;
+    }
+
+    function toggleMagnifier() {
+      isLoupeActive = !isLoupeActive;
+      if (isLoupeActive) {
+        document.body.classList.add('magnifier-mode');
+        btnLoupe.classList.add('active');
+        lens.classList.add('active');
+        lens.style.display = 'block';
+        syncLoupeSlide();
+        updateLoupeTransform();
+      } else {
+        document.body.classList.remove('magnifier-mode');
+        btnLoupe.classList.remove('active');
+        lens.classList.remove('active');
+        lens.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (isLoupeActive && !rafId) {
+        rafId = requestAnimationFrame(updateLoupeTransform);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (isLoupeActive) syncLoupeSlide();
+    });
+
+    navBar.addEventListener('mouseenter', () => {
+      if (isLoupeActive) lens.style.display = 'none';
+    });
+    navBar.addEventListener('mouseleave', () => {
+      if (isLoupeActive) lens.style.display = 'block';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z') {
+        toggleMagnifier();
+      }
+      if (e.key === 'Escape' && isLoupeActive) {
+        toggleMagnifier();
+      }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+    });
+  </script>
+<script src="/mobile-block.js"></script>
+</body>
+</html>
