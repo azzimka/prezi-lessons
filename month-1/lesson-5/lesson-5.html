@@ -867,13 +867,13 @@
             <div class="content-section-label">АРХИТЕКТУРА ДАННЫХ</div>
             <div class="content-h2">Смысловые зоны</div>
             <div class="content-body">
-              Как веб-страница делится на header, main и footer, так и сложная таблица делится на 3 семантических блока.
+              Как в веб-странице есть header, main и footer, так и в таблице выделяют 3 понятные части.
             </div>
-            <div class="content-section-title">Зачем это нужно:</div>
-            <div class="content-body" style="font-size:18px;">
-              • Позволяет браузеру фиксировать шапку при длинном скролле данных.<br/>
-              • При печати страницы шапка &lt;thead&gt; повторяется на каждом листе бумаги.<br/>
-              • Скринридеры точно отличают служебные итоги от основных данных.
+            <div class="content-section-title">Зачем делить таблицу:</div>
+            <div class="content-body" style="font-size:18px;line-height:1.55;">
+              • <strong>Шапка не теряется:</strong> когда вы листаете длинный список, названия колонок всегда перед глазами.<br/>
+              • <strong>Итоги не путаются:</strong> строка «Итого» не перемешается со строками обычных товаров.<br/>
+              • <strong>Порядок для браузера:</strong> легко оформлять стилями шапку, тело и подвал по отдельности.
             </div>
           </div>
 
@@ -883,15 +883,15 @@
                 <span class="catalog-tag-name">&lt;thead&gt;</span>
                 <span class="group-pill bg-purple" style="font-size:11px;">ШАПКА</span>
               </div>
-              <div class="info-card-body">Содержит строку с заголовочными ячейками &lt;th&gt;, определяющими структуру каждого столбца.</div>
+              <div class="info-card-body">Верхняя строка с заголовками колонок: сразу понятно, где какой параметр (Товар, Цена, Срок).</div>
             </div>
 
             <div class="info-card" style="border-left:6px solid var(--yellow);">
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <span class="catalog-tag-name">&lt;tbody&gt;</span>
-                <span class="group-pill bg-yellow" style="font-size:11px;">ОСНОВНОЙ МАССИВ</span>
+                <span class="group-pill bg-yellow" style="font-size:11px;">ОСНОВНЫЕ ДАННЫЕ</span>
               </div>
-              <div class="info-card-body">Основное хранилище строк &lt;tr&gt; с контентом &lt;td&gt;. Может содержать десятки и сотни записей.</div>
+              <div class="info-card-body">Всё содержимое таблицы: строки товаров, расписания, оценок или пользователей.</div>
             </div>
 
             <div class="info-card" style="border-left:6px solid var(--black);">
@@ -899,7 +899,7 @@
                 <span class="catalog-tag-name">&lt;tfoot&gt;</span>
                 <span class="group-pill bg-dark" style="font-size:11px;">ИТОГИ И ПОДВАЛ</span>
               </div>
-              <div class="info-card-body">Строки с суммарными результатами, примечаниями или датой обновления таблицы.</div>
+              <div class="info-card-body">Нижняя строка с результатами: финальная сумма, средний балл или важное примечание.</div>
             </div>
           </div>
         </div>
