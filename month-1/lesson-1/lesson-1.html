@@ -108,7 +108,7 @@
     .magnifier-lens {
       position: fixed;
       top: 0; left: 0;
-      width: 90px; height: 90px;
+      width: 180px; height: 180px;
       border-radius: 50%;
       border: 3px solid var(--black);
       box-shadow: 0 10px 30px rgba(10, 10, 10, 0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255, 255, 255, 0.6);
@@ -1638,7 +1638,7 @@
     const navBar = document.querySelector('.nav-bar');
 
     let isLoupeActive = false;
-    const loupeRadius = 45; // ~1cm radius (90px diameter)
+    const loupeRadius = 90; // 180px diameter / 2
     const loupeZoom = 2.0;  // 2x magnification
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;

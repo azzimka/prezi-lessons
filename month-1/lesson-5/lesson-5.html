@@ -95,7 +95,7 @@
     /* ── LOUPE MODE ── */
     .magnifier-lens {
       position: fixed; top: 0; left: 0;
-      width: 90px; height: 90px; border-radius: 50%;
+      width: 180px; height: 180px; border-radius: 50%;
       border: 3px solid var(--black);
       box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
       pointer-events: none; overflow: hidden; z-index: 9999;
@@ -483,7 +483,7 @@
           <div class="section-divider-text">
             <div class="section-divider-title">ЧТО ТАКОЕ ТАБЛИЦА</div>
             <div class="section-divider-line"></div>
-            <div class="section-divider-sub">Двумерная система координат: строки, столбцы и взаимосвязь данных</div>
+            <div class="section-divider-sub">строки, столбцы и взаимосвязь данных</div>
           </div>
         </div>
       </div>
@@ -599,12 +599,12 @@
             <div class="content-body">
               Люди систематизируют информацию таблицами уже сотни лет. Этот архивный документ переписи в США 1800 года наглядно показывает привычный нам табличный формат.
             </div>
-            <div class="content-section-title">Принцип преемственности</div>
+            <div class="content-section-title">сОхранение традиций</div>
             <div class="content-body" style="font-size:18px;">
               Создатели HTML включили теги таблиц в стандарт не случайно: вебу требовался надежный и универсальный способ публикации структурированных отчетов.
             </div>
             <div class="info-card" style="margin-top:20px;background:var(--bg);border-color:var(--border);">
-              <div class="info-card-title" style="font-size:15px;">Вывод для разработчика</div>
+              <div class="info-card-title" style="font-size:15px;">Вывод</div>
               <div class="info-card-body" style="font-size:15px;">
                 Таблица в вебе сохраняет ту же логику, что и 200 лет назад на бумаге — строгость, прозрачность и порядок.
               </div>
@@ -1247,7 +1247,7 @@
     const navBar = document.querySelector('.nav-bar');
 
     let isLoupeActive = false;
-    const loupeRadius = 45;
+    const loupeRadius = 90;
     const loupeZoom = 2.0;
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;

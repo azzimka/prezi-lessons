@@ -1057,7 +1057,7 @@ body {
 /* ── LOUPE / MAGNIFIER MODE ── */
 .magnifier-lens {
   position: fixed; top: 0; left: 0;
-  width: 90px; height: 90px; border-radius: 50%;
+  width: 180px; height: 180px; border-radius: 50%;
   border: 3px solid var(--black);
   box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
   pointer-events: none; overflow: hidden; z-index: 9999;
@@ -1149,7 +1149,7 @@ body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !
   const navBar = document.querySelector('.nav-bar');
 
   let isLoupeActive = false;
-  const loupeRadius = 45;
+  const loupeRadius = 90; // 180px diameter / 2 (увеличено в 2 раза)
   const loupeZoom = 2.0;
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
