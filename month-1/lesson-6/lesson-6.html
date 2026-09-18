@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Урок 6 — Шрифты, текст и свойства фона в CSS | Месяц 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --border:      #E0E0EE;
+      --text:        #1A1A1A;
+      --muted:       #888899;
+      --label:       #555566;
+      --code-bg:     #12131A;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── VIEWPORT ── */
+    .viewport { flex: 1; position: relative; overflow: hidden; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateX(80px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit   { opacity: 0; transform: translateX(-80px); }
+
+    /* ── HEADER ── */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 24px 56px 0; flex-shrink: 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 18px; }
+    .burger { display: flex; flex-direction: column; gap: 6px; }
+    .burger span { display: block; width: 32px; height: 4px; background: var(--black); border-radius: 2px; }
+    .brand-title { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .brand-sub   { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .header-right { text-align: right; }
+    .header-lesson { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+
+    /* ── CONTENT AREA ── */
+    .slide-content {
+      flex: 1; padding: 14px 56px 20px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-height: 0;
+    }
+
+    /* ── FOOTER ── */
+    .slide-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 260px 20px 56px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-bar {
+      position: fixed; bottom: 16px; right: 36px;
+      display: flex; gap: 12px; z-index: 100;
+    }
+    .nav-btn {
+      width: 58px; height: 58px; background: var(--white);
+      border: 2px solid var(--border); border-radius: 16px;
+      font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.06);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-btn:hover    { background: var(--black); color: var(--white); border-color: var(--black); }
+    .nav-btn:active   { transform: scale(0.95); }
+    .nav-btn:disabled { opacity: 0.25; pointer-events: none; box-shadow: none; }
+    .nav-btn.active   { background: var(--yellow) !important; color: var(--black) !important; border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(223,255,79,0.45); }
+
+    /* ── LOUPE MODE ── */
+    .magnifier-lens {
+      position: fixed; top: 0; left: 0;
+      width: 180px; height: 180px; border-radius: 50%;
+      border: 3px solid var(--black);
+      box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
+      pointer-events: none; overflow: hidden; z-index: 9999;
+      display: none; background: var(--bg); will-change: transform;
+    }
+    .magnifier-lens.active { display: block; }
+    .magnifier-lens::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 7px; height: 7px; background: var(--yellow);
+      border: 1.5px solid var(--black); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 10;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .magnifier-inner { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+    body.magnifier-mode, body.magnifier-mode * { cursor: none !important; }
+    body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !important; }
+
+    /* ════ TITLE SLIDE ════ */
+    .s-title {
+      position: absolute; inset: 0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .title-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 32px 56px 0; flex-shrink: 0;
+    }
+    .title-brand { display: flex; align-items: center; gap: 18px; }
+    .title-brand-name { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .title-brand-sub  { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .title-date-label { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: right; }
+    .title-date-val   { font-size: 22px; font-weight: 800; color: var(--black); text-align: right; margin-top: 2px; }
+    .title-center {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 1360px; margin: 0 auto; padding: 20px;
+    }
+    .title-badge {
+      background: var(--black); color: var(--white); border-radius: 100px;
+      padding: 8px 26px; font-size: 14px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .title-badge::before { content: '●'; color: var(--yellow); }
+    .title-main-line {
+      font-weight: 900; font-size: 80px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .accent-lines-row { display: flex; align-items: center; gap: 24px; margin: 6px 0; }
+    .accent-line { height: 5px; width: 90px; background: var(--yellow); flex-shrink: 0; border-radius: 3px; }
+    .title-italic-line {
+      font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+      font-size: 96px; letter-spacing: -0.02em; color: var(--black); line-height: 1;
+    }
+    .title-third-line {
+      font-weight: 900; font-size: 80px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .title-subtitle { font-size: 23px; font-weight: 500; color: var(--muted); margin-top: 18px; text-align: center; }
+    .title-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 280px 28px 56px; flex-shrink: 0;
+    }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; margin-top: 6px; }
+    .title-slogan { text-align: right; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
+
+    /* ════ TOC ════ */
+    .toc-wrap { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+    .toc-heading { display: flex; align-items: center; gap: 16px; font-weight: 900; font-size: 36px; letter-spacing: -0.01em; text-transform: uppercase; }
+    .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .toc-item { display: flex; align-items: center; gap: 18px; padding: 14px 22px; border-radius: 14px; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; text-transform: uppercase; }
+    .toc-num { font-size: 19px; font-weight: 900; min-width: 28px; }
+    .toc-white  { background: var(--white); border: 1px solid var(--border); color: var(--black); }
+    .toc-yellow { background: var(--yellow); color: var(--black); }
+    .toc-beige  { background: var(--beige); border: 1px solid #E0D8C0; color: var(--black); }
+    .toc-purple { background: var(--purple-soft); color: var(--black); }
+    .toc-black  { background: var(--black); color: var(--white); }
+
+    /* ════ QUOTE / STATEMENT SLIDES ════ */
+    .quote-slide-wrap {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .quote-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 28px;
+      padding: 56px 64px; max-width: 1100px; width: 100%;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      box-shadow: 0 16px 48px rgba(10,10,10,0.06); position: relative;
+    }
+    .quote-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 800; letter-spacing: 0.14em;
+      text-transform: uppercase; padding: 7px 20px; border-radius: 100px; margin-bottom: 28px;
+    }
+    .quote-pill.yellow { background: var(--yellow); color: var(--black); }
+    .quote-pill.purple { background: var(--purple-soft); color: var(--black); }
+    .quote-hero-text {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 38px; line-height: 1.42;
+      letter-spacing: -0.02em; color: var(--black);
+    }
+    .hl-yellow {
+      background: var(--yellow); color: var(--black);
+      padding: 0 10px; border-radius: 8px; display: inline-block;
+    }
+    .hl-purple {
+      background: var(--purple-soft); color: var(--black);
+      padding: 0 10px; border-radius: 8px; display: inline-block;
+    }
+    .quote-chips-row {
+      display: flex; align-items: center; gap: 12px; margin-top: 36px; flex-wrap: wrap; justify-content: center;
+    }
+    .quote-chip {
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 10px 20px; font-size: 15px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--black);
+    }
+    .quote-chip code {
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+      color: #004499; font-weight: 900;
+    }
+
+    /* ════ FULL-SCREEN TABLE SLIDE ════ */
+    .table-screen-wrap {
+      width: 100%; height: 100%; display: flex; flex-direction: column; gap: 14px;
+    }
+    .table-header-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .content-h2 {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 32px; line-height: 1.15;
+      letter-spacing: -0.02em; color: var(--black);
+      white-space: nowrap;
+    }
+    .table-count-badge {
+      font-size: 14px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .full-table-card {
+      background: var(--white); border: 2px solid var(--border); border-radius: 22px;
+      padding: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(10,10,10,0.04);
+      flex: 1; display: flex; flex-direction: column;
+    }
+    .css-props-table {
+      width: 100%; height: 100%; border-collapse: separate; border-spacing: 0;
+      text-align: left;
+    }
+    .css-props-table thead tr {
+      background: var(--black); color: var(--white);
+    }
+    .css-props-table th {
+      padding: 14px 22px; font-size: 14px; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .css-props-table th:first-child { border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
+    .css-props-table th:last-child  { border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
+    .css-props-table tbody tr {
+      transition: background 0.15s;
+    }
+    .css-props-table tbody tr:not(:last-child) td {
+      border-bottom: 1.5px solid var(--border);
+    }
+    .css-props-table tbody tr:hover {
+      background: rgba(223, 255, 79, 0.15);
+    }
+    .css-props-table td {
+      padding: 14px 22px; vertical-align: middle;
+      font-size: 16px; font-weight: 500; color: var(--text); line-height: 1.4;
+    }
+    .prop-badge {
+      display: inline-block; background: var(--code-bg); color: var(--yellow);
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+      font-size: 18px; font-weight: 800; padding: 6px 14px; border-radius: 10px;
+      letter-spacing: 0.02em;
+    }
+    .val-list {
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+      font-size: 14px; color: var(--text); font-weight: 600;
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    }
+    .val-chip {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 4px 8px; color: #9A3412; font-weight: 700;
+    }
+    .code-pill {
+      background: var(--code-bg); color: #F0F0FF;
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+      font-size: 14px; padding: 8px 14px; border-radius: 10px;
+      display: inline-block; white-space: nowrap;
+    }
+    .code-pill .c-sel  { color: #FFA657; font-weight: bold; }
+    .code-pill .c-prop { color: #79C0FF; }
+    .code-pill .c-val  { color: #A5D6FF; }
+
+    /* ════ CODE TO BROWSER PREVIEW SLIDE ════ */
+    .flow-grid {
+      display: grid; grid-template-columns: 1fr auto 1.05fr; gap: 24px;
+      width: 100%; height: 100%; align-items: stretch;
+    }
+    .flow-col {
+      display: flex; flex-direction: column; gap: 10px; height: 100%;
+    }
+    .col-caption {
+      font-size: 14px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .editor-frame {
+      background: var(--code-bg); border-radius: 20px; overflow: hidden;
+      display: flex; flex-direction: column; box-shadow: 0 14px 40px rgba(10,10,10,0.16);
+      flex: 1;
+    }
+    .editor-header {
+      background: #1C1D26; padding: 12px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #282936;
+    }
+    .editor-dots { display: flex; gap: 7px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot.red    { background: #FF5F56; }
+    .dot.yellow { background: #FFBD2E; }
+    .dot.green  { background: #27C93F; }
+    .editor-tab {
+      font-size: 13px; font-weight: 700; color: #A5B4FC;
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+      letter-spacing: 0.05em;
+    }
+    .code-box {
+      padding: 24px 28px;
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+      font-size: 17px; line-height: 1.8; color: #F0F0FF;
+      white-space: pre; tab-size: 2; flex: 1;
+    }
+    .c-sel  { color: #FFA657; font-weight: 800; }
+    .c-prop { color: #79C0FF; }
+    .c-val  { color: #A5D6FF; }
+    .c-punc { color: #E0E0EE; }
+    .c-comment { color: #8B949E; font-style: italic; }
+
+    .arrow-col {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px;
+    }
+    .arrow-circle {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: var(--yellow); border: 2px solid var(--black);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(223, 255, 79, 0.4);
+    }
+    .arrow-label {
+      font-size: 12px; font-weight: 900; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--black); text-align: center;
+    }
+
+    .browser-frame {
+      background: var(--white); border: 2px solid var(--border); border-radius: 20px;
+      overflow: hidden; display: flex; flex-direction: column;
+      box-shadow: 0 14px 40px rgba(10,10,10,0.08); flex: 1;
+    }
+    .browser-top {
+      background: #F4F4FA; border-bottom: 1.5px solid var(--border);
+      padding: 10px 18px; display: flex; align-items: center; gap: 14px;
+    }
+    .browser-url-pill {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      padding: 5px 14px; font-size: 12px; font-weight: 600; color: var(--muted);
+      flex: 1; font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+    }
+    .browser-view {
+      padding: 32px 36px; flex: 1; display: flex; flex-direction: column;
+      justify-content: center; background: #FAFAFD;
+    }
+    .live-paragraph-result {
+      font-family: Arial, serif;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 30px;
+      line-height: 1.45;
+      color: #0A0A0A;
+      background: var(--white);
+      border-left: 6px solid var(--yellow);
+      padding: 24px 28px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(10,10,10,0.04);
+    }
+    .browser-meta-chips {
+      display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap;
+    }
+    .meta-chip-sm {
+      background: var(--white); border: 1.5px solid var(--border);
+      padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700;
+      color: var(--label);
+    }
+    .meta-chip-sm b { color: var(--black); }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+
+    <!-- ══════════════════════════════
+         SLIDE 1 — TITLE SLIDE
+    ══════════════════════════════ -->
+    <div class="slide active" data-index="0">
+      <div class="s-title">
+        <div class="title-top">
+          <div class="title-brand">
+            <div class="burger"><span></span><span></span><span></span></div>
+            <div>
+              <div class="title-brand-name">ВЕБ-КУРС</div>
+              <div class="title-brand-sub">ОСНОВЫ CSS · СТИЛИЗАЦИЯ</div>
+            </div>
+          </div>
+          <div>
+            <div class="title-date-label">ФОРМАТ ОБУЧЕНИЯ</div>
+            <div class="title-date-val">ПРАКТИЧЕСКИЙ КУРС</div>
+          </div>
+        </div>
+
+        <div class="title-center">
+          <div class="title-badge">ТЕМА УРОКА · CSS3</div>
+          <div class="title-main-line">ШРИФТЫ И ТЕКСТ</div>
+          <div class="accent-lines-row">
+            <div class="accent-line"></div>
+            <div class="title-italic-line">в CSS-стилях</div>
+            <div class="accent-line"></div>
+          </div>
+          <div class="title-third-line">И СВОЙСТВА ФОНА</div>
+          <div class="title-subtitle">Управление семейством гарнитур, начертанием, выравниванием текста и слоями подложки</div>
+        </div>
+
+        <div class="title-bottom">
+          <div>
+            <div class="title-id-label">ID КУРСА</div>
+            <div class="title-id-val">WEB-CSS-DEV</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <div>
+              <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+              <div class="title-slogan-accents">
+                <div class="slogan-dash"></div>
+                <div class="slogan-dash-sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 2 — TABLE OF CONTENTS
+    ══════════════════════════════ -->
+    <div class="slide" data-index="1">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ CSS</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 6 · СОДЕРЖАНИЕ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="toc-wrap">
+          <div class="toc-heading">
+            <div class="burger" style="gap:5px;"><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span><span style="width:40px;height:5px;"></span></div>
+            СОДЕРЖАНИЕ УРОКА
+          </div>
+          <div class="toc-grid">
+            <div class="toc-item toc-white"><span class="toc-num">01</span> Введение в типографику: стиль и вид текста</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">02</span> Каталог свойств шрифта: family, style, weight, size</div>
+            <div class="toc-item toc-white"><span class="toc-num">03</span> Пример в коде: стилизация селектора p и рендер</div>
+            <div class="toc-item toc-beige"><span class="toc-num">04</span> Свойства текста: выравнивание, регистр и интервалы</div>
+            <div class="toc-item toc-purple"><span class="toc-num">05</span> Декорации текста и отступ первой строки</div>
+            <div class="toc-item toc-white"><span class="toc-num">06</span> Задний фон: background-color и изображения url()</div>
+            <div class="toc-item toc-yellow"><span class="toc-num">07</span> Повторение, позиционирование и фиксация фона</div>
+            <div class="toc-item toc-black"><span class="toc-num">08</span> Практикум: комплексная стилизация карточки</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТИПОГРАФИКА И СТИЛИ CSS</span>
+        <span>СТРАНИЦА 02 / 06</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 3 — ВВОДНЫЙ ТЕЗИС (ШРИФТЫ)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="2">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ CSS</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 6 · ВВЕДЕНИЕ В ШРИФТЫ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="quote-slide-wrap">
+          <div class="quote-card">
+            <div class="quote-pill yellow">ОСНОВНОЙ ПРИНЦИП ТИПОГРАФИКИ</div>
+            <div class="quote-hero-text">
+              С помощью CSS можно определять <span class="hl-purple">стиль и вид текста</span>.<br/>
+              Изменение начертания шрифта и его размера происходит через <span class="hl-yellow">свойства CSS</span>.
+            </div>
+            <div class="quote-chips-row">
+              <div class="quote-chip">Семейство: <code>font-family</code></div>
+              <div class="quote-chip">Начертание: <code>font-style</code></div>
+              <div class="quote-chip">Жирность: <code>font-weight</code></div>
+              <div class="quote-chip">Кегль: <code>font-size</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТИПОГРАФИКА И СТИЛИ CSS</span>
+        <span>СТРАНИЦА 03 / 06</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 4 — ТАБЛИЦА: РАБОТА СО ШРИФТОМ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="3">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ CSS</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 6 · СВОЙСТВА ШРИФТА</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="table-screen-wrap">
+          <div class="table-header-row">
+            <div class="content-h2">Работа со шрифтом</div>
+            <div class="table-count-badge">4 КЛЮЧЕВЫХ СВОЙСТВА · БАЗОВЫЙ НАБОР</div>
+          </div>
+
+          <div class="full-table-card">
+            <table class="css-props-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">Свойство</th>
+                  <th style="width: 26%;">Значение</th>
+                  <th style="width: 28%;">Описание</th>
+                  <th style="width: 24%;">Пример в CSS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="prop-badge">font-family</div>
+                  </td>
+                  <td>
+                    <div class="val-list">
+                      <span class="val-chip">имя шрифта</span>
+                      <span class="val-chip">Arial</span>
+                      <span class="val-chip">serif</span>
+                      <span class="val-chip">sans-serif</span>
+                    </div>
+                  </td>
+                  <td>Задаёт приоритетное семейство шрифтов и список запасных гарнитур (fallback)</td>
+                  <td>
+                    <div class="code-pill">
+                      <span class="c-sel">p</span> { <span class="c-prop">font-family</span>: <span class="c-val">Arial, serif</span>; }
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="prop-badge">font-style</div>
+                  </td>
+                  <td>
+                    <div class="val-list">
+                      <span class="val-chip">normal</span>
+                      <span class="val-chip">italic</span>
+                      <span class="val-chip">oblique</span>
+                    </div>
+                  </td>
+                  <td>Стиль начертания: нормальный прямой шрифт, курсив или наклонный шрифт</td>
+                  <td>
+                    <div class="code-pill">
+                      <span class="c-sel">p</span> { <span class="c-prop">font-style</span>: <span class="c-val">italic</span>; }
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="prop-badge">font-weight</div>
+                  </td>
+                  <td>
+                    <div class="val-list">
+                      <span class="val-chip">normal</span>
+                      <span class="val-chip">bold</span>
+                      <span class="val-chip">lighter</span>
+                      <span class="val-chip">100–900</span>
+                    </div>
+                  </td>
+                  <td>Насыщенность (толщина) шрифта: обычный, полужирный или числовая шкала</td>
+                  <td>
+                    <div class="code-pill">
+                      <span class="c-sel">p</span> { <span class="c-prop">font-weight</span>: <span class="c-val">bold</span>; }
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="prop-badge">font-size</div>
+                  </td>
+                  <td>
+                    <div class="val-list">
+                      <span class="val-chip">px</span>
+                      <span class="val-chip">pt</span>
+                      <span class="val-chip">%</span>
+                      <span class="val-chip">normal</span>
+                    </div>
+                  </td>
+                  <td>Размер шрифта: в точных пикселях (px), пунктах печати (pt) или процентах (%)</td>
+                  <td>
+                    <div class="code-pill">
+                      <span class="c-sel">p</span> { <span class="c-prop">font-size</span>: <span class="c-val">30px</span>; }
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТИПОГРАФИКА И СТИЛИ CSS</span>
+        <span>СТРАНИЦА 04 / 06</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 5 — КОД СЕЛЕКТОРА P И РЕЗУЛЬТАТ В БРАУЗЕРЕ
+    ══════════════════════════════ -->
+    <div class="slide" data-index="4">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ CSS</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 6 · ПРАКТИКА В КОДЕ</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="flow-grid">
+
+          <!-- Left: CSS Code -->
+          <div class="flow-col">
+            <div class="col-caption">Файл стилей · Редактор кода</div>
+            <div class="editor-frame">
+              <div class="editor-header">
+                <div class="editor-dots">
+                  <div class="dot red"></div>
+                  <div class="dot yellow"></div>
+                  <div class="dot green"></div>
+                </div>
+                <div class="editor-tab">style.css</div>
+              </div>
+              <div class="code-box"><span class="c-sel">p</span> <span class="c-punc">{</span>
+  <span class="c-prop">font-family</span><span class="c-punc">:</span> <span class="c-val">'Arial', serif</span><span class="c-punc">;</span>
+  <span class="c-prop">font-style</span><span class="c-punc">:</span> <span class="c-val">italic</span><span class="c-punc">;</span>
+  <span class="c-prop">font-weight</span><span class="c-punc">:</span> <span class="c-val">bold</span><span class="c-punc">;</span>
+  <span class="c-prop">font-size</span><span class="c-punc">:</span> <span class="c-val">30px</span><span class="c-punc">;</span>
+<span class="c-punc">}</span></div>
+            </div>
+          </div>
+
+          <!-- Center: Arrow -->
+          <div class="arrow-col">
+            <div class="arrow-circle">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+            <div class="arrow-label">Рендер<br/>браузера</div>
+          </div>
+
+          <!-- Right: Browser Preview -->
+          <div class="flow-col">
+            <div class="col-caption">Окно браузера · Предпросмотр</div>
+            <div class="browser-frame">
+              <div class="browser-top">
+                <div class="editor-dots">
+                  <div class="dot red"></div>
+                  <div class="dot yellow"></div>
+                  <div class="dot green"></div>
+                </div>
+                <div class="browser-url-pill">http://localhost:3000/index.html</div>
+              </div>
+              <div class="browser-view">
+                <p class="live-paragraph-result">
+                  Текст абзаца с применёнными стилями шрифта в CSS
+                </p>
+                <div class="browser-meta-chips">
+                  <div class="meta-chip-sm">Гарнитура: <b>Arial</b></div>
+                  <div class="meta-chip-sm">Начертание: <b>italic</b></div>
+                  <div class="meta-chip-sm">Жирность: <b>bold (700)</b></div>
+                  <div class="meta-chip-sm">Размер: <b>30px</b></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТИПОГРАФИКА И СТИЛИ CSS</span>
+        <span>СТРАНИЦА 05 / 06</span>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 6 — ВВОДНЫЙ ТЕЗИС (ТЕКСТ)
+    ══════════════════════════════ -->
+    <div class="slide" data-index="5">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ CSS</div></div>
+        </div>
+        <div class="header-right"><div class="header-lesson">УРОК 6 · СВОЙСТВА ТЕКСТА</div></div>
+      </header>
+      <div class="slide-content">
+        <div class="quote-slide-wrap">
+          <div class="quote-card">
+            <div class="quote-pill purple">СЛЕДУЮЩИЙ ШАГ В ТИПОГРАФИКЕ</div>
+            <div class="quote-hero-text">
+              Кроме изменения параметров шрифтов, <br/>
+              можно управлять и <span class="hl-yellow">свойствами всего текста</span>.
+            </div>
+            <div class="quote-chips-row">
+              <div class="quote-chip">Интерлиньяж: <code>line-height</code></div>
+              <div class="quote-chip">Линии: <code>text-decoration</code></div>
+              <div class="quote-chip">Регистр: <code>text-transform</code></div>
+              <div class="quote-chip">Выравнивание: <code>text-align</code></div>
+              <div class="quote-chip">Красная строка: <code>text-indent</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · ТИПОГРАФИКА И СТИЛИ CSS</span>
+        <span>СТРАНИЦА 06 / 06</span>
+      </footer>
+    </div>
+
+  </div><!-- /viewport -->
+
+  <!-- Navigation -->
+  <div class="nav-bar">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <circle cx="11" cy="11" r="2.5" fill="currentColor"></circle>
+      </svg>
+    </button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
+  </div>
+
+  <!-- Loupe -->
+  <div id="magnifierLens" class="magnifier-lens">
+    <div id="magnifierInner" class="magnifier-inner"></div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    let current = 0;
+
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+
+    function goTo(index) {
+      if (index < 0 || index >= total || index === current) return;
+      const prev = current;
+      const dir = index > current ? 1 : -1;
+
+      slides[prev].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      slides[prev].style.opacity = '0';
+      slides[prev].style.transform = dir > 0 ? 'translateX(-80px)' : 'translateX(80px)';
+      slides[prev].classList.remove('active');
+
+      setTimeout(() => {
+        slides[prev].style.transition = '';
+        slides[prev].style.transform  = 'translateX(80px)';
+        slides[prev].style.opacity    = '';
+      }, 420);
+
+      current = index;
+      slides[current].style.transition = '';
+      slides[current].style.transform  = dir > 0 ? 'translateX(80px)' : 'translateX(-80px)';
+      slides[current].style.opacity    = '0';
+      slides[current].classList.add('active');
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        slides[current].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+        slides[current].style.transform  = 'translateX(0)';
+        slides[current].style.opacity    = '1';
+      }));
+
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+
+      if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    /* ── LOUPE / MAGNIFIER ── */
+    const lens = document.getElementById('magnifierLens');
+    const magnifierInner = document.getElementById('magnifierInner');
+    const btnLoupe = document.getElementById('btnLoupe');
+    const navBar = document.querySelector('.nav-bar');
+
+    let isLoupeActive = false;
+    const loupeRadius = 90;
+    const loupeZoom = 2.0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let rafId = null;
+
+    function syncLoupeSlide() {
+      if (!isLoupeActive) return;
+      const activeSlide = slides[current];
+      magnifierInner.style.width = window.innerWidth + 'px';
+      magnifierInner.style.height = window.innerHeight + 'px';
+      magnifierInner.innerHTML = `
+        <div class="${activeSlide.className}" style="opacity:1 !important;transform:none !important;position:absolute;inset:0;pointer-events:none;">
+          ${activeSlide.innerHTML}
+        </div>
+      `;
+    }
+
+    function updateLoupeTransform() {
+      rafId = null;
+      if (!isLoupeActive) return;
+      lens.style.transform = `translate3d(${mouseX - loupeRadius}px, ${mouseY - loupeRadius}px, 0)`;
+      magnifierInner.style.transformOrigin = `${mouseX}px ${mouseY}px`;
+      const tx = loupeRadius - mouseX;
+      const ty = loupeRadius - mouseY;
+      magnifierInner.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${loupeZoom})`;
+    }
+
+    function toggleMagnifier() {
+      isLoupeActive = !isLoupeActive;
+      if (isLoupeActive) {
+        document.body.classList.add('magnifier-mode');
+        btnLoupe.classList.add('active');
+        lens.classList.add('active');
+        lens.style.display = 'block';
+        syncLoupeSlide();
+        updateLoupeTransform();
+      } else {
+        document.body.classList.remove('magnifier-mode');
+        btnLoupe.classList.remove('active');
+        lens.classList.remove('active');
+        lens.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (isLoupeActive && !rafId) {
+        rafId = requestAnimationFrame(updateLoupeTransform);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (isLoupeActive) syncLoupeSlide();
+    });
+
+    navBar.addEventListener('mouseenter', () => {
+      if (isLoupeActive) lens.style.display = 'none';
+    });
+    navBar.addEventListener('mouseleave', () => {
+      if (isLoupeActive) lens.style.display = 'block';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z') {
+        toggleMagnifier();
+      }
+      if (e.key === 'Escape' && isLoupeActive) {
+        toggleMagnifier();
+      }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+    });
+  </script>
+<script src="/mobile-block.js"></script>
+</body>
+</html>
