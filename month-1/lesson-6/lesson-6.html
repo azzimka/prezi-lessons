@@ -308,12 +308,13 @@
     .editor-frame {
       background: var(--code-bg); border-radius: 20px; overflow: hidden;
       display: flex; flex-direction: column; box-shadow: 0 14px 40px rgba(10,10,10,0.16);
-      flex: 1;
+      min-height: 0; max-height: calc(100% - 60px);
     }
     .editor-header {
       background: #1C1D26; padding: 12px 18px;
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid #282936;
+      flex-shrink: 0;
     }
     .editor-dots { display: flex; gap: 7px; }
     .dot { width: 11px; height: 11px; border-radius: 50%; }
@@ -330,6 +331,24 @@
       font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
       font-size: 17px; line-height: 1.8; color: #F0F0FF;
       white-space: pre; tab-size: 2; flex: 1;
+      overflow-x: auto;
+      overflow-y: auto;
+      min-height: 0;
+    }
+    .code-box::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    .code-box::-webkit-scrollbar-track {
+      background: #181926;
+      border-radius: 4px;
+    }
+    .code-box::-webkit-scrollbar-thumb {
+      background: #3B3C54;
+      border-radius: 4px;
+    }
+    .code-box::-webkit-scrollbar-thumb:hover {
+      background: var(--yellow);
     }
     .c-sel  { color: #FFA657; font-weight: 800; }
     .c-prop { color: #79C0FF; }
@@ -395,6 +414,7 @@
     .code-card-wrap {
       width: 100%; height: 100%; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
+      min-height: 0;
     }
   </style>
 </head>
@@ -927,7 +947,7 @@
               </div>
               <div class="editor-tab">style.css</div>
             </div>
-            <div class="code-box" style="font-size: 18px; padding: 28px 36px; line-height: 1.7;"><span class="c-sel">*</span> <span class="c-punc">{</span>
+            <div class="code-box" style="font-size: 16px; padding: 22px 32px; line-height: 1.55;"><span class="c-sel">*</span> <span class="c-punc">{</span>
   <span class="c-prop">line-height</span><span class="c-punc">:</span> <span class="c-val">20px</span><span class="c-punc">;</span>
   <span class="c-prop">text-align</span><span class="c-punc">:</span> <span class="c-val">center</span><span class="c-punc">;</span>
 <span class="c-punc">}</span>

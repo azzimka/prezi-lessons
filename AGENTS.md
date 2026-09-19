@@ -123,6 +123,15 @@ presentation/
      - *Нарушение структуры урока*: если нарушена логическая цепочка подачи материала (например, практика даётся раньше теории, отсутствует наглядный контраст или нарушена вложенность тегов).
   3. **Во всех остальных случаях**: агент строго следует прямым указаниям преподавателя, ничего не додумывает от себя и создаёт/обновляет слайды **только по прямому распоряжению**.
 
+### 1.12 Обязательный вертикальный скролл (overflow-y: auto) для блоков кода
+
+- ⚡ **СТРОГОЕ ПРАВИЛО ДЛЯ ВСЕХ АГЕНТОВ**: Любые блоки кода (`.editor-frame`, `.code-box`, терминалы и контейнеры листингов) **ОБЯЗАНЫ иметь вертикальную прокрутку (`overflow-y: auto;`) и защиту от обрезания контента (`min-height: 0; max-height: ...;`)**.
+- ❌ **СТРОГО ЗАПРЕЩЕНО** допускать ситуации, когда селекторы, свойства или длинный код уходят за нижний край карточки/экрана и обрезаются!
+- **Требования к оформлению блоков кода**:
+  1. В стилях `.code-box` всегда указывать `overflow-y: auto; overflow-x: auto;`.
+  2. Родительский фрейм (`.editor-frame`, `.code-card-wrap`) должен иметь `min-height: 0;` и аккуратно помещаться в `.slide-content`.
+  3. Для `.code-box` обязательно добавлять аккуратный стилизованный скроллбар (`::-webkit-scrollbar`), чтобы при прокрутке вверх и вниз интерфейс оставался стильным и не ломал вёрстку.
+
 ---
 
 ## 2. ЦВЕТОВАЯ ПАЛИТРА
@@ -958,8 +967,27 @@ TITLE → TOC → SECTION DIVIDER → CONTENT (2-col) → CONTENT (визуал)
   white-space: pre;
   tab-size: 2;
   overflow-x: auto;
+  overflow-y: auto;
 }
-.editor-frame .code-box { border-radius: 0; }
+.editor-frame {
+  min-height: 0;
+}
+.editor-frame .code-box {
+  border-radius: 0;
+  max-height: 480px;
+}
+.code-box::-webkit-scrollbar {
+  width: 8px; height: 8px;
+}
+.code-box::-webkit-scrollbar-track {
+  background: #1C1D26; border-radius: 4px;
+}
+.code-box::-webkit-scrollbar-thumb {
+  background: #38394E; border-radius: 4px;
+}
+.code-box::-webkit-scrollbar-thumb:hover {
+  background: var(--yellow);
+}
 
 /* Подсветка синтаксиса */
 .c-tag  { color: #FF7B72; font-weight: bold; }    /* HTML-теги */
