@@ -76,7 +76,7 @@
     /* ── FOOTER ── */
     .slide-footer {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 260px 20px 56px;
+      padding: 10px 280px 20px 56px;
       font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--muted); flex-shrink: 0;
     }
@@ -203,12 +203,15 @@
       max-width: 820px; margin-top: 24px; line-height: 1.6;
     }
     .title-bottom {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 56px 28px; flex-shrink: 0;
-      font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--muted);
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 280px 28px 56px; flex-shrink: 0;
     }
-    .title-bot-group { display: flex; gap: 32px; }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; color: var(--black); margin-top: 6px; }
+    .title-slogan { text-align: right; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
 
     /* ════ SECTION DIVIDER ════ */
     .divider-wrap {
@@ -404,10 +407,22 @@
       </div>
 
       <div class="title-bottom">
-        <div>МОДУЛЬ 01 · ОСНОВЫ HTML & CSS</div>
-        <div class="title-bot-group">
-          <span>ИНСТРУМЕНТ: CSS3</span>
-          <span>ФОРМАТ: МЕНТАЛЬНАЯ КАРТА</span>
+        <div>
+          <div class="title-id-label">ID КУРСА</div>
+          <div class="title-id-val">HTML-CSS-DEV</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <div>
+            <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+            <div class="title-slogan-accents">
+              <div class="slogan-dash"></div>
+              <div class="slogan-dash-sm"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
