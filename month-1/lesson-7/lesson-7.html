@@ -1627,19 +1627,24 @@
     const btnNext = document.getElementById('btnNext');
 
     function goTo(index) {
-      if (index < 0 || index >= total) return;
-      slides[current].classList.remove('active');
-      slides[current].classList.add('exit');
-
+      if (index < 0 || index >= total || index === current) return;
       const prevIndex = current;
+      const dir = index > current ? 1 : -1;
+
+      slides[prevIndex].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      slides[prevIndex].style.opacity = '0';
+      slides[prevIndex].style.transform = dir > 0 ? 'translateX(-80px)' : 'translateX(80px)';
+      slides[prevIndex].classList.remove('active');
+
       setTimeout(() => {
-        slides[prevIndex].classList.remove('exit');
-        slides[prevIndex].style.transform = '';
-      }, 400);
+        slides[prevIndex].style.transition = '';
+        slides[prevIndex].style.transform  = 'translateX(80px)';
+        slides[prevIndex].style.opacity    = '';
+      }, 420);
 
       current = index;
       slides[current].style.transition = 'none';
-      slides[current].style.transform  = index > prevIndex ? 'translateX(80px)' : 'translateX(-80px)';
+      slides[current].style.transform  = dir > 0 ? 'translateX(80px)' : 'translateX(-80px)';
       slides[current].style.opacity    = '0';
       slides[current].classList.add('active');
 
