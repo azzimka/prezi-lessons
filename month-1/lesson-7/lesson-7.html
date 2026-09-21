@@ -725,7 +725,7 @@
           <div class="divider-tag">РАЗДЕЛ 02</div>
           <h1 class="divider-h1">ВНУТРЕННИЙ ОТСТУП<br/>(СВОЙСТВО PADDING)</h1>
           <p class="divider-desc">
-            Как создать «воздух» внутри кнопки, плашки или карточки. Почему без padding любой сайт выглядит зажатым и любительским.
+            Как создать «воздух» внутри кнопки, карточки. Без padding любой сайт выглядит зажатым и любительским.
           </p>
         </div>
       </div>
@@ -849,37 +849,32 @@
           </div>
 
           <!-- 3 формулы шортхенда -->
-          <div class="col-card" style="justify-content: space-between;">
-            <div class="col-title">3 ВАРИАНТА СОКРАЩЁННОЙ ЗАПИСИ</div>
-            
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-              <!-- 1 значение -->
-              <div style="background: var(--code-bg); padding: 14px 18px; border-radius: 14px; color: #FFF; font-family: monospace; font-size: 15px;">
-                <span class="c-prop">padding</span>: <span class="c-val">20px</span>;
-                <div style="color: var(--yellow); font-size: 13px; font-family: 'Montserrat', sans-serif; margin-top: 4px;">
-                  ➔ Одинаково со всех 4 сторон (верх, право, низ, лево)
+          <div class="col-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div class="col-title" style="margin-bottom: 24px;">3 ВАРИАНТА ЗАПИСИ</div>
+              
+              <div style="background: var(--code-bg); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div style="padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; gap: 8px; align-items: center;">
+                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F56;"></div>
+                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #FFBD2E;"></div>
+                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #27C93F;"></div>
+                  <span style="font-family: monospace; font-size: 13px; color: var(--muted); margin-left: 12px; font-weight: 600;">shorthand.css</span>
                 </div>
-              </div>
+                <div class="code-box" style="padding: 24px 20px; font-size: 15px; border-radius: 0; line-height: 1.6;">
+<span class="c-com">/* 1. Одинаково со всех 4 сторон */</span>
+<span class="c-sel">.btn-1</span> { <span class="c-prop">padding</span>: <span class="c-val">20px</span>; }
 
-              <!-- 2 значения -->
-              <div style="background: var(--code-bg); padding: 14px 18px; border-radius: 14px; color: #FFF; font-family: monospace; font-size: 15px;">
-                <span class="c-prop">padding</span>: <span class="c-val">10px</span> <span class="c-val">25px</span>;
-                <div style="color: #9FD6FF; font-size: 13px; font-family: 'Montserrat', sans-serif; margin-top: 4px;">
-                  ➔ Первое: [Верх и Низ] · Второе: [Право и Лево]
-                </div>
-              </div>
+<span class="c-com">/* 2. Вертикаль [верх/низ] и Горизонталь [право/лево] */</span>
+<span class="c-sel">.btn-2</span> { <span class="c-prop">padding</span>: <span class="c-val">10px 25px</span>; }
 
-              <!-- 4 значения -->
-              <div style="background: var(--code-bg); padding: 14px 18px; border-radius: 14px; color: #FFF; font-family: monospace; font-size: 15px;">
-                <span class="c-prop">padding</span>: <span class="c-val">10px</span> <span class="c-val">15px</span> <span class="c-val">20px</span> <span class="c-val">5px</span>;
-                <div style="color: #F8C38C; font-size: 13px; font-family: 'Montserrat', sans-serif; margin-top: 4px;">
-                  ➔ Top (10px) → Right (15px) → Bottom (20px) → Left (5px)
+<span class="c-com">/* 3. По часовой: Верх → Право → Низ → Лево */</span>
+<span class="c-sel">.btn-3</span> { <span class="c-prop">padding</span>: <span class="c-val">10px 15px 20px 5px</span>; }
                 </div>
               </div>
             </div>
 
-            <div style="font-size: 13px; font-weight: 700; color: var(--label); margin-top: 8px;">
-              ⚡ Чаще всего на практике используется вариант с <strong>2 значениями</strong> (для кнопок и полей ввода).
+            <div style="font-size: 14px; font-weight: 600; color: var(--label); line-height: 1.5; padding-top: 16px; border-top: 2px dashed var(--border);">
+              ⚡ На практике для кнопок чаще всего используют <strong>вариант с 2 значениями</strong> (сверху-снизу поменьше, по бокам побольше).
             </div>
           </div>
         </div>
