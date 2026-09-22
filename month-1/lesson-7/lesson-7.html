@@ -202,6 +202,43 @@
       font-size: 18px; font-weight: 500; color: var(--label);
       max-width: 820px; margin-top: 24px; line-height: 1.6;
     }
+    .kahoot-cta {
+      margin-top: 28px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .kahoot-note {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--label);
+    }
+    .kahoot-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--black);
+      color: var(--yellow);
+      padding: 14px 34px;
+      border-radius: 100px;
+      text-decoration: none;
+      font-family: 'Unbounded', 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 8px 24px rgba(10,10,10,0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .kahoot-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(10,10,10,0.25);
+      background: #1e1e24;
+      color: var(--white);
+    }
     .title-bottom {
       display: flex; justify-content: space-between; align-items: flex-end;
       padding: 0 280px 28px 56px; flex-shrink: 0;
@@ -400,6 +437,18 @@
           <div class="accent-line"></div>
           <div class="title-italic-line">Box Model в CSS</div>
           <div class="accent-line"></div>
+        </div>
+
+        <div class="kahoot-cta">
+          <div class="kahoot-note">Перед началом урока обязательно пройдите тест:</div>
+          <a href="https://create.kahoot.it/my-library/kahoots/84c711fc-787f-4ce1-8431-7f9f0f7a80b1" target="_blank" rel="noopener noreferrer" class="kahoot-btn">
+            <span>Пройти тест в Kahoot</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
         </div>
       </div>
 
