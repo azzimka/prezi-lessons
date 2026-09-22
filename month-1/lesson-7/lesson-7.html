@@ -309,21 +309,21 @@
 
     /* ════ CLOCKWISE WHEEL ════ */
     .clock-wheel {
-      width: 360px; height: 360px; border-radius: 50%;
+      width: 400px; height: 400px; border-radius: 50%;
       border: 4px solid var(--black); background: var(--yellow);
       position: relative; margin: 0 auto 32px;
       display: flex; align-items: center; justify-content: center;
     }
     .clock-point {
-      position: absolute; font-family: 'Unbounded', sans-serif; font-size: 15px; font-weight: 900;
-      background: var(--black); color: var(--white); padding: 6px 14px; border-radius: 8px;
+      position: absolute; font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 900;
+      background: var(--black); color: var(--white); padding: 8px 16px; border-radius: 8px;
     }
-    .clock-top    { top: 16px; }
-    .clock-right  { right: 16px; }
-    .clock-bottom { bottom: 16px; }
-    .clock-left   { left: 16px; }
+    .clock-top    { top: 20px; }
+    .clock-right  { right: 10px; }
+    .clock-bottom { bottom: 20px; }
+    .clock-left   { left: 10px; }
     .clock-center-text {
-      font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 900; text-align: center;
+      font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900; text-align: center;
       line-height: 1.4;
     }
 
@@ -836,8 +836,9 @@
               <div class="clock-point clock-right">3:00 · RIGHT</div>
               <div class="clock-point clock-bottom">6:00 · BOTTOM</div>
               <div class="clock-point clock-left">9:00 · LEFT</div>
-              <div class="clock-center-text">
-                START<br/>ВЕРХ<br/>↓<br/>ПО ЧАСОВОЙ
+              <div class="clock-center-text" style="display: flex; flex-direction: column; gap: 40px;">
+                <div>START<br/>ВЕРХ</div>
+                <div>↓<br/>ПО ЧАСОВОЙ</div>
               </div>
             </div>
             <div style="font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 800;">
