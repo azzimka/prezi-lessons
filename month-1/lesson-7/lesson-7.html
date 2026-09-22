@@ -810,86 +810,7 @@
 
 
     <!-- ══════════════════════════════════════════════════════════════
-         SLIDE 08: ПРАВИЛО ЧАСОВОЙ СТРЕЛКИ (СИНТАКСИС)
-    ══════════════════════════════════════════════════════════════ -->
-    <section class="slide">
-      <header class="slide-header">
-        <div class="header-brand">
-          <div class="burger"><span></span><span></span><span></span></div>
-          <div>
-            <div class="brand-title">ВЕБ-КУРС</div>
-            <div class="brand-sub">ОСНОВЫ CSS</div>
-          </div>
-        </div>
-        <div class="header-right">
-          <div class="header-lesson">УРОК 07 · СИНТАКСИС</div>
-        </div>
-      </header>
-
-      <div class="slide-content" style="flex-direction: column; align-items: flex-start;">
-        <h2 class="content-h2">ПРАВИЛО ЧАСОВОЙ СТРЕЛКИ</h2>
-        <div class="two-col">
-          <!-- Часовой циферблат -->
-          <div class="col-card" style="align-items: center; justify-content: center; text-align: center;">
-            <div class="clock-wheel">
-              <div class="clock-point clock-top">12:00 · TOP</div>
-              <div class="clock-point clock-right">3:00 · RIGHT</div>
-              <div class="clock-point clock-bottom">6:00 · BOTTOM</div>
-              <div class="clock-point clock-left">9:00 · LEFT</div>
-              <div class="clock-center-text" style="display: flex; flex-direction: column; gap: 40px;">
-                <div>START<br/>ВЕРХ</div>
-                <div>↓<br/>ПО ЧАСОВОЙ</div>
-              </div>
-            </div>
-            <div style="font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 800;">
-              ВЕРХ → ПРАВО → НИЗ → ЛЕВО
-            </div>
-            <div style="font-size: 14px; color: var(--muted); margin-top: 6px; font-weight: 600;">
-              Единый стандарт для всех отступов в CSS (padding и margin)
-            </div>
-          </div>
-
-          <!-- 3 формулы шортхенда -->
-          <div class="col-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div class="col-title" style="margin-bottom: 24px;">3 ВАРИАНТА ЗАПИСИ</div>
-              
-              <div style="background: var(--code-bg); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <div style="padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; gap: 8px; align-items: center;">
-                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F56;"></div>
-                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #FFBD2E;"></div>
-                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #27C93F;"></div>
-                  <span style="font-family: monospace; font-size: 13px; color: var(--muted); margin-left: 12px; font-weight: 600;">shorthand.css</span>
-                </div>
-                <div class="code-box" style="padding: 24px 20px; font-size: 15px; border-radius: 0; line-height: 1.6;">
-<span class="c-com">/* 1. Одинаково со всех 4 сторон */</span>
-<span class="c-sel">.btn-1</span> { <span class="c-prop">padding</span>: <span class="c-val">20px</span>; }
-
-<span class="c-com">/* 2. Вертикаль [верх/низ] и Горизонталь [право/лево] */</span>
-<span class="c-sel">.btn-2</span> { <span class="c-prop">padding</span>: <span class="c-val">10px 25px</span>; }
-
-<span class="c-com">/* 3. По часовой: Верх → Право → Низ → Лево */</span>
-<span class="c-sel">.btn-3</span> { <span class="c-prop">padding</span>: <span class="c-val">10px 15px 20px 5px</span>; }
-                </div>
-              </div>
-            </div>
-
-            <div style="font-size: 14px; font-weight: 600; color: var(--label); line-height: 1.5; padding-top: 16px; border-top: 2px dashed var(--border);">
-              ⚡ На практике для кнопок чаще всего используют <strong>вариант с 2 значениями</strong> (сверху-снизу поменьше, по бокам побольше).
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <footer class="slide-footer">
-        <span>УЧЕБНЫЙ МОДУЛЬ · СТИЛИ И ОТСТУПЫ В CSS</span>
-        <span>СТРАНИЦА 08 / 19</span>
-      </footer>
-    </section>
-
-
-    <!-- ══════════════════════════════════════════════════════════════
-         SLIDE 09: РАЗДЕЛЬНЫЕ СВОЙСТВА PADDING
+         SLIDE 08: РАЗДЕЛЬНЫЕ СВОЙСТВА PADDING
     ══════════════════════════════════════════════════════════════ -->
     <section class="slide">
       <header class="slide-header">
@@ -953,6 +874,82 @@
             </div>
             <div class="code-box" style="padding: 12px; font-size: 13px;">
               <span class="c-prop">padding-left</span>: <span class="c-val">20px</span>;
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · СТИЛИ И ОТСТУПЫ В CSS</span>
+        <span>СТРАНИЦА 08 / 19</span>
+      </footer>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════
+         SLIDE 09: ПРАВИЛО ЧАСОВОЙ СТРЕЛКИ (СИНТАКСИС)
+    ══════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="brand-title">ВЕБ-КУРС</div>
+            <div class="brand-sub">ОСНОВЫ CSS</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 07 · СИНТАКСИС</div>
+        </div>
+      </header>
+
+      <div class="slide-content" style="flex-direction: column; align-items: flex-start;">
+        <h2 class="content-h2">ПРАВИЛО ЧАСОВОЙ СТРЕЛКИ</h2>
+        <div class="two-col">
+          <!-- Часовой циферблат -->
+          <div class="col-card" style="align-items: center; justify-content: center; text-align: center;">
+            <div class="clock-wheel">
+              <div class="clock-point clock-top">TOP</div>
+              <div class="clock-point clock-right">RIGHT</div>
+              <div class="clock-point clock-bottom">BOTTOM</div>
+              <div class="clock-point clock-left">LEFT</div>
+              <div class="clock-center-text" style="display: flex; flex-direction: column; gap: 40px;">
+                <div>START<br/>ВЕРХ</div>
+                <div>↓<br/>ПО ЧАСОВОЙ</div>
+              </div>
+            </div>
+            <div style="font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 800;">
+              ВЕРХ → ПРАВО → НИЗ → ЛЕВО
+            </div>
+          </div>
+
+          <!-- 3 формулы шортхенда -->
+          <div class="col-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div class="col-title" style="margin-bottom: 24px;">3 ВАРИАНТА ЗАПИСИ</div>
+              
+              <div style="background: var(--code-bg); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div style="padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; gap: 8px; align-items: center;">
+                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F56;"></div>
+                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #FFBD2E;"></div>
+                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #27C93F;"></div>
+                  <span style="font-family: monospace; font-size: 13px; color: var(--muted); margin-left: 12px; font-weight: 600;">shorthand.css</span>
+                </div>
+                <div class="code-box" style="padding: 24px 20px; font-size: 15px; border-radius: 0; line-height: 1.6;">
+<span class="c-com">/* 1. Одинаково со всех 4 сторон */</span><br>
+<span class="c-sel">.btn-1</span> { <span class="c-prop">padding</span>: <span class="c-val">20px</span>; }
+<br>
+<span class="c-com">/* 2. Вертикаль [верх/низ] и Горизонталь [право/лево] */</span><br>
+<span class="c-sel">.btn-2</span> { <span class="c-prop">padding</span>: <span class="c-val">10px 25px</span>; }
+<br>
+<span class="c-com">/* 3. По часовой: Верх → Право → Низ → Лево */</span><br>
+<span class="c-sel">.btn-3</span> { <span class="c-prop">padding</span>: <span class="c-val">10px 15px 20px 5px</span>; }
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size: 14px; font-weight: 600; color: var(--label); line-height: 1.5; padding-top: 16px; border-top: 2px dashed var(--border);">
+              ⚡ На практике для кнопок чаще всего используют <strong>вариант с 2 значениями</strong> (сверху-снизу поменьше, по бокам побольше).
             </div>
           </div>
         </div>
