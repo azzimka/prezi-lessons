@@ -301,6 +301,160 @@
     .prop-tag.purple {
       background: var(--purple-soft); color: var(--black);
     }
+
+    /* ════ SLIDE 3: PRACTICE TASKS (3 COLUMNS) ════ */
+    .practice-container {
+      width: 100%; max-width: 1360px;
+      display: flex; flex-direction: column;
+      height: 100%; justify-content: center;
+    }
+    .practice-header-wrap {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 16px;
+    }
+    .practice-badge {
+      font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--label);
+      background: rgba(10,10,10,0.06); padding: 6px 16px; border-radius: 100px;
+    }
+    .practice-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; width: 100%; align-items: stretch;
+    }
+    .task-card {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 20px; padding: 22px 24px;
+      display: flex; flex-direction: column;
+      justify-content: space-between; gap: 14px;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.03);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .task-card:hover {
+      transform: translateY(-3px);
+      border-color: #B5A0E6;
+      box-shadow: 0 10px 28px rgba(10,10,10,0.08);
+    }
+    .task-card-top {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .task-num {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 12px; font-weight: 900;
+      background: var(--black); color: var(--white);
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .task-pill {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 5px 12px; border-radius: 100px;
+    }
+    .task-pill.yellow { background: var(--yellow); color: var(--black); }
+    .task-pill.purple { background: var(--purple-soft); color: var(--black); }
+    .task-pill.dark   { background: var(--black); color: var(--white); }
+
+    .task-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 17px; font-weight: 800;
+      text-transform: uppercase; color: var(--black);
+      line-height: 1.25; margin-top: 2px;
+    }
+
+    /* Visual Target / Wireframe Preview Box */
+    .task-preview {
+      background: var(--bg); border: 1.5px dashed #D0D0E2;
+      border-radius: 14px; padding: 12px 14px;
+      min-height: 72px; display: flex; align-items: center;
+    }
+
+    /* Preview 1: Navbar space-between */
+    .preview-navbar {
+      width: 100%; display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .preview-logo {
+      padding: 5px 10px; background: var(--black);
+      color: var(--yellow); border-radius: 6px;
+      font-size: 10px; font-weight: 900;
+      font-family: 'Unbounded', sans-serif;
+    }
+    .preview-links {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .preview-link {
+      width: 32px; height: 12px; background: #C8B8F0;
+      border-radius: 4px;
+    }
+
+    /* Preview 2: Center Center */
+    .preview-center {
+      width: 100%; display: flex;
+      justify-content: center; align-items: center;
+    }
+    .preview-modal {
+      width: 100px; height: 46px; background: var(--white);
+      border: 2px solid var(--black); border-radius: 8px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+    .preview-modal-bar {
+      width: 60px; height: 6px; background: var(--yellow);
+      border-radius: 3px;
+    }
+    .preview-modal-btn {
+      width: 36px; height: 10px; background: var(--black);
+      border-radius: 3px;
+    }
+
+    /* Preview 3: Wrap Grid */
+    .preview-wrap {
+      width: 100%; display: flex; flex-wrap: wrap;
+      gap: 6px; justify-content: flex-start;
+    }
+    .preview-tag {
+      padding: 3px 8px; background: var(--white);
+      border: 1px solid var(--border); border-radius: 5px;
+      font-size: 9.5px; font-weight: 700;
+      font-family: 'SF Mono', monospace; color: var(--black);
+    }
+
+    .task-desc {
+      font-size: 14px; font-weight: 500;
+      line-height: 1.45; color: var(--text);
+    }
+    .task-desc strong { font-weight: 800; color: var(--black); }
+
+    .task-steps {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 6px;
+    }
+    .task-steps li {
+      font-size: 12.5px; font-weight: 600; color: var(--label);
+      display: flex; align-items: flex-start; gap: 8px; line-height: 1.35;
+    }
+    .task-steps li::before {
+      content: '✓'; color: var(--black);
+      font-weight: 900; font-size: 12px; flex-shrink: 0;
+    }
+
+    .task-hints {
+      border-top: 1.5px solid var(--border);
+      padding-top: 10px; display: flex;
+      flex-direction: column; gap: 5px;
+    }
+    .task-hints-label {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .task-hints-codes {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .task-hint-code {
+      font-family: 'SF Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      background: var(--bg); color: var(--black);
+      padding: 2px 6px; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
@@ -336,7 +490,6 @@
           <div class="accent-line"></div>
         </div>
         <div class="title-third-line">УПРАВЛЕНИЕ СЕТКОЙ И ЭЛЕМЕНТАМИ</div>
-        <p class="title-sub">Современный стандарт гибкой компоновки интерфейсов: контейнеры, оси координат, свободное выравнивание и многострочные ряды</p>
       </div>
 
       <div class="title-bottom">
@@ -350,7 +503,7 @@
             <polyline points="8 6 2 12 8 18"></polyline>
           </svg>
           <div>
-            <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+
             <div class="title-slogan-accents">
               <div class="slogan-dash"></div>
               <div class="slogan-dash-sm"></div>
@@ -425,7 +578,7 @@
               </div>
               <div class="prop-col-right">
                 <div class="prop-desc">
-                  Выравнивает и распределяет элементы <strong>по горизонтали</strong> (вдоль главной оси).
+                  Выравнивает и распределяет элементы <strong>по горизонтали</strong>
                 </div>
                 <div class="prop-tag purple">ПО ГОРИЗОНТАЛИ</div>
               </div>
@@ -447,7 +600,7 @@
               </div>
               <div class="prop-col-right">
                 <div class="prop-desc">
-                  Выравнивает элементы <strong>по вертикали</strong> (вдоль поперечной оси).
+                  Выравнивает элементы <strong>по вертикали</strong>
                 </div>
                 <div class="prop-tag yellow">ПО ВЕРТИКАЛИ</div>
               </div>
@@ -499,7 +652,167 @@
 
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · CSS FLEXBOX</span>
-        <span>СТРАНИЦА 02 / 02</span>
+        <span>СТРАНИЦА 02 / 03</span>
+      </footer>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         SLIDE 03: THREE PRACTICE TASKS (ПРАКТИКА)
+    ══════════════════════════════════════════════════════════════ -->
+    <section class="slide" data-index="2">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="brand-title">ВЕБ-КУРС</div>
+            <div class="brand-sub">ОСНОВЫ CSS</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 08 · ПРАКТИКА</div>
+        </div>
+      </header>
+
+      <div class="slide-content">
+        <div class="practice-container">
+          <div class="practice-header-wrap">
+            <h2 class="content-h2" style="margin-bottom:0;">ПРАКТИКА: ТРИ ЗАДАНИЯ НА FLEXBOX</h2>
+            <div class="practice-badge">ЗАКРЕПЛЕНИЕ СВОЙСТВ В РЕАЛЬНЫХ КЕЙСАХ</div>
+          </div>
+
+          <div class="practice-grid">
+
+            <!-- Task 1: Navbar -->
+            <div class="task-card">
+              <div>
+                <div class="task-card-top">
+                  <span class="task-num">ЗАДАЧА 01</span>
+                  <span class="task-pill purple">НАВБАР</span>
+                </div>
+                <div class="task-title">ШАПКА САЙТА</div>
+              </div>
+
+              <!-- Wireframe preview -->
+              <div class="task-preview">
+                <div class="preview-navbar">
+                  <div class="preview-logo">LOGO</div>
+                  <div class="preview-links">
+                    <div class="preview-link"></div>
+                    <div class="preview-link"></div>
+                    <div class="preview-link"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-desc">
+                Разместите <strong>логотип слева</strong>, а меню со ссылками — <strong>справа</strong> в одну линию по краям шапки.
+              </div>
+
+              <ul class="task-steps">
+                <li>Сделайте <code>&lt;nav&gt;</code> гибким контейнером</li>
+                <li>Разнесите контент по краям экрана</li>
+                <li>Выровняйте элементы строго по центру вертикали</li>
+              </ul>
+
+              <div class="task-hints">
+                <span class="task-hints-label">Свойства для решения:</span>
+                <div class="task-hints-codes">
+                  <span class="task-hint-code">display: flex</span>
+                  <span class="task-hint-code">justify-content: space-between</span>
+                  <span class="task-hint-code">align-items: center</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 2: Perfect Center -->
+            <div class="task-card">
+              <div>
+                <div class="task-card-top">
+                  <span class="task-num">ЗАДАЧА 02</span>
+                  <span class="task-pill yellow">ЦЕНТРИРОВАНИЕ</span>
+                </div>
+                <div class="task-title">ИДЕАЛЬНЫЙ ЦЕНТР</div>
+              </div>
+
+              <!-- Wireframe preview -->
+              <div class="task-preview">
+                <div class="preview-center">
+                  <div class="preview-modal">
+                    <div class="preview-modal-bar"></div>
+                    <div class="preview-modal-btn"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-desc">
+                Разместите модальную карточку <strong>ровно по центру</strong> экрана — одновременно по горизонтали и по вертикали.
+              </div>
+
+              <ul class="task-steps">
+                <li>Задайте контейнеру высоту всего экрана (100vh)</li>
+                <li>Выровняйте карточку по центру главной оси</li>
+                <li>Выровняйте карточку по центру поперечной оси</li>
+              </ul>
+
+              <div class="task-hints">
+                <span class="task-hints-label">Свойства для решения:</span>
+                <div class="task-hints-codes">
+                  <span class="task-hint-code">display: flex</span>
+                  <span class="task-hint-code">justify-content: center</span>
+                  <span class="task-hint-code">align-items: center</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 3: Wrap Grid -->
+            <div class="task-card">
+              <div>
+                <div class="task-card-top">
+                  <span class="task-num">ЗАДАЧА 03</span>
+                  <span class="task-pill dark">ПЕРЕНОС</span>
+                </div>
+                <div class="task-title">ГИБКАЯ СЕТКА КАРТОЧЕК</div>
+              </div>
+
+              <!-- Wireframe preview -->
+              <div class="task-preview">
+                <div class="preview-wrap">
+                  <span class="preview-tag">HTML5</span>
+                  <span class="preview-tag">CSS3</span>
+                  <span class="preview-tag">FLEX</span>
+                  <span class="preview-tag">GRID</span>
+                  <span class="preview-tag">BOX</span>
+                  <span class="preview-tag">NAV</span>
+                </div>
+              </div>
+
+              <div class="task-desc">
+                Расположите карточки в ряд так, чтобы при сужении экрана они <strong>не сжимались</strong>, а переносились на новую строку.
+              </div>
+
+              <ul class="task-steps">
+                <li>Включите режим flex-контейнера</li>
+                <li>Разрешите автоматический перенос элементов</li>
+                <li>Попробуйте сменить направление на колонку</li>
+              </ul>
+
+              <div class="task-hints">
+                <span class="task-hints-label">Свойства для решения:</span>
+                <div class="task-hints-codes">
+                  <span class="task-hint-code">display: flex</span>
+                  <span class="task-hint-code">flex-wrap: wrap</span>
+                  <span class="task-hint-code">flex-direction: column</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · CSS FLEXBOX</span>
+        <span>СТРАНИЦА 03 / 03</span>
       </footer>
     </section>
 
@@ -511,7 +824,7 @@
     <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
       <img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа"/>
     </button>
-    <button class="nav-btn" id="btnNext" onclick="navigate(1)" disabled title="Вперёд (→)">→</button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
   </div>
 
   <!-- MAGNIFIER LENS -->
