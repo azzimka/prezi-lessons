@@ -318,10 +318,12 @@
       background: rgba(10,10,10,0.06); padding: 6px 16px; border-radius: 100px;
     }
     .practice-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
+      /* display: grid; grid-template-columns: repeat(3, 1fr); */
+      display: flex;
       gap: 20px; width: 100%; align-items: stretch;
     }
     .task-card {
+      flex: 1; min-width: 0;
       background: var(--white); border: 2px solid var(--border);
       border-radius: 20px; padding: 22px 24px;
       display: flex; flex-direction: column;
@@ -762,6 +764,8 @@
                   <span class="task-hint-code">align-items: center</span>
                 </div>
               </div>
+            </div>
+
             <!-- Task 3: Wrap Grid -->
             <div class="task-card">
               <div>
@@ -791,7 +795,7 @@
               <ul class="task-steps">
                 <li>Включите режим flex-контейнера</li>
                 <li>Разрешите автоматический перенос элементов</li>
-                <li>Попробуйте сменить направление на колонку</li>
+                <li>Распределите карточки по ширине строки</li>
               </ul>
 
               <div class="task-hints">
@@ -799,7 +803,7 @@
                 <div class="task-hints-codes">
                   <span class="task-hint-code">display: flex</span>
                   <span class="task-hint-code">flex-wrap: wrap</span>
-                  <span class="task-hint-code">flex-direction: column</span>
+                  <span class="task-hint-code">justify-content: space-between</span>
                 </div>
               </div>
             </div>

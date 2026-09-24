@@ -21,5 +21,6 @@
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "python.analysis.completeFunctionParens": true,
     "typescript.suggest.completeFunctionCalls": true,
-    "javascript.suggest.completeFunctionCalls": true
+    "javascript.suggest.completeFunctionCalls": true,
+    "liveServer.settings.port": 5501
 }
