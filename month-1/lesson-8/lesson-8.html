@@ -318,9 +318,10 @@
       background: rgba(10,10,10,0.06); padding: 6px 16px; border-radius: 100px;
     }
     .practice-grid {
-      /* display: grid; grid-template-columns: repeat(3, 1fr); */
       display: flex;
-      gap: 20px; width: 100%; align-items: stretch;
+      gap: 28px;
+      width: 100%;
+      align-items: stretch;
     }
     .task-card {
       flex: 1; min-width: 0;
@@ -678,7 +679,7 @@
       <div class="slide-content">
         <div class="practice-container">
           <div class="practice-header-wrap">
-            <h2 class="content-h2" style="margin-bottom:0;">ПРАКТИКА: ТРИ ЗАДАНИЯ НА FLEXBOX</h2>
+            <h2 class="content-h2" style="margin-bottom:0;">ПРАКТИКА: ДВА ЗАДАНИЯ НА FLEXBOX</h2>
             <div class="practice-badge">ЗАКРЕПЛЕНИЕ СВОЙСТВ В РЕАЛЬНЫХ КЕЙСАХ</div>
           </div>
 
@@ -762,48 +763,6 @@
                   <span class="task-hint-code">display: flex</span>
                   <span class="task-hint-code">justify-content: center</span>
                   <span class="task-hint-code">align-items: center</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Task 3: Wrap Grid -->
-            <div class="task-card">
-              <div>
-                <div class="task-card-top">
-                  <span class="task-num">ЗАДАЧА 03</span>
-                  <span class="task-pill dark">ПЕРЕНОС</span>
-                </div>
-                <div class="task-title">ГИБКАЯ СЕТКА КАРТОЧЕК</div>
-              </div>
-
-              <!-- Wireframe preview -->
-              <div class="task-preview">
-                <div class="preview-wrap">
-                  <span class="preview-tag">HTML5</span>
-                  <span class="preview-tag">CSS3</span>
-                  <span class="preview-tag">FLEX</span>
-                  <span class="preview-tag">GRID</span>
-                  <span class="preview-tag">BOX</span>
-                  <span class="preview-tag">NAV</span>
-                </div>
-              </div>
-
-              <div class="task-desc">
-                Расположите карточки в ряд так, чтобы при сужении экрана они <strong>не сжимались</strong>, а переносились на новую строку.
-              </div>
-
-              <ul class="task-steps">
-                <li>Включите режим flex-контейнера</li>
-                <li>Разрешите автоматический перенос элементов</li>
-                <li>Распределите карточки по ширине строки</li>
-              </ul>
-
-              <div class="task-hints">
-                <span class="task-hints-label">Свойства для решения:</span>
-                <div class="task-hints-codes">
-                  <span class="task-hint-code">display: flex</span>
-                  <span class="task-hint-code">flex-wrap: wrap</span>
-                  <span class="task-hint-code">justify-content: space-between</span>
                 </div>
               </div>
             </div>
