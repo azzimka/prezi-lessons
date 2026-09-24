@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Урок 8 — Технология Flexbox в CSS | Месяц 1</title>
+  <link rel="icon" type="image/png" href="../../assets/icons/favicon.png"/>
+  <link rel="shortcut icon" href="../../assets/icons/favicon-32.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --border:      #E0E0EE;
+      --text:        #1A1A1A;
+      --muted:       #888899;
+      --label:       #555566;
+      --code-bg:     #12131A;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── VIEWPORT ── */
+    .viewport { flex: 1; position: relative; overflow: hidden; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateX(80px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit   { opacity: 0; transform: translateX(-80px); }
+
+    /* ── HEADER ── */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 24px 56px 0; flex-shrink: 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 18px; }
+    .burger { display: flex; flex-direction: column; gap: 6px; }
+    .burger span { display: block; width: 32px; height: 4px; background: var(--black); border-radius: 2px; }
+    .brand-title { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .brand-sub   { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .header-right { text-align: right; }
+    .header-lesson { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+
+    /* ── CONTENT AREA ── */
+    .slide-content {
+      flex: 1; padding: 14px 56px 20px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-height: 0;
+    }
+
+    /* ── FOOTER ── */
+    .slide-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 280px 20px 56px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-bar {
+      position: fixed; bottom: 16px; right: 36px;
+      display: flex; gap: 12px; z-index: 100;
+    }
+    .nav-btn {
+      width: 58px; height: 58px; background: var(--white);
+      border: 2px solid var(--border); border-radius: 16px;
+      font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.06);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-btn:hover    { background: var(--black); color: var(--white); border-color: var(--black); }
+    .nav-btn:active   { transform: scale(0.95); }
+    .nav-btn:disabled { opacity: 0.25; pointer-events: none; box-shadow: none; }
+    .nav-btn.active   { background: var(--yellow) !important; color: var(--black) !important; border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(223,255,79,0.45); }
+    .nav-btn-icon {
+      width: 28px; height: 28px; object-fit: contain; display: block;
+      pointer-events: none; transition: transform 0.2s, filter 0.2s;
+    }
+    .nav-btn:hover .nav-btn-icon { filter: brightness(0) invert(1); }
+    .nav-btn.active .nav-btn-icon { filter: none; transform: scale(1.08); }
+
+    /* ── LOUPE / MAGNIFIER MODE ── */
+    .magnifier-lens {
+      position: fixed; top: 0; left: 0;
+      width: 180px; height: 180px; border-radius: 50%;
+      border: 3px solid var(--black);
+      box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
+      pointer-events: none; overflow: hidden; z-index: 9999;
+      display: none; background: var(--bg); will-change: transform;
+    }
+    .magnifier-lens.active { display: block; }
+    .magnifier-lens::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 7px; height: 7px; background: var(--yellow);
+      border: 1.5px solid var(--black); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 10;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .magnifier-inner { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+    body.magnifier-mode, body.magnifier-mode * { cursor: none !important; }
+    body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !important; }
+
+    /* ════ TYPOGRAPHY ════ */
+    .content-h2 {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-size: 34px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: -0.02em; color: var(--black);
+      white-space: nowrap; margin-bottom: 20px;
+    }
+
+    /* ════ TITLE SLIDE ════ */
+    .s-title {
+      position: absolute; inset: 0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .deco-circles { position: absolute; top: 16px; right: 56px; pointer-events: none; }
+    .deco-circle-lg {
+      width: 340px; height: 340px;
+      border: 2px solid rgba(10,10,10,0.08); border-radius: 50%;
+    }
+    .deco-circle-sm {
+      width: 220px; height: 220px;
+      border: 2px solid rgba(10,10,10,0.05); border-radius: 50%;
+      position: absolute; top: 60px; left: 60px;
+    }
+    .title-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 32px 56px 0; flex-shrink: 0;
+    }
+    .title-brand { display: flex; align-items: center; gap: 18px; }
+    .title-brand-name { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .title-brand-sub  { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .title-badge-top  {
+      background: var(--black); color: var(--yellow);
+      font-weight: 800; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 10px 22px; border-radius: 100px;
+    }
+    .title-center {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 1360px; margin: 0 auto; padding: 20px;
+      text-align: center;
+    }
+    .title-badge {
+      background: var(--black); color: var(--white); border-radius: 100px;
+      padding: 8px 26px; font-size: 14px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
+    }
+    .title-badge::before { content: '●'; color: var(--yellow); }
+    .title-main-line {
+      font-weight: 900; font-size: 78px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .accent-lines-row { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 10px 0; }
+    .accent-line { height: 5px; width: 90px; background: var(--yellow); flex-shrink: 0; border-radius: 3px; }
+    .title-italic-line {
+      font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+      font-size: 84px; color: var(--black); line-height: 1;
+    }
+    .title-third-line {
+      font-weight: 900; font-size: 32px; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--black); margin-top: 6px;
+    }
+    .title-sub {
+      font-size: 18px; font-weight: 500; color: var(--label);
+      max-width: 820px; margin-top: 18px; line-height: 1.6;
+    }
+    .title-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 280px 28px 56px; flex-shrink: 0;
+    }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; color: var(--black); margin-top: 6px; }
+    .title-slogan   { text-align: right; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
+
+    /* ════ SLIDE 2: PROPERTIES MATRIX ════ */
+    .props-container {
+      width: 100%; max-width: 1360px;
+      display: flex; flex-direction: column;
+      height: 100%; justify-content: center;
+    }
+    .props-header-wrap {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 16px;
+    }
+    .props-badge {
+      font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--label);
+      background: rgba(10,10,10,0.06); padding: 6px 16px; border-radius: 100px;
+      margin-bottom: 20px;
+    }
+    .props-matrix {
+      display: flex; flex-direction: column; gap: 11px;
+      width: 100%;
+    }
+    .prop-row {
+      display: grid; grid-template-columns: 500px 1fr;
+      align-items: center; gap: 28px;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 18px; padding: 14px 24px;
+      box-shadow: 0 3px 12px rgba(10,10,10,0.02);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .prop-row:hover {
+      transform: translateY(-2px);
+      border-color: #B5A0E6;
+      box-shadow: 0 8px 24px rgba(10,10,10,0.07);
+    }
+    .prop-col-left {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .prop-name-row {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .prop-num {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 12px; font-weight: 900; color: var(--black);
+      background: var(--yellow); padding: 3px 9px; border-radius: 6px;
+      letter-spacing: 0.05em; line-height: 1.2;
+    }
+    .prop-name {
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+      font-size: 20px; font-weight: 900; color: var(--black);
+      letter-spacing: -0.02em;
+    }
+    .prop-values-list {
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    }
+    .val-pill {
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+      font-size: 13px; font-weight: 600;
+      padding: 4px 10px; border-radius: 6px;
+      background: var(--bg); color: #3A3A4D;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .val-pill.accent {
+      background: rgba(223, 255, 79, 0.55);
+      border-color: #BEDE2E;
+      color: #0A0A0A;
+      font-weight: 800;
+    }
+    .val-pill.purple {
+      background: rgba(200, 184, 240, 0.45);
+      border-color: #B09EE0;
+      color: #0A0A0A;
+      font-weight: 800;
+    }
+
+    .prop-col-right {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; padding-left: 24px;
+      border-left: 2px solid var(--border);
+      min-height: 48px;
+    }
+    .prop-desc {
+      font-size: 16px; font-weight: 500; line-height: 1.45;
+      color: var(--text);
+    }
+    .prop-desc strong {
+      font-weight: 800; color: var(--black);
+    }
+    .prop-desc code {
+      font-family: 'SF Mono', 'Fira Code', Menlo, monospace;
+      background: var(--bg); padding: 2px 6px; border-radius: 4px;
+      font-size: 14px; font-weight: 700; color: var(--black);
+    }
+    .prop-tag {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
+      background: var(--bg); color: var(--label);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .prop-tag.yellow {
+      background: var(--yellow); color: var(--black);
+    }
+    .prop-tag.purple {
+      background: var(--purple-soft); color: var(--black);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         SLIDE 01: TITLE SLIDE (ПОСТЕРНАЯ ОБЛОЖКА)
+    ══════════════════════════════════════════════════════════════ -->
+    <section class="slide s-title active" data-index="0">
+      <div class="deco-circles">
+        <div class="deco-circle-lg"></div>
+        <div class="deco-circle-sm"></div>
+      </div>
+
+      <div class="title-top">
+        <div class="title-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="title-brand-name">ВЕБ-КУРС</div>
+            <div class="title-brand-sub">ОСНОВЫ ВЕБ-РАЗРАБОТКИ</div>
+          </div>
+        </div>
+        <div class="title-badge-top">МЕСЯЦ 1 · УРОК 08</div>
+      </div>
+
+      <div class="title-center">
+        <div class="title-badge">ТЕХНОЛОГИЯ FLEXBOX</div>
+        <h1 class="title-main-line">ГИБКАЯ ВЁРСТКА И</h1>
+        <div class="accent-lines-row">
+          <div class="accent-line"></div>
+          <div class="title-italic-line">Flexbox в CSS</div>
+          <div class="accent-line"></div>
+        </div>
+        <div class="title-third-line">УПРАВЛЕНИЕ СЕТКОЙ И ЭЛЕМЕНТАМИ</div>
+        <p class="title-sub">Современный стандарт гибкой компоновки интерфейсов: контейнеры, оси координат, свободное выравнивание и многострочные ряды</p>
+      </div>
+
+      <div class="title-bottom">
+        <div>
+          <div class="title-id-label">ID КУРСА</div>
+          <div class="title-id-val">HTML-CSS-DEV</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          <div>
+            <div class="title-slogan">ИЗУЧАЙ. КОД. СОЗДАВАЙ.</div>
+            <div class="title-slogan-accents">
+              <div class="slogan-dash"></div>
+              <div class="slogan-dash-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════
+         SLIDE 02: FLEXBOX PROPERTIES MATRIX (КАРТА СВОЙСТВ)
+    ══════════════════════════════════════════════════════════════ -->
+    <section class="slide" data-index="1">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="brand-title">ВЕБ-КУРС</div>
+            <div class="brand-sub">ОСНОВЫ CSS</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 08 · ОБЗОР СВОЙСТВ</div>
+        </div>
+      </header>
+
+      <div class="slide-content">
+        <div class="props-container">
+          <div class="props-header-wrap">
+            <h2 class="content-h2" style="margin-bottom:0;">ОСНОВНЫЕ СВОЙСТВА FLEXBOX</h2>
+            <div class="props-badge">ШПАРГАЛКА ПО СВОЙСТВАМ И ЗНАЧЕНИЯМ</div>
+          </div>
+
+          <div class="props-matrix">
+
+            <!-- 01: display -->
+            <div class="prop-row">
+              <div class="prop-col-left">
+                <div class="prop-name-row">
+                  <span class="prop-num">01</span>
+                  <span class="prop-name">display</span>
+                </div>
+                <div class="prop-values-list">
+                  <span class="val-pill">inline</span>
+                  <span class="val-pill">block</span>
+                  <span class="val-pill accent">flex</span>
+                </div>
+              </div>
+              <div class="prop-col-right">
+                <div class="prop-desc">
+                  Определяет тип отображения элемента в потоке. Значение <code>flex</code> превращает блок в <strong>гибкий контейнер</strong>.
+                </div>
+                <div class="prop-tag yellow">КОНТЕЙНЕР</div>
+              </div>
+            </div>
+
+            <!-- 02: justify-content -->
+            <div class="prop-row">
+              <div class="prop-col-left">
+                <div class="prop-name-row">
+                  <span class="prop-num">02</span>
+                  <span class="prop-name">justify-content</span>
+                </div>
+                <div class="prop-values-list">
+                  <span class="val-pill">flex-start</span>
+                  <span class="val-pill">center</span>
+                  <span class="val-pill">flex-end</span>
+                  <span class="val-pill accent">space-between</span>
+                  <span class="val-pill">space-around</span>
+                </div>
+              </div>
+              <div class="prop-col-right">
+                <div class="prop-desc">
+                  Выравнивает и распределяет элементы вдоль <strong>главной оси</strong> (по умолчанию — по горизонтали).
+                </div>
+                <div class="prop-tag purple">ГЛАВНАЯ ОСЬ</div>
+              </div>
+            </div>
+
+            <!-- 03: align-items -->
+            <div class="prop-row">
+              <div class="prop-col-left">
+                <div class="prop-name-row">
+                  <span class="prop-num">03</span>
+                  <span class="prop-name">align-items</span>
+                </div>
+                <div class="prop-values-list">
+                  <span class="val-pill">stretch</span>
+                  <span class="val-pill accent">center</span>
+                  <span class="val-pill">flex-start</span>
+                  <span class="val-pill">flex-end</span>
+                </div>
+              </div>
+              <div class="prop-col-right">
+                <div class="prop-desc">
+                  Выравнивает элементы вдоль <strong>поперечной оси</strong> (по умолчанию — по вертикали).
+                </div>
+                <div class="prop-tag">ПОПЕРЕЧНАЯ ОСЬ</div>
+              </div>
+            </div>
+
+            <!-- 04: flex-direction -->
+            <div class="prop-row">
+              <div class="prop-col-left">
+                <div class="prop-name-row">
+                  <span class="prop-num">04</span>
+                  <span class="prop-name">flex-direction</span>
+                </div>
+                <div class="prop-values-list">
+                  <span class="val-pill accent">row</span>
+                  <span class="val-pill purple">column</span>
+                </div>
+              </div>
+              <div class="prop-col-right">
+                <div class="prop-desc">
+                  Задаёт направление главной оси: в строку (<code>row</code>, по умолчанию) или в колонку (<code>column</code>).
+                </div>
+                <div class="prop-tag yellow">НАПРАВЛЕНИЕ</div>
+              </div>
+            </div>
+
+            <!-- 05: flex-wrap -->
+            <div class="prop-row">
+              <div class="prop-col-left">
+                <div class="prop-name-row">
+                  <span class="prop-num">05</span>
+                  <span class="prop-name">flex-wrap</span>
+                </div>
+                <div class="prop-values-list">
+                  <span class="val-pill">nowrap</span>
+                  <span class="val-pill accent">wrap</span>
+                </div>
+              </div>
+              <div class="prop-col-right">
+                <div class="prop-desc">
+                  Управляет переносом: в одну строку (<code>nowrap</code>) или с переносом на новые строки (<code>wrap</code>).
+                </div>
+                <div class="prop-tag">ПЕРЕНОС</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · CSS FLEXBOX</span>
+        <span>СТРАНИЦА 02 / 02</span>
+      </footer>
+    </section>
+
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <div class="nav-bar">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
+      <img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа"/>
+    </button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" disabled title="Вперёд (→)">→</button>
+  </div>
+
+  <!-- MAGNIFIER LENS -->
+  <div id="magnifierLens" class="magnifier-lens">
+    <div id="magnifierInner" class="magnifier-inner"></div>
+  </div>
+
+  <script>
+    const slides  = document.querySelectorAll('.slide');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const total   = slides.length;
+    let current   = 0;
+
+    function goTo(index) {
+      if (index < 0 || index >= total) return;
+      const dir = index > current ? 1 : -1;
+      const prev = current;
+
+      slides[prev].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      slides[prev].style.opacity = '0';
+      slides[prev].style.transform = dir > 0 ? 'translateX(-80px)' : 'translateX(80px)';
+      slides[prev].classList.remove('active');
+
+      setTimeout(() => {
+        slides[prev].style.transition = '';
+        slides[prev].style.transform  = 'translateX(80px)';
+        slides[prev].style.opacity    = '';
+      }, 420);
+
+      current = index;
+      slides[current].style.transition = '';
+      slides[current].style.transform  = dir > 0 ? 'translateX(80px)' : 'translateX(-80px)';
+      slides[current].style.opacity    = '0';
+      slides[current].classList.add('active');
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        slides[current].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+        slides[current].style.transform  = 'translateX(0)';
+        slides[current].style.opacity    = '1';
+      }));
+
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+
+      if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    /* ── LOUPE / MAGNIFIER LOGIC ── */
+    const lens = document.getElementById('magnifierLens');
+    const magnifierInner = document.getElementById('magnifierInner');
+    const btnLoupe = document.getElementById('btnLoupe');
+    const navBar = document.querySelector('.nav-bar');
+
+    let isLoupeActive = false;
+    const loupeRadius = 90;
+    const loupeZoom = 2.0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let rafId = null;
+
+    function syncLoupeSlide() {
+      if (!isLoupeActive) return;
+      const activeSlide = slides[current];
+      magnifierInner.style.width = window.innerWidth + 'px';
+      magnifierInner.style.height = window.innerHeight + 'px';
+      magnifierInner.innerHTML = `
+        <div class="${activeSlide.className}" style="opacity:1 !important;transform:none !important;position:absolute;inset:0;pointer-events:none;">
+          ${activeSlide.innerHTML}
+        </div>
+      `;
+    }
+
+    function updateLoupeTransform() {
+      rafId = null;
+      if (!isLoupeActive) return;
+      lens.style.transform = `translate3d(${mouseX - loupeRadius}px, ${mouseY - loupeRadius}px, 0)`;
+      magnifierInner.style.transformOrigin = `${mouseX}px ${mouseY}px`;
+      const tx = loupeRadius - mouseX;
+      const ty = loupeRadius - mouseY;
+      magnifierInner.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${loupeZoom})`;
+    }
+
+    function toggleMagnifier() {
+      isLoupeActive = !isLoupeActive;
+      if (isLoupeActive) {
+        document.body.classList.add('magnifier-mode');
+        btnLoupe.classList.add('active');
+        lens.classList.add('active');
+        lens.style.display = 'block';
+        syncLoupeSlide();
+        updateLoupeTransform();
+      } else {
+        document.body.classList.remove('magnifier-mode');
+        btnLoupe.classList.remove('active');
+        lens.classList.remove('active');
+        lens.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (isLoupeActive && !rafId) {
+        rafId = requestAnimationFrame(updateLoupeTransform);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (isLoupeActive) syncLoupeSlide();
+    });
+
+    navBar.addEventListener('mouseenter', () => {
+      if (isLoupeActive) lens.style.display = 'none';
+    });
+    navBar.addEventListener('mouseleave', () => {
+      if (isLoupeActive) lens.style.display = 'block';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z') {
+        toggleMagnifier();
+      }
+      if (e.key === 'Escape' && isLoupeActive) {
+        toggleMagnifier();
+      }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+    });
+  </script>
+  <script src="/mobile-block.js"></script>
+</body>
+</html>
