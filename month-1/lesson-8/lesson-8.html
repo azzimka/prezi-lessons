@@ -455,6 +455,181 @@
       padding: 2px 6px; border-radius: 4px;
       border: 1px solid var(--border);
     }
+
+    /* ════ SLIDE 4: WIREFRAME LAYOUT PUZZLES ════ */
+    .wf-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; width: 100%; align-items: stretch;
+    }
+    .wf-card {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 20px; padding: 22px 22px 20px;
+      display: flex; flex-direction: column;
+      justify-content: space-between; gap: 12px;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.03);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .wf-card:hover {
+      transform: translateY(-3px);
+      border-color: #B5A0E6;
+      box-shadow: 0 10px 28px rgba(10,10,10,0.08);
+    }
+    .wf-card-top {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .wf-num {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 12px; font-weight: 900;
+      background: var(--black); color: var(--white);
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .wf-pill {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 5px 12px; border-radius: 100px;
+    }
+    .wf-pill.yellow { background: var(--yellow); color: var(--black); }
+    .wf-pill.purple { background: var(--purple-soft); color: var(--black); }
+    .wf-pill.beige  { background: var(--beige); color: var(--black); }
+
+    .wf-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 16px; font-weight: 800;
+      text-transform: uppercase; color: var(--black);
+      line-height: 1.25; margin-top: 3px;
+    }
+
+    /* Wireframe Canvas: high-contrast layout box like teacher's sketch */
+    .wf-canvas-box {
+      background: #FAFAFD;
+      border: 2.5px solid var(--black);
+      border-radius: 14px;
+      padding: 12px;
+      height: 154px;
+      display: flex;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(10,10,10,0.04);
+    }
+    .wf-container-tag {
+      position: absolute; top: -10px; left: 14px;
+      background: var(--black); color: var(--yellow);
+      font-family: 'SF Mono', monospace; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em;
+    }
+
+    /* Case 1: Banner + 2 cards (user sketch) */
+    .wf-canvas-1 {
+      width: 100%; display: flex;
+      flex-wrap: wrap; justify-content: space-between;
+      align-content: space-between;
+    }
+    .wf-c1-top {
+      width: 100%; height: 50px;
+      border: 2px solid var(--black); border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 800;
+      color: var(--black);
+    }
+    .wf-c1-bot {
+      width: 48%; height: 64px;
+      border: 2px solid var(--black); border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 800;
+      color: var(--black);
+    }
+
+    /* Case 2: Vertical Column Centered */
+    .wf-canvas-2 {
+      width: 100%; display: flex;
+      flex-direction: column; align-items: center;
+      justify-content: space-between;
+    }
+    .wf-c2-item-1 {
+      width: 58%; height: 30px;
+      border: 2px solid var(--black); border-radius: 6px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 11px; font-weight: 800;
+      color: var(--black);
+    }
+    .wf-c2-item-2 {
+      width: 94%; height: 50px;
+      border: 2px solid var(--black); border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 800;
+      color: var(--black);
+    }
+    .wf-c2-item-3 {
+      width: 40%; height: 28px;
+      border: 2px solid var(--black); border-radius: 6px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 11px; font-weight: 800;
+      color: var(--black);
+    }
+
+    /* Case 3: Podium bottom alignment */
+    .wf-canvas-3 {
+      width: 100%; display: flex;
+      justify-content: space-between; align-items: flex-end;
+    }
+    .wf-c3-item-1 {
+      width: 30%; height: 68px;
+      border: 2px solid var(--black); border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 800;
+      color: var(--black);
+    }
+    .wf-c3-item-2 {
+      width: 30%; height: 122px;
+      border: 2px solid var(--black); border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 800;
+      color: var(--black);
+    }
+    .wf-c3-item-3 {
+      width: 30%; height: 46px;
+      border: 2px solid var(--black); border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 800;
+      color: var(--black);
+    }
+
+    .wf-desc {
+      font-size: 13.5px; font-weight: 500;
+      line-height: 1.4; color: var(--text);
+    }
+    .wf-desc strong { font-weight: 800; color: var(--black); }
+
+    .wf-steps {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 5px;
+    }
+    .wf-steps li {
+      font-size: 12px; font-weight: 600; color: var(--label);
+      display: flex; align-items: flex-start; gap: 7px; line-height: 1.35;
+    }
+    .wf-steps li::before {
+      content: '→'; color: var(--black);
+      font-weight: 900; font-size: 12px; flex-shrink: 0;
+    }
+
+    .wf-hints {
+      border-top: 1.5px solid var(--border);
+      padding-top: 9px; display: flex;
+      flex-direction: column; gap: 4px;
+    }
+    .wf-hints-label {
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .wf-hints-codes {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .wf-hint-code {
+      font-family: 'SF Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      background: var(--bg); color: var(--black);
+      padding: 2px 6px; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
@@ -652,7 +827,7 @@
 
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · CSS FLEXBOX</span>
-        <span>СТРАНИЦА 02 / 03</span>
+        <span>СТРАНИЦА 02 / 04</span>
       </footer>
     </section>
 
@@ -812,7 +987,163 @@
 
       <footer class="slide-footer">
         <span>УЧЕБНЫЙ МОДУЛЬ · CSS FLEXBOX</span>
-        <span>СТРАНИЦА 03 / 03</span>
+        <span>СТРАНИЦА 03 / 04</span>
+      </footer>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         SLIDE 04: WIREFRAME LAYOUT PUZZLES (СХЕМЫ РАСКЛАДКИ)
+    ══════════════════════════════════════════════════════════════ -->
+    <section class="slide" data-index="3">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="brand-title">ВЕБ-КУРС</div>
+            <div class="brand-sub">ОСНОВЫ CSS</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 08 · АРХИТЕКТУРА СЕТОК</div>
+        </div>
+      </header>
+
+      <div class="slide-content">
+        <div class="practice-container">
+          <div class="practice-header-wrap">
+            <h2 class="content-h2" style="margin-bottom:0;">КОНСТРУКТОР СЕТОК: 3 МАКЕТА</h2>
+            <div class="practice-badge">ВОСПРОИЗВЕДИТЕ РАСПОЛОЖЕНИЕ БЛОКОВ ПО СХЕМЕ</div>
+          </div>
+
+          <div class="wf-grid">
+
+            <!-- Scheme 1: Banner + 2 cards (User sketch) -->
+            <div class="wf-card">
+              <div>
+                <div class="wf-card-top">
+                  <span class="wf-num">СХЕМА 01</span>
+                  <span class="wf-pill yellow">WRAP & ROWS</span>
+                </div>
+                <div class="wf-title">БАННЕР И КАРТОЧКИ</div>
+              </div>
+
+              <!-- High-contrast wireframe box matching teacher's sketch -->
+              <div class="wf-canvas-box">
+                <span class="wf-container-tag">.container</span>
+                <div class="wf-canvas-1">
+                  <div class="wf-c1-top">1 (width: 100%)</div>
+                  <div class="wf-c1-bot">2 (48%)</div>
+                  <div class="wf-c1-bot">3 (48%)</div>
+                </div>
+              </div>
+
+              <div class="wf-desc">
+                Блок 1 занимает <strong>всю ширину</strong>, а блоки 2 и 3 — делят нижнюю строку пополам по краям.
+              </div>
+
+              <ul class="wf-steps">
+                <li>Разрешите перенос: <code>flex-wrap: wrap;</code></li>
+                <li>Раздвиньте нижние блоки: <code>space-between</code></li>
+                <li>Задайте блоку 1 <code>width: 100%</code>, а нижним — <code>48%</code></li>
+              </ul>
+
+              <div class="wf-hints">
+                <span class="wf-hints-label">Ключевые свойства:</span>
+                <div class="wf-hints-codes">
+                  <span class="wf-hint-code">display: flex</span>
+                  <span class="wf-hint-code">flex-wrap: wrap</span>
+                  <span class="wf-hint-code">justify-content: space-between</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scheme 2: Vertical Column Centered -->
+            <div class="wf-card">
+              <div>
+                <div class="wf-card-top">
+                  <span class="wf-num">СХЕМА 02</span>
+                  <span class="wf-pill purple">COLUMN & CENTER</span>
+                </div>
+                <div class="wf-title">ЦЕНТРИРОВАННЫЙ СТЕК</div>
+              </div>
+
+              <!-- High-contrast wireframe box -->
+              <div class="wf-canvas-box">
+                <span class="wf-container-tag">.container</span>
+                <div class="wf-canvas-2">
+                  <div class="wf-c2-item-1">1 (Заголовок)</div>
+                  <div class="wf-c2-item-2">2 (Баннер)</div>
+                  <div class="wf-c2-item-3">3 (Кнопка)</div>
+                </div>
+              </div>
+
+              <div class="wf-desc">
+                Три блока <strong>разной ширины</strong> выстроены в вертикальную колонку и отцентрированы.
+              </div>
+
+              <ul class="wf-steps">
+                <li>Переключите главную ось: <code>flex-direction: column;</code></li>
+                <li>Выровняйте по центру поперечной оси: <code>align-items: center;</code></li>
+                <li>Распределите высоту контейнера: <code>space-between</code></li>
+              </ul>
+
+              <div class="wf-hints">
+                <span class="wf-hints-label">Ключевые свойства:</span>
+                <div class="wf-hints-codes">
+                  <span class="wf-hint-code">display: flex</span>
+                  <span class="wf-hint-code">flex-direction: column</span>
+                  <span class="wf-hint-code">align-items: center</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scheme 3: Podium bottom alignment -->
+            <div class="wf-card">
+              <div>
+                <div class="wf-card-top">
+                  <span class="wf-num">СХЕМА 03</span>
+                  <span class="wf-pill beige">ALIGN & BOTTOM</span>
+                </div>
+                <div class="wf-title">ПОДИУМ (ПО НИЖНЕМУ КРАЮ)</div>
+              </div>
+
+              <!-- High-contrast wireframe box -->
+              <div class="wf-canvas-box">
+                <span class="wf-container-tag">.container</span>
+                <div class="wf-canvas-3">
+                  <div class="wf-c3-item-1">1 (2-е место)</div>
+                  <div class="wf-c3-item-2">2 (1-е место)</div>
+                  <div class="wf-c3-item-3">3 (3-е место)</div>
+                </div>
+              </div>
+
+              <div class="wf-desc">
+                Три блока <strong>разной высоты</strong> стоят в ряд и идеально прижаты к <strong>нижнему краю</strong> контейнера.
+              </div>
+
+              <ul class="wf-steps">
+                <li>Оставьте направление по умолчанию (<code>row</code>)</li>
+                <li>Прижмите элементы к полу: <code>align-items: flex-end;</code></li>
+                <li>Равномерно распределите по ширине: <code>space-between</code></li>
+              </ul>
+
+              <div class="wf-hints">
+                <span class="wf-hints-label">Ключевые свойства:</span>
+                <div class="wf-hints-codes">
+                  <span class="wf-hint-code">display: flex</span>
+                  <span class="wf-hint-code">align-items: flex-end</span>
+                  <span class="wf-hint-code">justify-content: space-between</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · CSS FLEXBOX</span>
+        <span>СТРАНИЦА 04 / 04</span>
       </footer>
     </section>
 
