@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Урок 9 — Контроль размеров и свойство overflow в CSS | Месяц 1</title>
+  <link rel="icon" type="image/png" href="../../assets/icons/favicon.png"/>
+  <link rel="shortcut icon" href="../../assets/icons/favicon-32.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #EEEEF8;
+      --white:       #FFFFFF;
+      --black:       #0A0A0A;
+      --yellow:      #DFFF4F;
+      --purple-soft: #C8B8F0;
+      --beige:       #EDE8D8;
+      --border:      #E0E0EE;
+      --text:        #1A1A1A;
+      --muted:       #888899;
+      --label:       #555566;
+      --code-bg:     #12131A;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── VIEWPORT ── */
+    .viewport { flex: 1; position: relative; overflow: hidden; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateX(80px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none; display: flex; flex-direction: column;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit   { opacity: 0; transform: translateX(-80px); }
+
+    /* ── HEADER ── */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 24px 56px 0; flex-shrink: 0;
+    }
+    .header-brand { display: flex; align-items: center; gap: 18px; }
+    .burger { display: flex; flex-direction: column; gap: 6px; }
+    .burger span { display: block; width: 32px; height: 4px; background: var(--black); border-radius: 2px; }
+    .brand-title { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .brand-sub   { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .header-right { text-align: right; }
+    .header-lesson { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); }
+
+    /* ── CONTENT AREA ── */
+    .slide-content {
+      flex: 1; padding: 14px 56px 20px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; min-height: 0;
+    }
+
+    /* ── FOOTER ── */
+    .slide-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 280px 20px 56px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-bar {
+      position: fixed; bottom: 16px; right: 36px;
+      display: flex; gap: 12px; z-index: 100;
+    }
+    .nav-btn {
+      width: 58px; height: 58px; background: var(--white);
+      border: 2px solid var(--border); border-radius: 16px;
+      font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,10,10,0.06);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .nav-btn:hover    { background: var(--black); color: var(--white); border-color: var(--black); }
+    .nav-btn:active   { transform: scale(0.95); }
+    .nav-btn:disabled { opacity: 0.25; pointer-events: none; box-shadow: none; }
+    .nav-btn.active   { background: var(--yellow) !important; color: var(--black) !important; border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(223,255,79,0.45); }
+    .nav-btn-icon {
+      width: 28px; height: 28px; object-fit: contain; display: block;
+      pointer-events: none; transition: transform 0.2s, filter 0.2s;
+    }
+    .nav-btn:hover .nav-btn-icon { filter: brightness(0) invert(1); }
+    .nav-btn.active .nav-btn-icon { filter: none; transform: scale(1.08); }
+
+    /* ── LOUPE / MAGNIFIER MODE ── */
+    .magnifier-lens {
+      position: fixed; top: 0; left: 0;
+      width: 180px; height: 180px; border-radius: 50%;
+      border: 3px solid var(--black);
+      box-shadow: 0 10px 30px rgba(10,10,10,0.35), 0 0 0 2px var(--yellow), inset 0 0 0 2px rgba(255,255,255,0.6);
+      pointer-events: none; overflow: hidden; z-index: 9999;
+      display: none; background: var(--bg); will-change: transform;
+    }
+    .magnifier-lens.active { display: block; }
+    .magnifier-lens::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 7px; height: 7px; background: var(--yellow);
+      border: 1.5px solid var(--black); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 10;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .magnifier-inner { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+    body.magnifier-mode, body.magnifier-mode * { cursor: none !important; }
+    body.magnifier-mode .nav-bar, body.magnifier-mode .nav-bar * { cursor: pointer !important; }
+
+    /* ════ TYPOGRAPHY ════ */
+    .content-h2 {
+      font-family: 'Unbounded', 'Neutral Face', 'Montserrat', sans-serif;
+      font-size: 34px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: -0.02em; color: var(--black);
+      white-space: nowrap; margin-bottom: 18px;
+    }
+
+    /* ════ TITLE SLIDE ════ */
+    .s-title {
+      position: absolute; inset: 0; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .deco-circles { position: absolute; top: 16px; right: 56px; pointer-events: none; }
+    .deco-circle-lg {
+      width: 340px; height: 340px;
+      border: 2px solid rgba(10,10,10,0.08); border-radius: 50%;
+    }
+    .deco-circle-sm {
+      width: 220px; height: 220px;
+      border: 2px solid rgba(10,10,10,0.05); border-radius: 50%;
+      position: absolute; top: 60px; left: 60px;
+    }
+    .title-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 32px 56px 0; flex-shrink: 0;
+    }
+    .title-brand { display: flex; align-items: center; gap: 18px; }
+    .title-brand-name { font-weight: 800; font-size: 24px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--black); }
+    .title-brand-sub  { font-weight: 600; font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .title-badge-top  {
+      background: var(--black); color: var(--yellow);
+      font-weight: 800; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 10px 22px; border-radius: 100px;
+    }
+    .title-center {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 1360px; margin: 0 auto; padding: 20px;
+      text-align: center;
+    }
+    .title-badge {
+      background: var(--black); color: var(--white); border-radius: 100px;
+      padding: 8px 26px; font-size: 14px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
+    }
+    .title-badge::before { content: '●'; color: var(--yellow); }
+    .title-main-line {
+      font-weight: 900; font-size: 78px; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--black); line-height: 1.05;
+    }
+    .accent-lines-row { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 10px 0; }
+    .accent-line { height: 5px; width: 90px; background: var(--yellow); flex-shrink: 0; border-radius: 3px; }
+    .title-italic-line {
+      font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+      font-size: 84px; color: var(--black); line-height: 1;
+    }
+    .title-third-line {
+      font-weight: 900; font-size: 32px; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--black); margin-top: 6px;
+    }
+    .title-sub {
+      font-size: 18px; font-weight: 500; color: var(--label);
+      max-width: 860px; margin-top: 18px; line-height: 1.6;
+    }
+    .title-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding: 0 280px 28px 56px; flex-shrink: 0;
+    }
+    .title-id-label { font-size: 16px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .title-id-val   { font-size: 28px; font-weight: 900; letter-spacing: 0.02em; color: var(--black); margin-top: 6px; }
+    .title-slogan   { text-align: right; font-weight: 900; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--black); }
+    .title-slogan-accents { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+    .slogan-dash    { width: 44px; height: 5px; background: var(--yellow); border-radius: 2px; }
+    .slogan-dash-sm { width: 24px; height: 5px; background: var(--yellow); border-radius: 2px; }
+
+    /* ════ SLIDE 2: MENTAL MAP GRID ════ */
+    .map-container {
+      width: 100%; max-width: 1360px;
+      display: flex; flex-direction: column;
+      height: 100%; justify-content: center;
+    }
+    .map-header-wrap {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 14px;
+    }
+    .map-badge {
+      font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--label);
+      background: rgba(10,10,10,0.06); padding: 6px 16px; border-radius: 100px;
+    }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      width: 100%;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .map-node {
+      border-radius: 22px;
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      box-shadow: 0 4px 16px rgba(10,10,10,0.03);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      min-height: 0;
+    }
+    .map-node:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(10,10,10,0.08);
+      border-color: #B5A0E6;
+    }
+
+    /* Node theme variants */
+    .map-node.yellow-node {
+      background: #FDFFE5;
+      border-color: #E2EDB0;
+    }
+    .map-node.purple-node {
+      background: #F4F0FC;
+      border-color: #D3C4F3;
+    }
+    .map-node.beige-node {
+      background: #F9F6EE;
+      border-color: #E2DAC8;
+    }
+    .map-node.dark-node {
+      background: var(--black);
+      color: var(--white);
+      border-color: #24252E;
+    }
+    .map-node.dark-node:hover {
+      border-color: var(--yellow);
+    }
+
+    .node-top {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .node-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .node-num {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      background: var(--black);
+      color: var(--yellow);
+      padding: 4px 10px;
+      border-radius: 8px;
+      line-height: 1.2;
+    }
+    .map-node.dark-node .node-num {
+      background: var(--yellow);
+      color: var(--black);
+    }
+    .node-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(10,10,10,0.07);
+      color: var(--label);
+    }
+    .map-node.dark-node .node-tag {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.75);
+    }
+
+    .node-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--black);
+    }
+    .map-node.dark-node .node-title {
+      color: var(--white);
+    }
+
+    .node-anchor {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #383848;
+      background: rgba(10,10,10,0.04);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border-left: 3px solid var(--black);
+    }
+    .map-node.dark-node .node-anchor {
+      color: #E2E2EA;
+      background: rgba(255,255,255,0.06);
+      border-left-color: var(--yellow);
+    }
+
+    /* Code Snippet Box in Node */
+    .node-code-box {
+      background: var(--code-bg);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, Monaco, monospace;
+      font-size: 11.5px;
+      line-height: 1.45;
+      color: #DDE1F5;
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 115px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .node-code-box::-webkit-scrollbar { width: 5px; height: 5px; }
+    .node-code-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    .code-prop { color: #8FD8FF; font-weight: 700; }
+    .code-val  { color: #DFFF4F; font-weight: 600; }
+    .code-comm { color: #8888AA; font-style: italic; }
+
+    /* Bullets */
+    .node-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .node-bullets li {
+      font-size: 12.5px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .map-node.dark-node .node-bullets li {
+      color: #D6D6E2;
+    }
+    .bullet-icon {
+      font-weight: 900;
+      font-size: 11px;
+      flex-shrink: 0;
+      color: var(--black);
+      margin-top: 1px;
+    }
+    .map-node.dark-node .bullet-icon {
+      color: var(--yellow);
+    }
+
+    /* Node Bottom Role Badge */
+    .node-role-bar {
+      border-top: 1px solid rgba(10,10,10,0.08);
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .map-node.dark-node .node-role-bar {
+      border-top-color: rgba(255,255,255,0.12);
+    }
+    .node-role-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .map-node.dark-node .node-role-label {
+      color: rgba(255,255,255,0.5);
+    }
+    .node-role-text {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--black);
+      text-align: right;
+    }
+    .map-node.dark-node .node-role-text {
+      color: var(--yellow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- VIEWPORT -->
+  <div class="viewport">
+
+    <!-- ════ SLIDE 1: COVER / TITLE ════ -->
+    <section class="slide active s-title" data-slide="1">
+      <div class="deco-circles">
+        <div class="deco-circle-lg"></div>
+        <div class="deco-circle-sm"></div>
+      </div>
+
+      <div class="title-top">
+        <div class="title-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="title-brand-name">ВЕБ-КУРС</div>
+            <div class="title-brand-sub">ОСНОВЫ ВЁРСТКИ</div>
+          </div>
+        </div>
+        <div class="title-badge-top">МЕСЯЦ 1 · УРОК 09</div>
+      </div>
+
+      <div class="title-center">
+        <div class="title-badge">CSS РАЗМЕРЫ И ПЕРЕПОЛНЕНИЕ</div>
+        <h1 class="title-main-line">КОНТРОЛЬ РАЗМЕРОВ И</h1>
+        <div class="accent-lines-row">
+          <div class="accent-line"></div>
+          <div class="title-italic-line">min &amp; max в CSS</div>
+          <div class="accent-line"></div>
+        </div>
+        <div class="title-third-line">СВОЙСТВО OVERFLOW И .CONTAINER</div>
+        <p class="title-sub">
+          Управление границами элементов: защита от горизонтального скролла на мобильных, предотвращение выпадения текста и умная прокрутка блоков
+        </p>
+      </div>
+
+      <div class="title-bottom">
+        <div>
+          <div class="title-id-label">Учебный модуль</div>
+          <div class="title-id-val">CSS-09 · SIZES &amp; OVERFLOW</div>
+        </div>
+        <div>
+          <div class="title-slogan">ИЗУЧАЙ · КОД · СОЗДАВАЙ</div>
+          <div class="title-slogan-accents">
+            <div class="slogan-dash"></div>
+            <div class="slogan-dash-sm"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ SLIDE 2: MENTAL MAP ════ -->
+    <section class="slide" data-slide="2">
+      <header class="slide-header">
+        <div class="header-brand">
+          <div class="burger"><span></span><span></span><span></span></div>
+          <div>
+            <div class="brand-title">ВЕБ-КУРС</div>
+            <div class="brand-sub">ОСНОВЫ CSS</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-lesson">УРОК 09 · МЕНТАЛЬНАЯ КАРТА</div>
+        </div>
+      </header>
+
+      <div class="slide-content">
+        <div class="map-container">
+          <div class="map-header-wrap">
+            <h2 class="content-h2">МЕНТАЛЬНАЯ КАРТА УРОКА</h2>
+            <div class="map-badge">4 КЛЮЧЕВЫЕ КОНЦЕПЦИИ И СВЯЗКИ СВОЙСТВ</div>
+          </div>
+
+          <div class="map-grid">
+            <!-- Node 1: max-width & .container -->
+            <div class="map-node yellow-node">
+              <div class="node-top">
+                <div class="node-header-row">
+                  <span class="node-num">01</span>
+                  <span class="node-tag">ШИРИНА СВЕРХУ</span>
+                </div>
+                <div class="node-title">MAX-WIDTH &amp; .CONTAINER</div>
+                <div class="node-anchor">«Не шире порога, но сжимается на смартфонах»</div>
+              </div>
+
+              <div class="node-code-box">
+                <span class="code-comm">/* Главный каркас страницы */</span><br/>
+                <span class="code-prop">max-width</span>: <span class="code-val">1200px</span>;<br/>
+                <span class="code-prop">width</span>: <span class="code-val">100%</span>;<br/>
+                <span class="code-prop">margin</span>: <span class="code-val">0 auto</span>;
+              </div>
+
+              <ul class="node-bullets">
+                <li><span class="bullet-icon">●</span> Задаёт максимальный порог ширины на больших мониторах</li>
+                <li><span class="bullet-icon">●</span> Автоматически сжимается на экранах уже 1200px</li>
+                <li><span class="bullet-icon">●</span> Исключает горизонтальный скролл на мобильных</li>
+              </ul>
+
+              <div class="node-role-bar">
+                <span class="node-role-label">Главный кейс</span>
+                <span class="node-role-text">Центральный контейнер сайта</span>
+              </div>
+            </div>
+
+            <!-- Node 2: min-width -->
+            <div class="map-node purple-node">
+              <div class="node-top">
+                <div class="node-header-row">
+                  <span class="node-num">02</span>
+                  <span class="node-tag">ШИРИНА СНИЗУ</span>
+                </div>
+                <div class="node-title">MIN-WIDTH ВО FLEXBOX</div>
+                <div class="node-anchor">«Защита от критического сплющивания»</div>
+              </div>
+
+              <div class="node-code-box">
+                <span class="code-comm">/* Защита карточки товара */</span><br/>
+                <span class="code-prop">flex</span>: <span class="code-val">1 1 280px</span>;<br/>
+                <span class="code-prop">min-width</span>: <span class="code-val">280px</span>;<br/>
+                <span class="code-comm">/* не сожмётся в кашу */</span>
+              </div>
+
+              <ul class="node-bullets">
+                <li><span class="bullet-icon">●</span> Запрещает элементу становиться уже указанного минимума</li>
+                <li><span class="bullet-icon">●</span> Во Flexbox блоки стремятся сжаться — min-width ставит барьер</li>
+                <li><span class="bullet-icon">●</span> В связке с flex-wrap переносит карточки на новую строку</li>
+              </ul>
+
+              <div class="node-role-bar">
+                <span class="node-role-label">Главный кейс</span>
+                <span class="node-role-text">Карточки каталога и кнопки</span>
+              </div>
+            </div>
+
+            <!-- Node 3: min-height vs height -->
+            <div class="map-node beige-node">
+              <div class="node-top">
+                <div class="node-header-row">
+                  <span class="node-num">03</span>
+                  <span class="node-tag">ПРАВИЛО ВЫСОТЫ</span>
+                </div>
+                <div class="node-title">MIN-HEIGHT VS HEIGHT</div>
+                <div class="node-anchor">«Золотое правило: контент должен дышать»</div>
+              </div>
+
+              <div class="node-code-box">
+                <span class="code-comm">/* ❌ height: 300px (текст выпадет) */</span><br/>
+                <span class="code-comm">/* ✅ min-height: 300px (растёт) */</span><br/>
+                <span class="code-prop">min-height</span>: <span class="code-val">100vh</span>;
+              </div>
+
+              <ul class="node-bullets">
+                <li><span class="bullet-icon">●</span> Жесткий height ломает верстку при увеличении текста</li>
+                <li><span class="bullet-icon">●</span> min-height задаёт старт, но растягивается вниз без ограничений</li>
+                <li><span class="bullet-icon">●</span> min-height: 100vh гарантирует экран на весь первый разворот</li>
+              </ul>
+
+              <div class="node-role-bar">
+                <span class="node-role-label">Главный кейс</span>
+                <span class="node-role-text">Hero-секции и блоки с текстом</span>
+              </div>
+            </div>
+
+            <!-- Node 4: max-height & overflow -->
+            <div class="map-node dark-node">
+              <div class="node-top">
+                <div class="node-header-row">
+                  <span class="node-num">04</span>
+                  <span class="node-tag">ПЕРЕПОЛНЕНИЕ</span>
+                </div>
+                <div class="node-title">MAX-HEIGHT &amp; OVERFLOW</div>
+                <div class="node-anchor">«Контроль того, что вышло за рамки»</div>
+              </div>
+
+              <div class="node-code-box">
+                <span class="code-comm">/* Умный вертикальный скролл */</span><br/>
+                <span class="code-prop">max-height</span>: <span class="code-val">360px</span>;<br/>
+                <span class="code-prop">overflow-y</span>: <span class="code-val">auto</span>;<br/>
+                <span class="code-prop">overflow-x</span>: <span class="code-val">hidden</span>;
+              </div>
+
+              <ul class="node-bullets">
+                <li><span class="bullet-icon">●</span> overflow: hidden срезает картинки под border-radius родителя</li>
+                <li><span class="bullet-icon">●</span> overflow: auto включает скролл только при переполнении</li>
+                <li><span class="bullet-icon">●</span> max-height спасает от бесконечного раздувания модалок и списков</li>
+              </ul>
+
+              <div class="node-role-bar">
+                <span class="node-role-label">Главный кейс</span>
+                <span class="node-role-text">Списки, чаты, модальные окна</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <span>УЧЕБНЫЙ МОДУЛЬ · CSS РАЗМЕРЫ И OVERFLOW</span>
+        <span>СТРАНИЦА 02 / 02</span>
+      </footer>
+    </section>
+
+  </div>
+
+  <!-- NAVIGATION BUTTONS -->
+  <div class="nav-bar">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Предыдущий слайд">‹</button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Следующий слайд">›</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Экранная лупа (L)">
+      <img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа"/>
+    </button>
+  </div>
+
+  <!-- LOUPE / MAGNIFIER DOM -->
+  <div class="magnifier-lens" id="magnifierLens">
+    <div class="magnifier-inner" id="magnifierInner"></div>
+  </div>
+
+  <script>
+    const slides    = document.querySelectorAll('.slide');
+    const total     = slides.length;
+    const btnPrev   = document.getElementById('btnPrev');
+    const btnNext   = document.getElementById('btnNext');
+    let current     = 0;
+
+    function goTo(index) {
+      if (index < 0 || index >= total) return;
+      const dir = index > current ? 1 : -1;
+      const prev = current;
+
+      slides[prev].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      slides[prev].style.opacity = '0';
+      slides[prev].style.transform = dir > 0 ? 'translateX(-80px)' : 'translateX(80px)';
+      slides[prev].classList.remove('active');
+
+      setTimeout(() => {
+        slides[prev].style.transition = '';
+        slides[prev].style.transform  = 'translateX(80px)';
+        slides[prev].style.opacity    = '';
+      }, 420);
+
+      current = index;
+      slides[current].style.transition = '';
+      slides[current].style.transform  = dir > 0 ? 'translateX(80px)' : 'translateX(-80px)';
+      slides[current].style.opacity    = '0';
+      slides[current].classList.add('active');
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        slides[current].style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+        slides[current].style.transform  = 'translateX(0)';
+        slides[current].style.opacity    = '1';
+      }));
+
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+
+      if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
+    }
+
+    function navigate(dir) { goTo(current + dir); }
+
+    /* ── LOUPE / MAGNIFIER LOGIC ── */
+    const lens = document.getElementById('magnifierLens');
+    const magnifierInner = document.getElementById('magnifierInner');
+    const btnLoupe = document.getElementById('btnLoupe');
+    const navBar = document.querySelector('.nav-bar');
+
+    let isLoupeActive = false;
+    const loupeRadius = 90;
+    const loupeZoom = 2.0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let rafId = null;
+
+    function syncLoupeSlide() {
+      if (!isLoupeActive) return;
+      const activeSlide = slides[current];
+      magnifierInner.style.width = window.innerWidth + 'px';
+      magnifierInner.style.height = window.innerHeight + 'px';
+      magnifierInner.innerHTML = `
+        <div class="${activeSlide.className}" style="opacity:1 !important;transform:none !important;position:absolute;inset:0;pointer-events:none;">
+          ${activeSlide.innerHTML}
+        </div>
+      `;
+    }
+
+    function updateLoupeTransform() {
+      rafId = null;
+      if (!isLoupeActive) return;
+      lens.style.transform = `translate3d(${mouseX - loupeRadius}px, ${mouseY - loupeRadius}px, 0)`;
+      magnifierInner.style.transformOrigin = `${mouseX}px ${mouseY}px`;
+      const tx = loupeRadius - mouseX;
+      const ty = loupeRadius - mouseY;
+      magnifierInner.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${loupeZoom})`;
+    }
+
+    function toggleMagnifier() {
+      isLoupeActive = !isLoupeActive;
+      if (isLoupeActive) {
+        document.body.classList.add('magnifier-mode');
+        btnLoupe.classList.add('active');
+        lens.classList.add('active');
+        lens.style.display = 'block';
+        syncLoupeSlide();
+        updateLoupeTransform();
+      } else {
+        document.body.classList.remove('magnifier-mode');
+        btnLoupe.classList.remove('active');
+        lens.classList.remove('active');
+        lens.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (isLoupeActive && !rafId) {
+        rafId = requestAnimationFrame(updateLoupeTransform);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (isLoupeActive) syncLoupeSlide();
+    });
+
+    navBar.addEventListener('mouseenter', () => {
+      if (isLoupeActive) lens.style.display = 'none';
+    });
+    navBar.addEventListener('mouseleave', () => {
+      if (isLoupeActive) lens.style.display = 'block';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z') {
+        toggleMagnifier();
+      }
+      if (e.key === 'Escape' && isLoupeActive) {
+        toggleMagnifier();
+      }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+    });
+  </script>
+  <script src="/mobile-block.js"></script>
+</body>
+</html>
