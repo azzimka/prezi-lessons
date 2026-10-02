@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Урок 12 — Tailwind CSS | Месяц 1</title>
+  <link rel="icon" type="image/png" href="../../assets/icons/favicon.png">
+  <link rel="shortcut icon" href="../../assets/icons/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#EEEEF8;--white:#fff;--black:#0A0A0A;--yellow:#DFFF4F;--purple:#C8B8F0;--beige:#EDE8D8;--border:#E0E0EE;--text:#1A1A1A;--muted:#888899;--label:#555566;--code:#12131A;--ok:#27622c;--bad:#be4545}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%}body{font-family:Montserrat,sans-serif;background:var(--bg);color:var(--black);overflow:hidden}.deck{width:100%;height:100%;position:relative}.slide{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;background:var(--bg)}.slide.active{display:flex}
+    .slide-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 56px 0;flex-shrink:0}.brand{display:flex;align-items:center;gap:14px}.burger{display:grid;gap:5px}.burger i{width:31px;height:3px;border-radius:5px;background:var(--black)}.brand-name{display:block;font-size:24px;font-weight:900;letter-spacing:-.045em;line-height:1}.brand-sub,.header-lesson,.footer,.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.brand-sub{display:block;margin-top:4px;color:var(--muted)}.header-lesson{padding-top:7px;text-align:right}.content{flex:1;min-height:0;padding:14px 56px 18px;display:flex;align-items:center}.shell{width:100%;max-width:1360px;margin:auto}.footer{display:flex;justify-content:space-between;padding:10px 260px 28px 56px;color:var(--label);flex-shrink:0}.h2{margin:0;font:900 clamp(26px,2.5vw,36px)/1.15 Unbounded,Montserrat,sans-serif;letter-spacing:-.055em;text-transform:uppercase;white-space:nowrap}.eyebrow{margin:0 0 10px;color:var(--label)}.line{width:72px;height:5px;border-radius:8px;background:var(--yellow);margin:16px 0}.card{min-height:0;padding:23px;border:1px solid var(--border);border-radius:20px;background:var(--white)}.purple{background:var(--purple);border-color:transparent}.beige{background:var(--beige);border-color:#dfd6c0}.yellow{background:var(--yellow);border-color:transparent}.dark{background:var(--black);color:var(--white);border-color:transparent}.ctitle{margin:0;font-size:19px;line-height:1.2;font-weight:900;text-transform:uppercase}.copy{margin:12px 0 0;font-size:16px;line-height:1.45;font-weight:500}
+    .title{justify-content:space-between}.rings{position:absolute;border:2px solid rgba(10,10,10,.08);border-radius:50%;pointer-events:none}.ring-a{width:390px;height:390px;right:-80px;top:-115px}.ring-b{width:235px;height:235px;right:95px;top:65px}.title-top{display:flex;justify-content:space-between;padding:32px 56px 0}.title-brand{display:flex;align-items:center;gap:14px}.mode{text-align:right}.mode small,.id small{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.14em}.mode b,.id b{display:block;margin-top:5px;font-size:14px;letter-spacing:.06em}.title-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px}.badge{padding:8px 18px;border-radius:99px;background:var(--black);color:var(--white);font-size:12px;font-weight:800;letter-spacing:.14em}.title-main{margin-top:22px;font-size:clamp(56px,5.5vw,82px);font-weight:900;letter-spacing:-.075em;line-height:.95}.title-ital{font:900 italic clamp(64px,6.5vw,94px)/.95 'Playfair Display',serif;letter-spacing:-.065em}.title-lines{display:flex;align-items:center;gap:20px;margin:8px 0}.title-lines i{width:76px;height:5px;border-radius:6px;background:var(--yellow)}.title-third{font-size:clamp(28px,3vw,44px);font-weight:900;letter-spacing:-.06em}.title-sub{max-width:700px;margin-top:22px;font-size:20px;line-height:1.4;color:var(--muted)}.title-bottom{display:flex;justify-content:space-between;align-items:flex-end;padding:0 280px 28px 56px}.slogan{font-size:13px;font-weight:900;letter-spacing:.1em}.dashes{display:flex;gap:8px;margin-top:8px}.dashes i{height:4px;border-radius:6px;background:var(--yellow)}.dashes i:first-child{width:40px}.dashes i:last-child{width:22px}
+    .toc-title{display:flex;align-items:center;gap:15px;margin-bottom:24px;font-size:36px;font-weight:900;letter-spacing:-.03em}.toc-mark{position:relative;width:32px;height:32px;border-radius:9px;background:var(--yellow)}.toc-mark:before,.toc-mark:after{content:'';position:absolute;left:8px;width:16px;height:3px;border-radius:4px;background:var(--black)}.toc-mark:before{top:10px}.toc-mark:after{top:18px}.toc{display:grid;grid-template-columns:1fr 1fr;gap:11px}.toc div{display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-size:15px;font-weight:800;letter-spacing:.02em}.toc b{min-width:29px;font-size:18px}.toc .black{background:var(--black);color:var(--white)}
+    .mm{position:relative;min-height:400px;margin-top:10px}.mm .wires{position:absolute;inset:0;width:100%;height:100%}.mm .wires line{stroke:rgba(10,10,10,.16);stroke-width:3;stroke-linecap:round}.mm-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;background:var(--black);color:#fff;border-radius:22px;padding:22px 32px;text-align:center;box-shadow:0 14px 32px rgba(10,10,10,.2)}.mm-center small{display:block;font-size:11px;font-weight:800;letter-spacing:.18em;color:var(--yellow);margin-bottom:8px}.mm-center b{display:block;font:900 30px/1 Unbounded,Montserrat,sans-serif;letter-spacing:-.05em}.mm-node{position:absolute;width:28%;z-index:2;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:14px 16px}.mm-node.beige{background:var(--beige);border-color:#dfd6c0}.mm-node.purple{background:var(--purple);border-color:transparent}.mm-node.yellow{background:var(--yellow);border-color:transparent}.mm-node .k{display:block;font-size:11px;font-weight:800;letter-spacing:.13em;color:var(--label);margin-bottom:6px}.mm-node p{margin:0;font-size:14px;font-weight:600;line-height:1.4}.mm-node .sn{display:block;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--code);color:#f8f8ff;font:12px/1.55 'SF Mono','Fira Code',Menlo,monospace;white-space:pre}.n-tl{left:0;top:0}.n-tr{right:0;top:0}.n-bl{left:0;bottom:0}.n-br{right:0;bottom:0}
+    .practice{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}.steps{display:grid;gap:11px;margin:16px 0 0;padding:0;list-style:none;counter-reset:step}.steps li{display:flex;align-items:center;gap:12px;font-size:16px;font-weight:700;line-height:1.35}.steps li:before{counter-increment:step;content:counter(step,decimal-leading-zero);display:grid;place-items:center;width:31px;height:31px;flex:none;border-radius:8px;background:var(--yellow);font-size:11px;font-weight:900}.practice .card{min-height:300px}
+    .nav{position:fixed;right:36px;bottom:16px;z-index:5;display:flex;gap:8px}.nav button{display:grid;place-items:center;width:58px;height:58px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--white);cursor:pointer}.nav button:hover:not(:disabled){background:var(--yellow);border-color:var(--yellow)}.nav button:disabled{opacity:.45;cursor:default}.nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}.progress{position:fixed;left:56px;right:210px;bottom:10px;height:4px;border-radius:9px;background:rgba(10,10,10,.1);z-index:4}.progress i{display:block;width:9.1%;height:100%;border-radius:inherit;background:var(--yellow);transition:width .2s ease}.skip{position:fixed;z-index:10;left:16px;top:-60px;padding:10px 14px;background:var(--yellow);color:var(--black);font-weight:800}.skip:focus{top:12px}
+    @media(max-width:900px){.slide-header{padding:20px 24px 0}.content{align-items:flex-start;overflow-y:auto;padding:14px 24px 80px}.footer{display:none}.title-top{padding:24px 24px 0}.title-bottom{padding:0 24px 84px}.mode{display:none}.h2{white-space:normal}.practice{grid-template-columns:1fr}.toc{grid-template-columns:1fr}.mm{min-height:0;display:grid;gap:12px}.mm .wires{display:none}.mm-center,.mm-node{position:static;transform:none;width:100%}.mm-center{order:-1}.nav{right:18px}.nav button{width:50px;height:50px}.progress{left:24px;right:150px}}@media(max-width:520px){.brand-name{font-size:18px}.header-lesson{font-size:10px}.title-main{font-size:46px}.title-ital{font-size:56px}.title-third{font-size:24px}.title-sub{font-size:16px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">К содержанию слайда</a>
+  <main class="deck" id="main" aria-label="Презентация урока 12">
+    <section class="slide title active" aria-label="Титульный слайд">
+      <i class="rings ring-a"></i><i class="rings ring-b"></i>
+      <div class="title-top"><div class="title-brand"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span><span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</span></span></div><div class="mode"><small>ФОРМАТ ОБУЧЕНИЯ</small><b>ПРАКТИЧЕСКИЙ КУРС</b></div></div>
+      <div class="title-center"><span class="badge">УРОК 12 · TAILWIND CSS</span><div class="title-main">TAILWIND</div><div class="title-lines"><i></i><div class="title-ital">css</div><i></i></div><div class="title-third">UTILITY-FIRST · КЛАССЫ · СКОРОСТЬ</div><p class="title-sub">Собираем дизайн прямо в HTML из готовых классов: один класс — одно свойство. Быстро, системно, без лишнего CSS.</p></div>
+      <div class="title-bottom"><span class="id"><small>ID КУРСА</small><b>HTML-CSS-DEV</b></span><span><b class="slogan">ИЗУЧАЙ · КОД · СОЗДАВАЙ</b><span class="dashes"><i></i><i></i></span></span></div>
+    </section>
+  </main>
+  <nav class="nav" aria-label="Навигация по слайдам"><button id="prev" type="button" aria-label="Предыдущий слайд" disabled><svg viewBox="0 0 24 24"><path d="M15 18 9 12l6-6"/></svg></button><button id="next" type="button" aria-label="Следующий слайд"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></nav>
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+  <script>
+    (function(){
+      var WIRES='<svg class="wires" viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true"><line x1="500" y1="200" x2="292" y2="82"/><line x1="500" y1="200" x2="708" y2="82"/><line x1="500" y1="200" x2="292" y2="318"/><line x1="500" y1="200" x2="708" y2="318"/></svg>';
+      function mm(centerSmall,centerBig,nodes){
+        var html='<div class="mm">'+WIRES+'<div class="mm-center"><small>'+centerSmall+'</small><b>'+centerBig+'</b></div>';
+        var pos=['n-tl','n-tr','n-bl','n-br'];
+        var tones=['','beige','purple','yellow'];
+        nodes.forEach(function(n,i){
+          html+='<div class="mm-node '+pos[i]+' '+tones[i]+'"><span class="k">'+n[0]+'</span><p>'+n[1]+'</p>'+(n[2]?'<span class="sn">'+n[2]+'</span>':'')+'</div>';
+        });
+        return html+'</div>';
+      }
+      var data=[
+        ['СОДЕРЖАНИЕ','<div class="toc-title"><i class="toc-mark"></i>СОДЕРЖАНИЕ УРОКА</div><div class="toc"><div class="card"><b>01</b>ЧТО ТАКОЕ TAILWIND</div><div class="yellow"><b>02</b>ПОДКЛЮЧЕНИЕ</div><div class="purple"><b>03</b>ТЕКСТ И ТИПОГРАФИКА</div><div class="beige"><b>04</b>РАЗМЕРЫ И ОТСТУПЫ</div><div class="black"><b>05</b>ЦВЕТА И ФОНЫ</div><div class="card"><b>06</b>FLEX И GRID</div><div class="yellow"><b>07</b>ПОЗИЦИИ И СЛОИ</div><div class="purple"><b>08</b>АДАПТИВНОСТЬ</div><div class="beige"><b>09</b>ПРАКТИКА</div></div>'],
+        ['ОБЩАЯ КАРТА','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · ОСНОВА</p><h2 class="h2">ЧТО ТАКОЕ TAILWIND CSS</h2>'+mm('ЧТО ЭТО','Tailwind CSS',[
+          ['UTILITY-FIRST','Тысячи готовых классов: text-center, bg-blue-500, p-4. Дизайн пишешь прямо в HTML, а не в отдельном CSS-файле.','&lt;div class="flex p-4\\n  bg-white rounded-xl shadow"&gt;'],
+          ['ОДИН КЛАСС = СВОЙСТВО','Каждый класс делает ровно одну вещь. Комбинируешь их, как конструктор Lego.','class="text-2xl\\n  font-bold text-center"'],
+          ['ПЛЮСЫ','Скорость вёрстки, единый дизайн-язык, не нужно придумывать имена классов.'],
+          ['КАК НАЧАТЬ','Для учёбы хватает CDN: один скрипт в &lt;head&gt; — и всё работает.','&lt;script\\n  src="https://cdn.tailwindcss.com"&gt;\\n&lt;/script&gt;']
+        ])],
+        ['ПОДКЛЮЧЕНИЕ','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 01</p><h2 class="h2">ПОДКЛЮЧЕНИЕ TAILWIND</h2>'+mm('СТАРТ','Подключение',[
+          ['CDN PLAY','Для учёбы и прототипов: один скрипт в &lt;head&gt; — Tailwind готов к работе.','&lt;script\\n  src="https://cdn.tailwindcss.com"&gt;\\n&lt;/script&gt;'],
+          ['PREFLIGHT','Встроенный сброс стилей: убирает отступы и дефолтные стили браузера. Работает сам.'],
+          ['КОНФИГ','Свои цвета, шрифты и брейкпоинты задаются через объект tailwind.config.','tailwind.config = {\\n  theme: { extend: {} }\\n}'],
+          ['ПРАВИЛО','CDN — только для разработки. На продакшен — сборка через npm: она вычищает неиспользуемые классы.']
+        ])],
+        ['ТЕКСТ','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 02</p><h2 class="h2">ТЕКСТ И ТИПОГРАФИКА</h2>'+mm('ТИПО','Текст',[
+          ['РАЗМЕР ШРИФТА','Шкала text-xs → text-9xl. Базовый размер — text-base (16px).','class="text-2xl"'],
+          ['НАСЫЩЕННОСТЬ','От font-thin до font-black. Чаще всего нужны font-medium и font-bold.','class="font-bold"'],
+          ['ВЫРАВНИВАНИЕ','text-left, text-center, text-right, text-justify.','class="text-center"'],
+          ['ИНТЕРВАЛЫ','leading-* — высота строки, tracking-* — межбуквенный интервал, uppercase, truncate.','class="leading-relaxed\\n  tracking-wide"']
+        ])],
+        ['РАЗМЕРЫ','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 03</p><h2 class="h2">РАЗМЕРЫ И ОТСТУПЫ</h2>'+mm('SPACING','Размеры',[
+          ['ШИРИНА','w-4, w-64, w-1/2, w-full, w-screen. Шаг шкалы — 4px: w-4 = 16px.','class="w-1/2"'],
+          ['ВЫСОТА','h-*, h-full, h-screen. Блок на весь экран: min-h-screen.','class="min-h-screen"'],
+          ['PADDING','p-4 — со всех сторон; px-6 — горизонталь; py-3 — вертикаль.','class="px-6 py-3"'],
+          ['MARGIN','m-*, mx-auto — центровка блока; -mt-4 — отрицательный; space-x-4 — между детьми.','class="mx-auto"']
+        ])],
+        ['ЦВЕТА','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 04</p><h2 class="h2">ЦВЕТА И ФОНЫ</h2>'+mm('ПАЛИТРА','Цвета',[
+          ['ФОН','bg-white, bg-black, bg-blue-500, bg-transparent. Цифра — насыщенность: 100 → 900.','class="bg-blue-500"'],
+          ['ТЕКСТ','text-white, text-gray-800, text-red-500. Та же палитра, что и у фона.','class="text-gray-800"'],
+          ['ГРАНИЦЫ','border, border-2, border-gray-200. Скругления: rounded, rounded-xl, rounded-full.','class="rounded-xl border"'],
+          ['ЭФФЕКТЫ','Тени: shadow, shadow-lg. Прозрачность: opacity-50. Градиент: bg-gradient-to-r from-blue-500 to-purple-500.']
+        ])],
+        ['FLEX И GRID','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 05</p><h2 class="h2">DISPLAY · FLEX · GRID</h2>'+mm('РАСКЛАДКА','Flex & Grid',[
+          ['DISPLAY','block, inline-block, inline, hidden — он же display: none.','class="hidden md:block"'],
+          ['FLEX','flex включает контейнер; flex-col — колонка; gap-4 — промежутки между детьми.','class="flex gap-4"'],
+          ['ВЫРАВНИВАНИЕ','justify-center / justify-between — главная ось; items-center — поперечная.','class="flex items-center\\n  justify-between"'],
+          ['GRID','grid + grid-cols-3 — три колонки; gap-6 — отступы между ячейками.','class="grid grid-cols-3\\n  gap-6"']
+        ])],
+        ['ПОЗИЦИИ','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 06</p><h2 class="h2">ПОЗИЦИИ И СЛОИ</h2>'+mm('СЛОИ','Position',[
+          ['POSITION','Те же значения, что в CSS: relative, absolute, fixed, sticky.','class="absolute\\n  top-0 right-0"'],
+          ['СДВИГИ','top-0, right-4, bottom-8, left-1/2. Прижать ко всем краям сразу: inset-0.','class="inset-0"'],
+          ['Z-INDEX','z-0, z-10, z-20, z-50. Чем больше число — тем выше слой.','class="z-50"'],
+          ['OVERFLOW','overflow-hidden — обрезать; overflow-auto — скролл, когда контент не влезает.','class="overflow-hidden"']
+        ])],
+        ['АДАПТИВНОСТЬ','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 07</p><h2 class="h2">ПРЕФИКСЫ · АДАПТИВ</h2>'+mm('ПРЕФИКСЫ','Responsive',[
+          ['БРЕЙКПОИНТЫ','sm: 640 · md: 768 · lg: 1024 · xl: 1280. Префикс пишется перед классом.','class="text-sm\\n  md:text-lg lg:text-2xl"'],
+          ['МОБАЙЛ-ФЁРСТ','База — телефон. Префиксы добавляют стили для экранов шире.','class="grid-cols-1\\n  md:grid-cols-3"'],
+          ['СОСТОЯНИЯ','hover:, focus:, active: — реакция на действия пользователя.','class="bg-blue-500\\n  hover:bg-blue-700"'],
+          ['DARK MODE','Префикс dark: — стили для тёмной темы.','class="bg-white\\n  dark:bg-gray-900"']
+        ])],
+        ['ПРАКТИКА','<p class="eyebrow">ВАША ОЧЕРЕДЬ · 15 МИНУТ</p><h2 class="h2">СОБЕРИТЕ НА КЛАССАХ</h2><div class="practice"><article class="card yellow"><h3 class="ctitle">КАРТОЧКА ПРОФИЛЯ</h3><ol class="steps"><li>Контейнер: flex items-center gap-4 p-6 bg-white rounded-xl shadow.</li><li>Аватар: img с классами w-16 h-16 rounded-full.</li><li>Имя: text-xl font-bold; должность: text-gray-500.</li></ol></article><article class="card purple"><h3 class="ctitle">АДАПТИВНАЯ СЕТКА</h3><ol class="steps"><li>Сетка: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6.</li><li>Карточки: p-4 border border-gray-200 rounded-lg.</li><li>Кнопка: bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded.</li></ol></article></div>']
+      ];
+      var deck=document.querySelector('.deck'),prev=document.querySelector('#prev'),next=document.querySelector('#next'),bar=document.querySelector('#bar');
+      function brand(topic){return '<header class="slide-header"><div class="brand"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span><span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">TAILWIND CSS</span></span></div><div class="header-lesson">УРОК 12 · '+topic+'</div></header>'}
+      function footer(n){return '<footer class="footer"><span>УЧЕБНЫЙ МОДУЛЬ · TAILWIND CSS</span><span>СТРАНИЦА '+String(n).padStart(2,'0')+' / '+(data.length+1)+'</span></footer>'}
+      data.forEach(function(item,i){var slide=document.createElement('section');slide.className='slide';slide.setAttribute('aria-hidden','true');slide.innerHTML=brand(item[0])+'<div class="content"><div class="shell">'+item[1]+'</div></div>'+footer(i+2);deck.appendChild(slide)});
+      var slides=Array.from(document.querySelectorAll('.slide'));var current=0,touchX=0;
+      function render(n){current=Math.max(0,Math.min(n,slides.length-1));slides.forEach(function(s,i){s.classList.toggle('active',i===current);s.setAttribute('aria-hidden',i===current?'false':'true')});prev.disabled=current===0;next.disabled=current===slides.length-1;bar.style.width=((current+1)/slides.length*100)+'%';document.title='Урок 12 · Слайд '+(current+1)+' из '+slides.length}
+      prev.addEventListener('click',function(){render(current-1)});next.addEventListener('click',function(){render(current+1)});
+      document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();render(current+1)}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();render(current-1)}if(e.key==='Home'){e.preventDefault();render(0)}if(e.key==='End'){e.preventDefault();render(slides.length-1)}});
+      document.addEventListener('touchstart',function(e){touchX=e.changedTouches[0].screenX},{passive:true});document.addEventListener('touchend',function(e){var d=e.changedTouches[0].screenX-touchX;if(Math.abs(d)>55)render(current+(d<0?1:-1))},{passive:true});
+      render(0);
+    }());
+  </script>
+  <script src="/mobile-block.js"></script>
+</body>
+</html>
