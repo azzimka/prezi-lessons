@@ -302,7 +302,7 @@
       background: var(--purple-soft); color: var(--black);
     }
 
-    /* ════ SLIDE 3: PRACTICE TASKS (3 COLUMNS) ════ */
+    /* ════ SLIDE 3: PRACTICE TASKS (2 COLUMNS) ════ */
     .practice-container {
       width: 100%; max-width: 1360px;
       display: flex; flex-direction: column;
@@ -311,11 +311,6 @@
     .practice-header-wrap {
       display: flex; justify-content: space-between; align-items: flex-end;
       margin-bottom: 16px;
-    }
-    .practice-badge {
-      font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--label);
-      background: rgba(10,10,10,0.06); padding: 6px 16px; border-radius: 100px;
     }
     .practice-grid {
       display: flex;
@@ -408,17 +403,6 @@
       border-radius: 3px;
     }
 
-    /* Preview 3: Wrap Grid */
-    .preview-wrap {
-      width: 100%; display: flex; flex-wrap: wrap;
-      gap: 6px; justify-content: flex-start;
-    }
-    .preview-tag {
-      padding: 3px 8px; background: var(--white);
-      border: 1px solid var(--border); border-radius: 5px;
-      font-size: 9.5px; font-weight: 700;
-      font-family: 'SF Mono', monospace; color: var(--black);
-    }
 
     .task-desc {
       font-size: 14px; font-weight: 500;
@@ -507,6 +491,7 @@
           </svg>
           <div>
 
+            <div class="title-slogan">Изучай · Код · Создавай</div>
             <div class="title-slogan-accents">
               <div class="slogan-dash"></div>
               <div class="slogan-dash-sm"></div>
@@ -581,9 +566,9 @@
               </div>
               <div class="prop-col-right">
                 <div class="prop-desc">
-                  Выравнивает и распределяет элементы <strong>по горизонтали</strong>
+                  Выравнивает и распределяет элементы <strong>вдоль главной оси</strong>
                 </div>
-                <div class="prop-tag purple">ПО ГОРИЗОНТАЛИ</div>
+                <div class="prop-tag purple">ПО ГЛАВНОЙ ОСИ</div>
               </div>
             </div>
 
@@ -603,9 +588,9 @@
               </div>
               <div class="prop-col-right">
                 <div class="prop-desc">
-                  Выравнивает элементы <strong>по вертикали</strong>
+                  Выравнивает элементы <strong>вдоль поперечной оси</strong>
                 </div>
-                <div class="prop-tag yellow">ПО ВЕРТИКАЛИ</div>
+                <div class="prop-tag yellow">ПО ПОПЕРЕЧНОЙ ОСИ</div>
               </div>
             </div>
 
@@ -780,11 +765,11 @@
 
   <!-- NAVIGATION BAR -->
   <div class="nav-bar">
-    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
-    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)" aria-label="Предыдущий слайд">←</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)" aria-label="Режим лупы">
       <img src="../../assets/icons/loupe.png" class="nav-btn-icon" alt="Лупа"/>
     </button>
-    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)" aria-label="Следующий слайд">→</button>
   </div>
 
   <!-- MAGNIFIER LENS -->
@@ -798,6 +783,7 @@
     const btnNext = document.getElementById('btnNext');
     const total   = slides.length;
     let current   = 0;
+    slides.forEach((s, i) => { if (i !== 0) s.setAttribute('aria-hidden', 'true'); });
 
     function goTo(index) {
       if (index < 0 || index >= total) return;
@@ -829,6 +815,8 @@
 
       btnPrev.disabled = current === 0;
       btnNext.disabled = current === total - 1;
+      slides.forEach((s, i) => s.setAttribute('aria-hidden', i === current ? 'false' : 'true'));
+      document.title = 'Урок 8 · Слайд ' + (current + 1) + ' из ' + total;
 
       if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
     }
@@ -909,7 +897,7 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
       if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
-      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z') {
+      if (e.key === 'l' || e.key === 'L' || e.key === 'д' || e.key === 'Д' || e.key === 'z' || e.key === 'Z' || e.key === 'я' || e.key === 'Я') {
         toggleMagnifier();
       }
       if (e.key === 'Escape' && isLoupeActive) {
