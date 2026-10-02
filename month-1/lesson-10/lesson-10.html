@@ -66,14 +66,14 @@
           ['ТИПИЧНЫЙ ПРИМЕР','Бейдж «NEW» в углу карточки товара.']
         ])],
         ['FIXED','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 03</p><h2 class="h2">POSITION: FIXED</h2>'+mm('POSITION','fixed',[
-          ['ОКНО БРАУЗЕРА','Координаты всегда считаются от viewport, а не от родителя.'],
+          ['ОКНО БРАУЗЕРА','Координаты считаются от viewport, а не от родителя.'],
           ['НЕ СКРОЛЛИТСЯ','Остаётся на месте, когда страница прокручивается.','.header {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n}'],
           ['ПРИМЕНЕНИЕ','Шапка сайта, кнопка «наверх», окно чата.'],
           ['ОСТОРОЖНО','Перекрывает контент — добавь отступ сверху у страницы.']
         ])],
         ['Z-INDEX','<p class="eyebrow">МЕНТАЛЬНАЯ КАРТА · 04</p><h2 class="h2">Z-INDEX · ПОРЯДОК СЛОЁВ</h2>'+mm('СЛОИ','z-index',[
           ['КТО СВЕРХУ','Больше число — выше слой при наложении элементов.'],
-          ['УСЛОВИЕ','Работает только у элементов с position: relative / absolute / fixed.'],
+          ['УСЛОВИЕ','Работает у элементов с position: relative / absolute / fixed / sticky.'],
           ['ПРИМЕР','Модальное окно поверх всего остального.','.modal {\n  position: fixed;\n  z-index: 100;\n}'],
           ['ЛОВУШКА','Без position свойство z-index просто не сработает.']
         ])],
@@ -82,7 +82,7 @@
       var deck=document.querySelector('.deck'),prev=document.querySelector('#prev'),next=document.querySelector('#next'),bar=document.querySelector('#bar');
       function brand(topic){return '<header class="slide-header"><div class="brand"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span><span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">ОСНОВЫ CSS</span></span></div><div class="header-lesson">УРОК 10 · '+topic+'</div></header>'}
       function footer(n){return '<footer class="footer"><span>УЧЕБНЫЙ МОДУЛЬ · ПОЗИЦИОНИРОВАНИЕ В CSS</span><span>СТРАНИЦА '+String(n).padStart(2,'0')+' / '+(data.length+1)+'</span></footer>'}
-      data.forEach(function(item,i){var slide=document.createElement('section');slide.className='slide';slide.setAttribute('aria-hidden','true');slide.innerHTML=brand(item[0])+'<div class="content"><div class="shell">'+item[1]+'</div></div>'+footer(i+2);deck.appendChild(slide)});
+      data.forEach(function(item,i){var slide=document.createElement('section');slide.className='slide';slide.setAttribute('aria-hidden','true');slide.setAttribute('aria-label','Слайд: '+item[0]);slide.innerHTML=brand(item[0])+'<div class="content"><div class="shell">'+item[1]+'</div></div>'+footer(i+2);deck.appendChild(slide)});
       var slides=Array.from(document.querySelectorAll('.slide'));var current=0,touchX=0;
       function render(n){current=Math.max(0,Math.min(n,slides.length-1));slides.forEach(function(s,i){s.classList.toggle('active',i===current);s.setAttribute('aria-hidden',i===current?'false':'true')});prev.disabled=current===0;next.disabled=current===slides.length-1;bar.style.width=((current+1)/slides.length*100)+'%';document.title='Урок 10 · Слайд '+(current+1)+' из '+slides.length}
       prev.addEventListener('click',function(){render(current-1)});next.addEventListener('click',function(){render(current+1)});
