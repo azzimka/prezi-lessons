@@ -43,7 +43,6 @@
       pointer-events: none; display: flex; flex-direction: column;
     }
     .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
-    .slide.exit   { opacity: 0; transform: translateX(-80px); }
 
     /* ── HEADER ── */
     .slide-header {
@@ -462,7 +461,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · HTML-ФОРМЫ</div></div>
       </header>
@@ -476,7 +475,7 @@
             <div class="toc-item toc-white"><span class="toc-num">01</span> Зачем нужны формы</div>
             <div class="toc-item toc-yellow"><span class="toc-num">02</span> Тег &lt;form&gt; — контейнер</div>
             <div class="toc-item toc-white"><span class="toc-num">03</span> &lt;input&gt; и &lt;label&gt; — связка</div>
-            <div class="toc-item toc-beige"><span class="toc-num">04</span> Типы полей: password, email, tel</div>
+            <div class="toc-item toc-beige"><span class="toc-num">04</span> Типы полей: text, password, email и др.</div>
             <div class="toc-item toc-purple"><span class="toc-num">05</span> Checkbox и Radio</div>
             <div class="toc-item toc-white"><span class="toc-num">06</span> Textarea и Select</div>
             <div class="toc-item toc-yellow"><span class="toc-num">07</span> Отправка и валидация</div>
@@ -485,7 +484,7 @@
         </div>
       </div>
       <footer class="slide-footer">
-        <span>УЧЕБНЫЙ МОДУЛЬ · ОСНОВЫ HTML</span>
+        <span>УЧЕБНЫЙ МОДУЛЬ · HTML-ФОРМЫ</span>
         <span>СТРАНИЦА 02 / 15</span>
       </footer>
     </div>
@@ -497,7 +496,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ВВЕДЕНИЕ</div></div>
       </header>
@@ -524,7 +523,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ТЕГ FORM</div></div>
       </header>
@@ -537,10 +536,6 @@
             <div class="content-body"><span class="text-underline">Почтовый конверт</span> — оборачивает все поля в единую «посылку» для отправки на сервер.</div>
             <div class="content-section-title">АТРИБУТЫ</div>
             <div class="content-body"><span class="text-underline">action</span> — куда летит посылка. <span class="text-underline">method</span> — как упакована (GET / POST).</div>
-            <!-- HTTP - это сетевой протокол -->
-            <div style="margin-top:14px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:14px;color:var(--label);background:rgba(255,255,255,0.7);padding:6px 14px;border-radius:8px;display:inline-block;">
-              &lt;!-- HTTP — это сетевой протокол --&gt;
-            </div>
           </div>
           <div class="content-right">
             <div class="photo-card">
@@ -572,7 +567,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · INPUT И LABEL</div></div>
       </header>
@@ -592,7 +587,7 @@
                 <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                 <span class="editor-tab">index.html</span>
               </div>
-              <div class="code-box"><span class="c-tag">&lt;form&gt;</span>
+              <div class="code-box"><span class="c-tag">&lt;form</span> <span class="c-attr">action</span>=<span class="c-str">"#"</span> <span class="c-attr">method</span>=<span class="c-str">"post"</span><span class="c-tag">&gt;</span>
 
   <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"username"</span><span class="c-tag">&gt;</span>Имя:<span class="c-tag">&lt;/label&gt;</span>
   <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"text"</span>
@@ -621,7 +616,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ДОСТУПНОСТЬ</div></div>
       </header>
@@ -646,7 +641,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ТИПЫ INPUT</div></div>
       </header>
@@ -673,7 +668,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · КАТАЛОГ ТИПОВ</div></div>
       </header>
@@ -748,7 +743,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ВЫБОР ВАРИАНТОВ</div></div>
       </header>
@@ -764,10 +759,12 @@
                 <span class="editor-tab">index.html</span>
               </div>
               <div class="code-box"><span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"checkbox"</span>
+       <span class="c-attr">name</span>=<span class="c-str">"lang"</span> <span class="c-attr">value</span>=<span class="c-str">"html"</span>
        <span class="c-attr">id</span>=<span class="c-str">"html"</span><span class="c-tag">&gt;</span>
 <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"html"</span><span class="c-tag">&gt;</span>HTML<span class="c-tag">&lt;/label&gt;</span>
 
 <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"checkbox"</span>
+       <span class="c-attr">name</span>=<span class="c-str">"lang"</span> <span class="c-attr">value</span>=<span class="c-str">"css"</span>
        <span class="c-attr">id</span>=<span class="c-str">"css"</span><span class="c-tag">&gt;</span>
 <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"css"</span><span class="c-tag">&gt;</span>CSS<span class="c-tag">&lt;/label&gt;</span></div>
             </div>
@@ -783,11 +780,11 @@
                 <span class="editor-tab">index.html</span>
               </div>
               <div class="code-box"><span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"radio"</span>
-       <span class="c-attr">name</span>=<span class="c-str">"size"</span> <span class="c-attr">id</span>=<span class="c-str">"s"</span><span class="c-tag">&gt;</span>
+       <span class="c-attr">name</span>=<span class="c-str">"size"</span> <span class="c-attr">id</span>=<span class="c-str">"s"</span> <span class="c-attr">value</span>=<span class="c-str">"s"</span><span class="c-tag">&gt;</span>
 <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"s"</span><span class="c-tag">&gt;</span>S<span class="c-tag">&lt;/label&gt;</span>
 
 <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"radio"</span>
-       <span class="c-attr">name</span>=<span class="c-str">"size"</span> <span class="c-attr">id</span>=<span class="c-str">"m"</span><span class="c-tag">&gt;</span>
+       <span class="c-attr">name</span>=<span class="c-str">"size"</span> <span class="c-attr">id</span>=<span class="c-str">"m"</span> <span class="c-attr">value</span>=<span class="c-str">"m"</span><span class="c-tag">&gt;</span>
 <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"m"</span><span class="c-tag">&gt;</span>M<span class="c-tag">&lt;/label&gt;</span></div>
             </div>
             <div class="compare-rule">Старое радио — одна станция, остальные выключаются. Ключ: одинаковый <strong>name</strong>!</div>
@@ -807,7 +804,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · TEXTAREA И SELECT</div></div>
       </header>
@@ -859,7 +856,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ФИНАЛ</div></div>
       </header>
@@ -867,7 +864,7 @@
         <div class="section-divider-content">
           <div class="section-num-box">03</div>
           <div class="section-divider-text">
-            <div class="section-divider-title">ОТПРАВКА<br/>И СТИЛИЗАЦИЯ</div>
+            <div class="section-divider-title">ОТПРАВКА<br/>И ВАЛИДАЦИЯ</div>
             <div class="section-divider-line"></div>
             <div class="section-divider-sub">Кнопка submit, атрибут required и базовый CSS</div>
           </div>
@@ -886,7 +883,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ОТПРАВКА</div></div>
       </header>
@@ -906,7 +903,7 @@
                 <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                 <span class="editor-tab">index.html</span>
               </div>
-              <div class="code-box"><span class="c-tag">&lt;form&gt;</span>
+              <div class="code-box"><span class="c-tag">&lt;form</span> <span class="c-attr">action</span>=<span class="c-str">"#"</span> <span class="c-attr">method</span>=<span class="c-str">"post"</span><span class="c-tag">&gt;</span>
 
   <span class="c-tag">&lt;label</span> <span class="c-attr">for</span>=<span class="c-str">"email"</span><span class="c-tag">&gt;</span>Email:<span class="c-tag">&lt;/label&gt;</span>
   <span class="c-tag">&lt;input</span> <span class="c-attr">type</span>=<span class="c-str">"email"</span>
@@ -939,14 +936,14 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">ОСНОВЫ HTML</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · CSS ФОРМЫ</div></div>
       </header>
       <div class="slide-content">
         <div class="content-two-col">
           <div class="content-card-left">
-            <div class="content-section-label">ТОЛЬКО ПРОЙДЕННЫЕ СВОЙСТВА</div>
+            <div class="content-section-label">ЗНАКОМИМСЯ СО СВОЙСТВАМИ</div>
             <div class="content-h2">Стилизация формы</div>
             <div class="content-section-title">ЧТО МОЖЕМ ИСПОЛЬЗОВАТЬ</div>
             <div class="content-body" style="font-size:18px;">
@@ -962,7 +959,7 @@
                 <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                 <span class="editor-tab">style.css</span>
               </div>
-              <div class="code-box"><span class="c-sel">input</span> {
+              <div class="code-box"><span class="c-sel">input[type="text"], input[type="email"]</span> {
   <span class="c-prop">width</span>: <span class="c-val">100%</span>;
   <span class="c-prop">height</span>: <span class="c-val">40px</span>;
   <span class="c-prop">border</span>: <span class="c-val">2px solid #ccc</span>;
@@ -981,7 +978,7 @@
             </div>
             <div style="background:var(--beige);border-radius:18px;padding:16px 22px;">
               <div style="font-size:13px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--label);margin-bottom:4px;">ВАЖНО</div>
-              <div style="font-size:17px;font-weight:700;color:var(--black);line-height:1.4;">padding и margin мы изучим позже — пока обходимся без них!</div>
+              <div style="font-size:17px;font-weight:700;color:var(--black);line-height:1.4;">padding и margin подробно разберём в уроке 7, а эти свойства осваиваем прямо сейчас!</div>
             </div>
           </div>
         </div>
@@ -999,7 +996,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">СОВМЕСТНАЯ ПРАКТИКА</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">СОВМЕСТНАЯ ПРАКТИКА</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ПРАКТИКУМ</div></div>
       </header>
@@ -1095,7 +1092,7 @@
       <header class="slide-header">
         <div class="header-brand">
           <div class="burger"><span></span><span></span><span></span></div>
-          <div><div class="brand-title">ВЕБ-РАЗРАБОТКА</div><div class="brand-sub">САМОСТОЯТЕЛЬНАЯ РАБОТА</div></div>
+          <div><div class="brand-title">ВЕБ-КУРС</div><div class="brand-sub">САМОСТОЯТЕЛЬНАЯ РАБОТА</div></div>
         </div>
         <div class="header-right"><div class="header-lesson">УРОК 4 · ПРАКТИКУМ</div></div>
       </header>
@@ -1169,15 +1166,15 @@
 
   <!-- Navigation -->
   <div class="nav-bar">
-    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)">←</button>
-    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)">
+    <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" disabled title="Назад (←)" aria-label="Предыдущий слайд">←</button>
+    <button class="nav-btn" id="btnLoupe" onclick="toggleMagnifier()" title="Режим лупы (L / Z)" aria-label="Режим лупы">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="7"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         <circle cx="11" cy="11" r="2.5" fill="currentColor"></circle>
       </svg>
     </button>
-    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)">→</button>
+    <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Вперёд (→)" aria-label="Следующий слайд">→</button>
   </div>
 
   <!-- Loupe -->
@@ -1191,6 +1188,7 @@
     const btnNext = document.getElementById('btnNext');
     const total   = slides.length;
     let current   = 0;
+    slides.forEach((s, i) => { if (i !== 0) s.setAttribute('aria-hidden', 'true'); });
 
     function goTo(index) {
       if (index < 0 || index >= total) return;
@@ -1203,6 +1201,7 @@
       slides[prev].classList.remove('active');
 
       setTimeout(() => {
+        if (slides[prev].classList.contains('active')) return;
         slides[prev].style.transition = '';
         slides[prev].style.transform  = 'translateX(80px)';
         slides[prev].style.opacity    = '';
@@ -1222,6 +1221,8 @@
 
       btnPrev.disabled = current === 0;
       btnNext.disabled = current === total - 1;
+      slides.forEach((s, i) => s.setAttribute('aria-hidden', i === current ? 'false' : 'true'));
+      document.title = 'Урок 4 · Слайд ' + (current + 1) + ' из ' + total;
 
       if (isLoupeActive) setTimeout(syncLoupeSlide, 50);
     }
