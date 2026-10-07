@@ -141,6 +141,97 @@ presentation/
   2. **Точечные правки**: вносить изменения **только** в те конкретные места, о которых прямо попросил преподаватель (например, точечно подправить отступ в одном блоке или удалить указанный слайд), не задевая и не перезаписывая остальной код.
   3. ❌ **СТРОГО ЗАПРЕЩЕНО** перезаписывать файлы старыми шаблонами, стирать новые слайды или блоки данных, которые преподаватель добавил или изменил сам.
 
+### 1.14 Атмосферный фоновый дрейф (Ambient Floating Background) и генерация 3D-ассетов
+
+- ⚡ **ОБЯЗАТЕЛЬНЫЙ СТАНДАРТ ДЛЯ ВСЕХ УРОКОВ**: Каждая презентация любого модуля и темы (Git, Python, JavaScript, HTML, CSS, React, SQL и др.) **ОБЯЗАНА иметь живой, глубокий и ненавязчивый фоновый дрейф тематических элементов («эффект невесомости / плавного подводного парения» — floating particles / ambient mesh)**.
+- Презентация не должна выглядеть плоским статичным документом. Плавное движение фоновых артефактов создаёт атмосферу дорогого интерактивного продукта, удерживает внимание и погружает учеников в тему урока.
+
+#### 1. Правило 3–5 тематических ассетов урока
+Под тему создаваемого урока агент обязан подобрать и внедрить **от 3 до 5 узнаваемых визуальных символов**, точно отражающих изучаемую технологию:
+- **Примеры для разных предметов курса**:
+  - **Git & GitHub** (Урок 12): 3D-токен ромба Git, 3D-токен Octocat GitHub, векторная цепочка коммитов `○──●──○`, знак ветвления веток, терминал `> _`.
+  - **Python** (Урок 1 и далее): 3D-токен двухцветной змейки Python, скобки коллекций `[ ]` и `{ }`, ключевые слова `def` / `import`, терминальный промпт `>>>`, знаки операций.
+  - **JavaScript**: 3D-токен логотипа JS, стрелочные функции `() => {}`, ключевые слова `const` / `let`, фигурные скобки `{ }`, шестерёнка логики.
+  - **HTML & Основы Web**: 3D-токен HTML5, теговые скобки `< / >`, дерево DOM-узлов, знаки `#id` и `.class`.
+  - **Базы данных & SQL**: 3D-токен цилиндра базы данных, знаки таблиц, ключей `PK/FK`, операторы `SELECT *`.
+
+#### 2. Требования к генерации изображений (`generate_image`)
+1. **Стиль 3D-токенов/бейджей**: Главные логотипы генерируются через инструмент `generate_image` как премиальные объёмные значки (скруглённые ромбы, круглые медальоны, объёмная фаска, реалистичные световые блики, студийный свет).
+2. **Изоляция и прозрачность**: Картинки обязаны быть сохранены с **чистым прозрачным фоном (transparent PNG)** без артефактов обрезки, цветных полей и паразитных теней на полу.
+3. **Хранение**: Все сгенерированные файлы урока сохраняются строго в папку урока: `month-X/lesson-Y/img/` (например, `git-logo.png`, `python-logo.png`).
+4. **Символы синтаксиса**: Второстепенные знаки (скобки, ветки, промпты) оформляются через легковесный **inline SVG** в фирменных цветах (`--black`, `--yellow`).
+
+#### 3. Физика «под водой» (Underwater Physics)
+Чтобы частицы двигались органично и расслабляюще, а не хаотично мелькали:
+- **Двухфазная траектория**: элементы не просто летят строго вверх, а плавно покачиваются из стороны в сторону (`translateX(±26px)` с мягким покачиванием `rotate(±7deg)`).
+- **Сверхмедленный дрейф**: цикл анимации составляет **от 22 до 40 секунд** (`animation-duration`), чтобы движение было фоновым и не отвлекало от речи преподавателя.
+- **Отрицательные задержки (`animation-delay: -5s... -25s`)**: критически важно задавать отрицательные задержки для каждого элемента! Тогда при первой же загрузке слайда частицы уже равномерно распределены по всей высоте экрана, а не вылетают снизу с пустой паузой.
+
+#### 4. Трёхуровневая глубина резкости (Depth of Field / 3D)
+На экране создаётся объёмная пространственная глубина за счёт трёх классов:
+- `.d-deep` — **Дальний план**: размер 34–42px, размытие `filter: blur(2px)`, минимальная видимость `opacity: 0.035`, медленный цикл 35–40s.
+- `.d-mid` — **Средний план**: размер 48–66px, лёгкое микро-размытие `filter: blur(0.5px)`, `opacity: 0.06`, средний цикл 26–32s.
+- `.d-near` — **Передний план**: крупный размер 72–85px, чёткий без размытия, `opacity: 0.085`, динамичный цикл 22–26s.
+
+#### 5. Неприкосновенность контента и 60 FPS (Железные правила)
+- ❌ **СТРОГО ЗАПРЕЩЕНО** делать прозрачными карточки контента (`.card`, `.editor-frame`, `.code-box` и т.д.)! Карточки обязаны иметь свой плотный цвет (`var(--white)`, `var(--beige)`, `var(--purple)`, `var(--black)`), чтобы проплывающие частицы никогда не накладывались на учебный текст и код.
+- **Слайды прозрачны**: у контейнера `.slide` задаётся `background: transparent;`, а фоновый цвет страницы `var(--bg)` задан у `body`.
+- **Z-Index и клики**: контейнер `.float-bg` имеет `position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;`. Контейнер колоды `.deck` имеет `position: relative; z-index: 1;`. Мышь, клики и перелистывание абсолютно свободны.
+- **Аппаратное ускорение (GPU)**: анимация строится исключительно на `transform: translate3d(...)` и свойстве `will-change: transform`. Нагрузка на CPU составляет 0%, анимация выдаёт 60 FPS на любом устройстве.
+
+#### 6. Эталонный код для внедрения в любой урок
+
+**В `<style>`:**
+```css
+.deck { width: 100%; height: 100%; position: relative; z-index: 1; }
+.slide { position: absolute; inset: 0; display: none; flex-direction: column; overflow: hidden; background: transparent; }
+.slide.active { display: flex; }
+
+/* Фоновый дрейф */
+.float-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.float-item { position: absolute; bottom: -120px; user-select: none; pointer-events: none; will-change: transform; animation: underwaterDrift linear infinite; }
+.float-item:nth-child(even) { animation-name: underwaterDriftAlt; }
+.f-img { object-fit: contain; }
+.f-svg { stroke: var(--black); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Слои глубины резкости */
+.d-deep { filter: blur(2px); opacity: .035; }
+.d-mid  { filter: blur(.5px); opacity: .06; }
+.d-near { opacity: .085; }
+
+@keyframes underwaterDrift {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25%  { transform: translate3d(26px, -32vh, 0) rotate(7deg); }
+  50%  { transform: translate3d(-20px, -64vh, 0) rotate(-6deg); }
+  75%  { transform: translate3d(22px, -96vh, 0) rotate(5deg); }
+  100% { transform: translate3d(-12px, -135vh, 0) rotate(-3deg); }
+}
+@keyframes underwaterDriftAlt {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25%  { transform: translate3d(-28px, -34vh, 0) rotate(-8deg); }
+  50%  { transform: translate3d(24px, -66vh, 0) rotate(6deg); }
+  75%  { transform: translate3d(-18px, -96vh, 0) rotate(-5deg); }
+  100% { transform: translate3d(14px, -135vh, 0) rotate(4deg); }
+}
+```
+
+**В `<body>` (сразу перед `<main class="deck">`):**
+```html
+<div class="float-bg" aria-hidden="true">
+  <!-- 8-10 равномерно распределенных элементов с отрицательными delay -->
+  <img src="img/token-main.png" alt="" class="float-item d-mid f-img" style="left:7%;width:62px;animation-duration:28s;animation-delay:-6s;">
+  <img src="img/token-secondary.png" alt="" class="float-item d-deep f-img" style="left:21%;width:38px;animation-duration:36s;animation-delay:-18s;">
+  <svg class="float-item d-mid f-svg" viewBox="0 0 24 24" style="left:35%;width:44px;height:44px;animation-duration:26s;animation-delay:-10s;">...</svg>
+  <img src="img/token-secondary.png" alt="" class="float-item d-near f-img" style="left:51%;width:72px;animation-duration:32s;animation-delay:-24s;">
+  <svg class="float-item d-deep f-svg" viewBox="0 0 24 24" style="left:65%;width:46px;height:46px;animation-duration:38s;animation-delay:-14s;">...</svg>
+  <img src="img/token-main.png" alt="" class="float-item d-mid f-img" style="left:79%;width:66px;animation-duration:25s;animation-delay:-4s;">
+  <svg class="float-item d-near f-svg" viewBox="0 0 24 24" style="left:91%;width:42px;height:42px;animation-duration:34s;animation-delay:-28s;">...</svg>
+  <svg class="float-item d-deep f-svg" viewBox="0 0 24 24" style="left:15%;width:44px;height:44px;animation-duration:31s;animation-delay:-15s;">...</svg>
+  <img src="img/token-main.png" alt="" class="float-item d-near f-img" style="left:43%;width:78px;animation-duration:23s;animation-delay:-8s;">
+  <img src="img/token-secondary.png" alt="" class="float-item d-deep f-img" style="left:73%;width:36px;animation-duration:35s;animation-delay:-20s;">
+</div>
+```
+
 ---
 
 ## 2. ЦВЕТОВАЯ ПАЛИТРА
