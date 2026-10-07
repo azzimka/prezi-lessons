@@ -1,0 +1,217 @@
+<!--
+  slide-layouts.html — Коллекция каноничных шаблонов слайдов
+  Используется агентами при вёрстке конкретных слайдов презентации.
+-->
+
+<!-- ═══════════════════════════════════════════════════════
+     1. TITLE SLIDE (Титульный слайд / Постерная обложка)
+     Запрещено дублировать Agenda/план на титульном слайде!
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide title active" aria-label="Титульный слайд">
+  <div class="title-top">
+    <div class="title-brand">
+      <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div>
+        <b class="brand-name">ВЕБ-КУРС</b>
+        <span class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</span>
+      </div>
+    </div>
+    <div class="mode">
+      <small>ФОРМАТ ОБУЧЕНИЯ</small>
+      <b>ПРАКТИЧЕСКИЙ КУРС</b>
+    </div>
+  </div>
+
+  <div class="title-center">
+    <span class="badge">УРОК 01 · ОСНОВЫ ВЕБА</span>
+    <div class="title-main">
+      <img src="img/token-main.png" alt="" class="title-logo">
+      <span>ТЕМА УРОКА</span>
+      <img src="img/token-secondary.png" alt="" class="title-logo">
+    </div>
+    <div class="title-lines">
+      <i></i>
+      <div class="title-ital">практика кода</div>
+      <i></i>
+    </div>
+    <div class="title-third">ПОДЗАГОЛОВОК · ТРИ · КЛЮЧЕВЫХ · СЛОВА</div>
+    <p class="title-sub">Краткое интригующее описание урока в одно предложение для учеников.</p>
+  </div>
+
+  <div class="title-bottom">
+    <span class="id">
+      <small>ID КУРСА</small>
+      <b>WEB-HTML-DEV</b>
+    </span>
+    <span>
+      <b class="slogan">ИЗУЧАЙ · КОД · СОЗДАВАЙ</b>
+      <span class="dashes"><i></i><i></i></span>
+    </span>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     2. TABLE OF CONTENTS (Содержание / Agenda) — Слайд 2
+     Сетка 2xN с цветным чередованием карточек
+     ═══════════════════════════════════════════════════════ -->
+<div class="toc-title"><i class="toc-mark"></i>СОДЕРЖАНИЕ УРОКА</div>
+<div class="toc" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+  <div class="card" style="display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-weight:800;">
+    <b style="font-size:18px;">01</b>ЧТО ТАКОЕ ТЕХНОЛОГИЯ
+  </div>
+  <div class="card yellow" style="display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-weight:800;">
+    <b style="font-size:18px;">02</b>БАЗОВЫЙ СИНТАКСИС
+  </div>
+  <div class="card purple" style="display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-weight:800;">
+    <b style="font-size:18px;">03</b>СРАВНЕНИЕ И АЛЬТЕРНАТИВЫ
+  </div>
+  <div class="card beige" style="display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-weight:800;">
+    <b style="font-size:18px;">04</b>АРХИТЕКТУРА И ЗОНЫ
+  </div>
+  <div class="card dark" style="display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-weight:800;">
+    <b style="font-size:18px;">05</b>РАБОТА С КОДОМ
+  </div>
+  <div class="card" style="display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-weight:800;">
+    <b style="font-size:18px;">06</b>ПРАКТИКА И ВЫВОДЫ
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     3. SECTION DIVIDER (Разделитель между блоками)
+     Визуальная пауза перед началом новой крупной темы
+     ═══════════════════════════════════════════════════════ -->
+<div class="section-divider-content" style="display:flex;align-items:center;gap:40px;max-width:900px;margin:auto;">
+  <div class="section-num-box" style="width:100px;height:100px;background:var(--yellow);border-radius:24px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:42px;flex-shrink:0;">
+    02
+  </div>
+  <div class="section-divider-text">
+    <div class="section-divider-title" style="font-family:'Unbounded',sans-serif;font-weight:900;font-size:42px;line-height:1.1;text-transform:uppercase;">
+      ОСНОВНЫЕ КОМАНДЫ
+    </div>
+    <div class="accent-line"></div>
+    <div class="section-divider-sub" style="font-size:20px;font-weight:500;color:var(--muted);">
+      Как управлять версиями прямо из терминала
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     4. CONTENT TWO-COLUMN (Классический 2-колоночный)
+     Слева тезисы / Справа визуал или редактор кода
+     ═══════════════════════════════════════════════════════ -->
+<p class="eyebrow">ОСНОВНОЙ ПРИНЦИП · 01</p>
+<h2 class="h2">СТРУКТУРА ДОКУМЕНТА</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;align-items:stretch;">
+  <!-- Левая колонка -->
+  <article class="card beige" style="display:flex;flex-direction:column;justify-content:center;padding:28px;">
+    <h3 class="ctitle">КАРКАС СТРАНИЦЫ</h3>
+    <p class="copy" style="font-size:18px;margin-bottom:14px;">HTML задаёт структуру, в которую вкладываются все видимые элементы интерфейса.</p>
+    <div style="margin-top:auto;padding-top:14px;border-top:1px solid rgba(10,10,10,0.1);font-size:13px;font-weight:700;color:var(--label);">
+      Основа любого веб-сайта в интернете
+    </div>
+  </article>
+
+  <!-- Правая колонка: редактор кода -->
+  <div class="editor-frame">
+    <div class="editor-topbar">
+      <div class="editor-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+      <span class="editor-tab">index.html</span>
+    </div>
+    <div class="code-box"><span class="c-tag">&lt;!doctype html&gt;</span>
+<span class="c-tag">&lt;html&gt;</span>
+  <span class="c-tag">&lt;head&gt;</span>
+    <span class="c-tag">&lt;title&gt;</span>Мой проект<span class="c-tag">&lt;/title&gt;</span>
+  <span class="c-tag">&lt;/head&gt;</span>
+  <span class="c-tag">&lt;body&gt;</span>
+    <span class="c-tag">&lt;h1&gt;</span>Привет, мир!<span class="c-tag">&lt;/h1&gt;</span>
+  <span class="c-tag">&lt;/body&gt;</span>
+<span class="c-tag">&lt;/html&gt;</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     5. THREE-COLUMN GRID (3 карточки в ряд)
+     ═══════════════════════════════════════════════════════ -->
+<p class="eyebrow">ТРИ КИТА СИСТЕМЫ</p>
+<h2 class="h2">АРХИТЕКТУРА ТЕХНОЛОГИИ</h2>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+  <article class="card beige">
+    <h3 class="ctitle">ЛОКАЛЬНО</h3>
+    <p class="copy">Работает на вашем компьютере без интернета, сохраняя историю каждой правки.</p>
+  </article>
+  <article class="card purple">
+    <h3 class="ctitle">КОНТРОЛЬ</h3>
+    <p class="copy">Отслеживает каждую строку кода, подсказывает изменения и защищает от ошибок.</p>
+  </article>
+  <article class="card yellow">
+    <h3 class="ctitle">ОТКАТ</h3>
+    <p class="copy">Позволяет вернуться к любой стабильной версии проекта за одну секунду.</p>
+  </article>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     6. COMPARISON / VERSUS (Слайд-баттл или ДО / ПОСЛЕ)
+     ═══════════════════════════════════════════════════════ -->
+<p class="eyebrow">СРАВНЕНИЕ И НАЗНАЧЕНИЕ</p>
+<h2 class="h2">БИТВА: ИНСТРУМЕНТ А VS ИНСТРУМЕНТ Б</h2>
+<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:18px;position:relative;">
+  <article class="card beige" style="padding:26px;display:flex;flex-direction:column;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid rgba(10,10,10,0.08);padding-bottom:12px;margin-bottom:16px;">
+      <span style="font-family:'Unbounded',sans-serif;font-weight:900;font-size:26px;">GIT</span>
+      <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;padding:5px 12px;border-radius:99px;background:var(--black);color:var(--yellow);">НА КОМПЬЮТЕРЕ</span>
+    </div>
+    <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px;font-size:15px;font-weight:600;">
+      <li>— Программа, установленная на вашем ПК</li>
+      <li>— Работает оффлайн без подключения к сети</li>
+      <li>— Управляется из терминала или VS Code</li>
+    </ul>
+  </article>
+
+  <div style="width:66px;height:66px;border-radius:50%;background:var(--yellow);color:var(--black);font-family:'Unbounded',sans-serif;font-weight:900;font-size:24px;display:flex;align-items:center;justify-content:center;align-self:center;box-shadow:0 12px 28px rgba(10,10,10,0.14);z-index:2;">
+    VS
+  </div>
+
+  <article class="card dark" style="padding:26px;display:flex;flex-direction:column;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid rgba(255,255,255,0.15);padding-bottom:12px;margin-bottom:16px;">
+      <span style="font-family:'Unbounded',sans-serif;font-weight:900;font-size:26px;">GITHUB</span>
+      <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;padding:5px 12px;border-radius:99px;background:var(--yellow);color:var(--black);">В ИНТЕРНЕТЕ</span>
+    </div>
+    <ul style="list-style:none;padding:0;margin:0;display:grid;gap:12px;font-size:15px;font-weight:600;">
+      <li>— Облачная веб-платформа в сети</li>
+      <li>— Хранилище удалённых копий проектов</li>
+      <li>— Даёт бесплатный хостинг сайтов</li>
+    </ul>
+  </article>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     7. PRACTICE SLIDE (Практика: Ваша очередь)
+     2 задания с пошаговыми пунктами
+     ═══════════════════════════════════════════════════════ -->
+<p class="eyebrow">ВАША ОЧЕРЕДЬ · 10 МИНУТ</p>
+<h2 class="h2">ЗАКРЕПИТЕ МАТЕРИАЛ НА ПРАКТИКЕ</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;">
+  <article class="card yellow">
+    <h3 class="ctitle">ЗАДАНИЕ 1 · ИНИЦИАЛИЗАЦИЯ</h3>
+    <ol style="display:grid;gap:12px;margin:16px 0 0;padding:0;list-style:none;">
+      <li><b>01</b> Создайте новую папку проекта в VS Code.</li>
+      <li><b>02</b> Откройте встроенный терминал клавишами Ctrl+`.</li>
+      <li><b>03</b> Введите команду <code style="background:var(--black);color:var(--yellow);padding:2px 6px;border-radius:4px;">git init</code>.</li>
+    </ol>
+  </article>
+
+  <article class="card purple">
+    <h3 class="ctitle">ЗАДАНИЕ 2 · ПЕРВЫЙ КОММИТ</h3>
+    <ol style="display:grid;gap:12px;margin:16px 0 0;padding:0;list-style:none;">
+      <li><b>01</b> Создайте файл index.html и добавьте тег h1.</li>
+      <li><b>02</b> Добавьте файл в индекс: <code style="background:var(--black);color:#fff;padding:2px 6px;border-radius:4px;">git add .</code></li>
+      <li><b>03</b> Зафиксируйте сохранение командой commit.</li>
+    </ol>
+  </article>
+</div>
