@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Урок 12 — Tailwind CSS | Месяц 1</title>
+  <title>Урок 13 — Tailwind CSS | Месяц 1</title>
   <link rel="icon" type="image/png" href="../../assets/icons/favicon.png">
   <link rel="shortcut icon" href="../../assets/icons/favicon-32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,11 +23,11 @@
 </head>
 <body>
   <a class="skip" href="#main">К содержанию слайда</a>
-  <main class="deck" id="main" aria-label="Презентация урока 12">
+  <main class="deck" id="main" aria-label="Презентация урока 13">
     <section class="slide title active" aria-label="Титульный слайд">
       <i class="rings ring-a"></i><i class="rings ring-b"></i>
       <div class="title-top"><div class="title-brand"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span><span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</span></span></div><div class="mode"><small>ФОРМАТ ОБУЧЕНИЯ</small><b>ПРАКТИЧЕСКИЙ КУРС</b></div></div>
-      <div class="title-center"><span class="badge">УРОК 12 · TAILWIND CSS</span><div class="title-main">TAILWIND</div><div class="title-lines"><i></i><div class="title-ital">css</div><i></i></div><div class="title-third">UTILITY-FIRST · КЛАССЫ · СКОРОСТЬ</div><p class="title-sub">Собираем дизайн прямо в HTML из готовых классов: один класс — одно свойство. Быстро, системно, без лишнего CSS.</p></div>
+      <div class="title-center"><span class="badge">УРОК 13 · TAILWIND CSS</span><div class="title-main">TAILWIND</div><div class="title-lines"><i></i><div class="title-ital">css</div><i></i></div><div class="title-third">UTILITY-FIRST · КЛАССЫ · СКОРОСТЬ</div><p class="title-sub">Собираем дизайн прямо в HTML из готовых классов: один класс — одно свойство. Быстро, системно, без лишнего CSS.</p></div>
       <div class="title-bottom"><span class="id"><small>ID КУРСА</small><b>HTML-CSS-DEV</b></span><span><b class="slogan">ИЗУЧАЙ · КОД · СОЗДАВАЙ</b><span class="dashes"><i></i><i></i></span></span></div>
     </section>
   </main>
@@ -98,11 +98,11 @@
         ['ПРАКТИКА','<p class="eyebrow">ВАША ОЧЕРЕДЬ · 15 МИНУТ</p><h2 class="h2">СОБЕРИТЕ НА КЛАССАХ</h2><div class="practice"><article class="card yellow"><h3 class="ctitle">КАРТОЧКА ПРОФИЛЯ</h3><ol class="steps"><li>Контейнер: flex items-center gap-4 p-6 bg-white rounded-xl shadow.</li><li>Аватар: img с классами w-16 h-16 rounded-full.</li><li>Имя: text-xl font-bold; должность: text-gray-500.</li></ol></article><article class="card purple"><h3 class="ctitle">АДАПТИВНАЯ СЕТКА</h3><ol class="steps"><li>Сетка: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6.</li><li>Карточки: p-4 border border-gray-200 rounded-lg.</li><li>Кнопка: bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded.</li></ol></article></div>']
       ];
       var deck=document.querySelector('.deck'),prev=document.querySelector('#prev'),next=document.querySelector('#next'),bar=document.querySelector('#bar');
-      function brand(topic){return '<header class="slide-header"><div class="brand"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span><span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">TAILWIND CSS</span></span></div><div class="header-lesson">УРОК 12 · '+topic+'</div></header>'}
+      function brand(topic){return '<header class="slide-header"><div class="brand"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span><span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">TAILWIND CSS</span></span></div><div class="header-lesson">УРОК 13 · '+topic+'</div></header>'}
       function footer(n){return '<footer class="footer"><span>УЧЕБНЫЙ МОДУЛЬ · TAILWIND CSS</span><span>СТРАНИЦА '+String(n).padStart(2,'0')+' / '+(data.length+1)+'</span></footer>'}
       data.forEach(function(item,i){var slide=document.createElement('section');slide.className='slide';slide.setAttribute('aria-hidden','true');slide.innerHTML=brand(item[0])+'<div class="content"><div class="shell">'+item[1]+'</div></div>'+footer(i+2);deck.appendChild(slide)});
       var slides=Array.from(document.querySelectorAll('.slide'));var current=0,touchX=0;
-      function render(n){current=Math.max(0,Math.min(n,slides.length-1));slides.forEach(function(s,i){s.classList.toggle('active',i===current);s.setAttribute('aria-hidden',i===current?'false':'true')});prev.disabled=current===0;next.disabled=current===slides.length-1;bar.style.width=((current+1)/slides.length*100)+'%';document.title='Урок 12 · Слайд '+(current+1)+' из '+slides.length}
+      function render(n){current=Math.max(0,Math.min(n,slides.length-1));slides.forEach(function(s,i){s.classList.toggle('active',i===current);s.setAttribute('aria-hidden',i===current?'false':'true')});prev.disabled=current===0;next.disabled=current===slides.length-1;bar.style.width=((current+1)/slides.length*100)+'%';document.title='Урок 13 · Слайд '+(current+1)+' из '+slides.length}
       prev.addEventListener('click',function(){render(current-1)});next.addEventListener('click',function(){render(current+1)});
       document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();render(current+1)}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();render(current-1)}if(e.key==='Home'){e.preventDefault();render(0)}if(e.key==='End'){e.preventDefault();render(slides.length-1)}});
       document.addEventListener('touchstart',function(e){touchX=e.changedTouches[0].screenX},{passive:true});document.addEventListener('touchend',function(e){var d=e.changedTouches[0].screenX-touchX;if(Math.abs(d)>55)render(current+(d<0?1:-1))},{passive:true});
