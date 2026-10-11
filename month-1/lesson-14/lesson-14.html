@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Урок 14 — Финальный проект: Адаптивный сайт по Figma | Месяц 1</title>
+  <link rel="icon" type="image/png" href="../../assets/icons/favicon.png">
+  <link rel="shortcut icon" href="../../assets/icons/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Unbounded:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#EEEEF8;--white:#fff;--black:#0A0A0A;--yellow:#DFFF4F;--purple:#C8B8F0;--beige:#EDE8D8;--border:#E0E0EE;--text:#1A1A1A;--muted:#888899;--label:#555566;--code:#12131A;--ok:#27622c;--bad:#be4545}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%}body{font-family:Montserrat,sans-serif;background:var(--bg);color:var(--black);overflow:hidden}.deck{width:100%;height:100%;position:relative;z-index:1}.slide{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;background:transparent}.slide.active{display:flex}
+    
+    /* ── ФОНОВЫЙ ДРЕЙФ (UNDERWATER AMBIENT DRIFT) ── */
+    .float-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .float-item{position:absolute;bottom:-120px;user-select:none;pointer-events:none;will-change:transform;animation:underwaterDrift linear infinite}
+    .float-item:nth-child(even){animation-name:underwaterDriftAlt}
+    .f-img{object-fit:contain}
+    .f-svg{stroke:var(--black);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .d-deep{filter:blur(2px);opacity:.035}
+    .d-mid{filter:blur(.5px);opacity:.06}
+    .d-near{opacity:.085}
+    @keyframes underwaterDrift{0%{transform:translate3d(0,0,0) rotate(0deg)}25%{transform:translate3d(26px,-32vh,0) rotate(7deg)}50%{transform:translate3d(-20px,-64vh,0) rotate(-6deg)}75%{transform:translate3d(22px,-96vh,0) rotate(5deg)}100%{transform:translate3d(-12px,-135vh,0) rotate(-3deg)}}
+    @keyframes underwaterDriftAlt{0%{transform:translate3d(0,0,0) rotate(0deg)}25%{transform:translate3d(-28px,-34vh,0) rotate(-8deg)}50%{transform:translate3d(24px,-66vh,0) rotate(6deg)}75%{transform:translate3d(-18px,-96vh,0) rotate(-5deg)}100%{transform:translate3d(14px,-135vh,0) rotate(4deg)}}
+    
+    /* ── ОБЩИЕ СТИЛИ СЛАЙДОВ ── */
+    .slide-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 56px 0;flex-shrink:0}
+    .brand{display:flex;align-items:center;gap:14px}
+    .burger{display:grid;gap:5px}
+    .burger i{width:31px;height:3px;border-radius:5px;background:var(--black)}
+    .brand-name{display:block;font-size:24px;font-weight:900;letter-spacing:-.045em;line-height:1}
+    .brand-sub,.header-lesson,.footer,.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .brand-sub{display:block;margin-top:4px;color:var(--muted)}
+    .header-lesson{padding-top:7px;text-align:right}
+    .content{flex:1;min-height:0;padding:14px 56px 18px;display:flex;align-items:center}
+    .shell{width:100%;max-width:1360px;margin:auto}
+    .footer{display:flex;justify-content:space-between;padding:10px 260px 28px 56px;color:var(--label);flex-shrink:0}
+    .h2{margin:0;font:900 clamp(24px,2.4vw,34px)/1.15 Unbounded,Montserrat,sans-serif;letter-spacing:-.055em;text-transform:uppercase;white-space:nowrap}
+    .eyebrow{margin:0 0 10px;color:var(--label)}
+    .line{width:72px;height:5px;border-radius:8px;background:var(--yellow);margin:16px 0}
+    .card{min-height:0;padding:24px;border:1px solid var(--border);border-radius:20px;background:var(--white)}
+    .purple{background:var(--purple);border-color:transparent}
+    .beige{background:var(--beige);border-color:#dfd6c0}
+    .yellow{background:var(--yellow);border-color:transparent}
+    .dark{background:var(--black);color:var(--white);border-color:transparent}
+    .ctitle{margin:0;font-size:19px;line-height:1.2;font-weight:900;text-transform:uppercase}
+    .copy{margin:12px 0 0;font-size:15px;line-height:1.45;font-weight:500}
+    
+    /* ── СЛАЙД 1: ТИТУЛ ── */
+    .title{justify-content:space-between}
+    .rings{position:absolute;border:2px solid rgba(10,10,10,.08);border-radius:50%;pointer-events:none}
+    .ring-a{width:390px;height:390px;right:-80px;top:-115px}
+    .ring-b{width:235px;height:235px;right:95px;top:65px}
+    .title-top{display:flex;justify-content:space-between;padding:32px 56px 0}
+    .title-brand{display:flex;align-items:center;gap:14px}
+    .mode{text-align:right}
+    .mode small,.id small{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.14em}
+    .mode b,.id b{display:block;margin-top:5px;font-size:14px;letter-spacing:.06em}
+    .title-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px}
+    .badge{padding:8px 18px;border-radius:99px;background:var(--black);color:var(--white);font-size:12px;font-weight:800;letter-spacing:.14em}
+    .title-main{margin-top:22px;display:inline-flex;align-items:center;justify-content:center;gap:clamp(16px,1.8vw,26px);font-size:clamp(50px,5.2vw,78px);font-weight:900;letter-spacing:-.075em;line-height:.95}
+    .title-logo{width:.86em;height:.86em;object-fit:contain;display:block;flex-shrink:0;user-select:none;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(10,10,10,.14));transition:transform .25s ease}
+    .title-main:hover .title-logo{transform:translateY(-2px) scale(1.04)}
+    .title-ital{font:900 italic clamp(64px,6.5vw,94px)/.95 'Playfair Display',serif;letter-spacing:-.065em}
+    .title-lines{display:flex;align-items:center;gap:20px;margin:8px 0}
+    .title-lines i{width:76px;height:5px;border-radius:6px;background:var(--yellow)}
+    .title-third{font-size:clamp(26px,2.8vw,42px);font-weight:900;letter-spacing:-.06em}
+    .title-sub{max-width:760px;margin-top:22px;font-size:19px;line-height:1.45;color:var(--muted)}
+    .title-bottom{display:flex;justify-content:space-between;align-items:flex-end;padding:0 280px 28px 56px}
+    .slogan{font-size:13px;font-weight:900;letter-spacing:.1em}
+    .dashes{display:flex;gap:8px;margin-top:8px}
+    .dashes i{height:4px;border-radius:6px;background:var(--yellow)}
+    .dashes i:first-child{width:40px}
+    .dashes i:last-child{width:22px}
+    
+    /* ── СЛАЙД 2: ОГЛАВЛЕНИЕ ── */
+    .toc-title{display:flex;align-items:center;gap:15px;margin-bottom:24px;font-size:36px;font-weight:900;letter-spacing:-.03em}
+    .toc-mark{position:relative;width:32px;height:32px;border-radius:9px;background:var(--yellow)}
+    .toc-mark:before,.toc-mark:after{content:'';position:absolute;left:8px;width:16px;height:3px;border-radius:4px;background:var(--black)}
+    .toc-mark:before{top:10px}
+    .toc-mark:after{top:18px}
+    .toc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .toc div{display:flex;align-items:center;gap:16px;min-height:64px;padding:14px 20px;border-radius:14px;font-size:15px;font-weight:800;letter-spacing:.02em}
+    .toc b{min-width:29px;font-size:18px}
+    .toc .black{background:var(--black);color:var(--white)}
+    
+    /* ── СЕТКИ КАРТОЧЕК ── */
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+    .grid-3 .card{min-height:260px;display:flex;flex-direction:column}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+    .grid-4 .card{min-height:270px;display:flex;flex-direction:column}
+    .grid-4 .ctitle{font-size:17px;margin-bottom:10px}
+    .grid-4 .copy{font-size:14px}
+    .take{display:flex;gap:12px;align-items:center;margin-top:18px;padding:15px 20px;border-radius:14px;background:var(--purple);font-size:15px;font-weight:700;line-height:1.4}
+    .take i{width:12px;height:12px;flex:none;border-radius:50%;background:var(--black)}
+    
+    /* ── ЭЛЕМЕНТЫ ШАГОВ ── */
+    .step-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .step-circle{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--black);color:var(--white);font:900 13px/1 Unbounded,sans-serif}
+    .step-circle.yellow{background:var(--yellow);color:var(--black)}
+    .step-tag{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .dark .step-tag{color:var(--yellow)}
+    .purple .step-tag{color:rgba(10,10,10,.6)}
+    .yellow .step-tag{color:rgba(10,10,10,.6)}
+    .beige .step-tag{color:rgba(10,10,10,.6)}
+    
+    /* ── НАВИГАЦИЯ ── */
+    .nav{position:fixed;right:36px;bottom:16px;z-index:5;display:flex;gap:8px}
+    .nav button{display:grid;place-items:center;width:58px;height:58px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--white);cursor:pointer;transition:background .2s}
+    .nav button:hover:not(:disabled){background:var(--yellow);border-color:var(--yellow)}
+    .nav button:disabled{opacity:.45;cursor:default}
+    .nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+    .progress{position:fixed;left:56px;right:210px;bottom:10px;height:4px;border-radius:9px;background:rgba(10,10,10,.1);z-index:4}
+    .progress i{display:block;width:10%;height:100%;border-radius:inherit;background:var(--yellow);transition:width .2s ease}
+    .skip{position:fixed;z-index:10;left:16px;top:-60px;padding:10px 14px;background:var(--yellow);color:var(--black);font-weight:800}
+    .skip:focus{top:12px}
+    
+    @media(max-width:900px){
+      .slide-header{padding:20px 24px 0}
+      .content{align-items:flex-start;overflow-y:auto;padding:14px 24px 80px}
+      .footer{display:none}
+      .title-top{padding:24px 24px 0}
+      .title-bottom{padding:0 24px 84px}
+      .mode{display:none}
+      .h2{white-space:normal}
+      .grid-3,.grid-4{grid-template-columns:1fr}
+      .toc{grid-template-columns:1fr}
+      .nav{right:18px}
+      .nav button{width:50px;height:50px}
+      .progress{left:24px;right:150px}
+    }
+    @media(max-width:520px){
+      .brand-name{font-size:18px}
+      .header-lesson{font-size:10px}
+      .title-main{font-size:36px;gap:10px}
+      .title-ital{font-size:52px}
+      .title-third{font-size:22px}
+      .title-sub{font-size:15px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*:before,*:after{transition-duration:.01ms!important;scroll-behavior:auto!important}
+    }
+  </style>
+</head>
+<body>
+  <!-- ФОНОВЫЙ ДРЕЙФ (UNDERWATER FLOATING BG) -->
+  <div class="float-bg" aria-hidden="true">
+    <img src="img/figma-logo.png" alt="" class="float-item d-near f-img" style="left:8%;width:64px;animation-duration:26s;animation-delay:-4s;">
+    <img src="img/vercel-logo.png" alt="" class="float-item d-mid f-img" style="left:24%;width:52px;animation-duration:32s;animation-delay:-16s;">
+    <svg class="float-item d-deep f-svg" viewBox="0 0 24 24" style="left:38%;width:44px;height:44px;animation-duration:38s;animation-delay:-8s;"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+    <img src="img/git-logo.png" alt="" class="float-item d-mid f-img" style="left:52%;width:60px;animation-duration:29s;animation-delay:-22s;">
+    <svg class="float-item d-near f-svg" viewBox="0 0 24 24" style="left:66%;width:46px;height:46px;animation-duration:24s;animation-delay:-12s;"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>
+    <img src="img/github-logo.png" alt="" class="float-item d-deep f-img" style="left:78%;width:42px;animation-duration:36s;animation-delay:-18s;">
+    <svg class="float-item d-mid f-svg" viewBox="0 0 24 24" style="left:90%;width:42px;height:42px;animation-duration:30s;animation-delay:-6s;"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+  </div>
+
+  <a class="skip" href="#main">К содержанию слайда</a>
+  <main class="deck" id="main" aria-label="Презентация урока 14">
+    <!-- СЛАЙД 1: ТИТУЛЬНЫЙ СЛАЙД -->
+    <section class="slide title active" aria-label="Титульный слайд">
+      <i class="rings ring-a"></i><i class="rings ring-b"></i>
+      <div class="title-top">
+        <div class="title-brand">
+          <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>
+            <b class="brand-name">ВЕБ-КУРС</b>
+            <span class="brand-sub">ОСНОВЫ РАЗРАБОТКИ</span>
+          </span>
+        </div>
+        <div class="mode">
+          <small>ФОРМАТ ОБУЧЕНИЯ</small>
+          <b>КУРСОВАЯ РАБОТА</b>
+        </div>
+      </div>
+      <div class="title-center">
+        <span class="badge">УРОК 14 · ФИНАЛЬНЫЙ ПРОЕКТ 1-ГО МЕСЯЦА</span>
+        <div class="title-main">
+          <img src="img/figma-logo.png" alt="Figma" class="title-logo">
+          <span>КУРСОВОЙ ПРОЕКТ</span>
+          <img src="img/vercel-logo.png" alt="Vercel" class="title-logo">
+        </div>
+        <div class="title-lines">
+          <i></i>
+          <div class="title-ital">online course</div>
+          <i></i>
+        </div>
+        <div class="title-third">FIGMA · DESKTOP FIRST · GIT &amp; VERCEL</div>
+        <p class="title-sub">Итог первого месяца: собираем полноценный адаптивный сайт образовательной платформы из макета Figma, фиксируем этапы в Git и публикуем в реальный веб на Vercel.</p>
+      </div>
+      <div class="title-bottom">
+        <span class="id">
+          <small>ID КУРСА</small>
+          <b>HTML-CSS-DEV</b>
+        </span>
+        <span>
+          <b class="slogan">ИЗУЧАЙ · КОД · СОЗДАВАЙ</b>
+          <span class="dashes"><i></i><i></i></span>
+        </span>
+      </div>
+    </section>
+  </main>
+
+  <!-- НАВИГАЦИЯ -->
+  <nav class="nav" aria-label="Навигация по слайдам">
+    <button id="prev" type="button" aria-label="Предыдущий слайд" disabled>
+      <svg viewBox="0 0 24 24"><path d="M15 18 9 12l6-6"/></svg>
+    </button>
+    <button id="next" type="button" aria-label="Следующий слайд">
+      <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+  </nav>
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+  <script>
+    (function(){
+      // Слайды презентации (данные)
+      var data = [
+        // 02: Содержание
+        [
+          'СОДЕРЖАНИЕ',
+          '<div class="toc-title"><i class="toc-mark"></i>СОДЕРЖАНИЕ УРОКА</div>' +
+          '<div class="toc">' +
+            '<div class="card"><b>01</b>ЦЕЛЬ И КОНЦЕПЦИЯ ПРОЕКТА</div>' +
+            '<div class="yellow"><b>02</b>МАКЕТ FIGMA И СЕКЦИИ</div>' +
+            '<div class="purple"><b>03</b>АРХИТЕКТУРА: DESKTOP FIRST</div>' +
+            '<div class="beige"><b>04</b>МЕДИАЗАПРОСЫ И АДАПТИВ</div>' +
+            '<div class="dark"><b>05</b>GIT &amp; GITHUB: ВЕРСИИ</div>' +
+            '<div class="card"><b>06</b>ДЕПЛОЙ НА ПЛАТФОРМУ VERCEL</div>' +
+          '</div>' +
+          '<div class="take"><i></i><span>+ Полный чек-лист требований и критериев приёмки в конце урока.</span></div>'
+        ],
+        // 03: Цель и концепция
+        [
+          'ЦЕЛЬ И КОНЦЕПЦИЯ',
+          '<p class="eyebrow">МЕНТАЛЬНЫЙ СДВИГ · ИТОГИ МЕСЯЦА</p>' +
+          '<h2 class="h2">ОТ ТРЕНИРОВКИ К НАСТОЯЩЕМУ ПРОДУКТУ</h2>' +
+          '<div class="grid-4">' +
+            '<article class="card beige">' +
+              '<div class="step-top"><span class="step-circle">01</span><span class="step-tag">ПОРТФОЛИО</span></div>' +
+              '<h3 class="ctitle">ПЕРВЫЙ КЕЙС</h3>' +
+              '<p class="copy">Больше никаких изолированных примеров: перед вами готовый коммерческий лендинг платформы курсов, который можно показать заказчику или работодателю.</p>' +
+            '</article>' +
+            '<article class="card purple">' +
+              '<div class="step-top"><span class="step-circle">02</span><span class="step-tag">СЕМАНТИКА</span></div>' +
+              '<h3 class="ctitle">ЧИСТЫЙ HTML5</h3>' +
+              '<p class="copy">Строгий запрет на «дивоманию». Используйте осознанные теги: &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;article&gt; и правильную иерархию заголовков.</p>' +
+            '</article>' +
+            '<article class="card yellow">' +
+              '<div class="step-top"><span class="step-circle">03</span><span class="step-tag">ВЁРСТКА</span></div>' +
+              '<h3 class="ctitle">FLEX И АДАПТИВ</h3>' +
+              '<p class="copy">Сетка на Flexbox и CSS-переменных. Начинаем с Desktop First (1440px), а затем плавно адаптируем под планшеты и мобильные через медиазапросы.</p>' +
+            '</article>' +
+            '<article class="card dark">' +
+              '<div class="step-top"><span class="step-circle yellow">04</span><span class="step-tag">ПРОДАКШЕН</span></div>' +
+              '<h3 class="ctitle">GIT И VERCEL</h3>' +
+              '<p class="copy">Пошаговая фиксация каждого этапа в Git, открытый репозиторий на GitHub и живой продакшен-деплой с быстрым HTTPS-доменом на Vercel.</p>' +
+            '</article>' +
+          '</div>' +
+          '<div class="take"><i></i><span>Цель проекта — соединить все знания месяца в единую цельную систему и создать работающий сайт.</span></div>'
+        ],
+        // Плейсхолдеры для Итераций 2 и 3
+        ['МАКЕТ FIGMA', '<p class="eyebrow">ИЗУЧЕНИЕ МАКЕТА</p><h2 class="h2">ИНТЕРАКТИВНЫЙ РАЗБОР FIGMA</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Разбор секций макета Online Course Educational Website...</p></div>'],
+        ['DESKTOP FIRST', '<p class="eyebrow">СТРАТЕГИЯ ВЁРСТКИ</p><h2 class="h2">АРХИТЕКТУРА: СНАЧАЛА ДЕСКТОП</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Построение сетки десктопа...</p></div>'],
+        ['МЕДИАЗАПРОСЫ', '<p class="eyebrow">АДАПТИВНАЯ ВЁРСТКА</p><h2 class="h2">МОБИЛЬНАЯ АДАПТАЦИЯ И @MEDIA</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Брейкпоинты и нулевой горизонтальный скролл...</p></div>'],
+        ['GIT & GITHUB', '<p class="eyebrow">КОНТРОЛЬ ВЕРСИЙ</p><h2 class="h2">ФИКСАЦИЯ ЭТАПОВ В РЕПОЗИТОРИИ</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Ритм коммитов и структура проекта...</p></div>'],
+        ['ДЕПЛОЙ VERCEL', '<p class="eyebrow">ПУБЛИКАЦИЯ В СЕТЬ</p><h2 class="h2">ОБЛАЧНЫЙ ХОСТИНГ НА VERCEL</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Подключение к GitHub и запуск деплоя...</p></div>'],
+        ['ЧЕК-ЛИСТ КРИТЕРИЕВ', '<p class="eyebrow">ТРЕБОВАНИЯ К РАБОТЕ</p><h2 class="h2">КРИТЕРИИ ПРИЁМКИ И ОЦЕНКИ</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Полный чек-лист готовности проекта...</p></div>'],
+        ['ВАША ОЧЕРЕДЬ', '<p class="eyebrow">ПРАКТИКА И СДАЧА</p><h2 class="h2">ФОРМАТ СДАЧИ ПРОЕКТА</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Инструкция по отправке ссылок...</p></div>']
+      ];
+
+      var deck = document.querySelector('.deck');
+      var prev = document.querySelector('#prev');
+      var next = document.querySelector('#next');
+      var bar  = document.querySelector('#bar');
+
+      function brand(topic){
+        return '<header class="slide-header">' +
+          '<div class="brand">' +
+            '<span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>' +
+            '<span><b class="brand-name">ВЕБ-КУРС</b><span class="brand-sub">ФИНАЛЬНЫЙ ПРОЕКТ</span></span>' +
+          '</div>' +
+          '<div class="header-lesson">УРОК 14 · ' + topic + '</div>' +
+        '</header>';
+      }
+
+      function footer(n){
+        return '<footer class="footer">' +
+          '<span>КУРСОВАЯ РАБОТА · ПЕРВЫЙ МЕСЯЦ</span>' +
+          '<span>СТРАНИЦА ' + String(n).padStart(2, '0') + ' / ' + (data.length + 1) + '</span>' +
+        '</footer>';
+      }
+
+      // Генерация динамических слайдов
+      data.forEach(function(item, i){
+        var slide = document.createElement('section');
+        slide.className = 'slide' + (item[1].indexOf('figma-embed-card') !== -1 ? ' slide-figma' : '');
+        slide.setAttribute('aria-hidden', 'true');
+        slide.setAttribute('aria-label', 'Слайд: ' + item[0]);
+        slide.innerHTML = brand(item[0]) + '<div class="content"><div class="shell">' + item[1] + '</div></div>' + footer(i + 2);
+        deck.appendChild(slide);
+      });
+
+      var slides = Array.from(document.querySelectorAll('.slide'));
+      var current = 0;
+      var touchX = 0;
+
+      function render(n){
+        current = Math.max(0, Math.min(n, slides.length - 1));
+        slides.forEach(function(s, i){
+          s.classList.toggle('active', i === current);
+          s.setAttribute('aria-hidden', i === current ? 'false' : 'true');
+        });
+        prev.disabled = (current === 0);
+        next.disabled = (current === slides.length - 1);
+        bar.style.width = ((current + 1) / slides.length * 100) + '%';
+        document.title = 'Урок 14 · Слайд ' + (current + 1) + ' из ' + slides.length;
+        if(location.hash !== '#' + (current + 1)){
+          history.replaceState(null, '', '#' + (current + 1));
+        }
+      }
+
+      prev.addEventListener('click', function(){ render(current - 1); });
+      next.addEventListener('click', function(){ render(current + 1); });
+
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'ArrowRight' || e.key === 'PageDown'){ e.preventDefault(); render(current + 1); }
+        if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); render(current - 1); }
+        if(e.key === 'Home'){ e.preventDefault(); render(0); }
+        if(e.key === 'End'){ e.preventDefault(); render(slides.length - 1); }
+      });
+
+      document.addEventListener('touchstart', function(e){
+        touchX = e.changedTouches[0].screenX;
+      }, {passive:true});
+
+      document.addEventListener('touchend', function(e){
+        var diff = e.changedTouches[0].screenX - touchX;
+        if(Math.abs(diff) > 55){
+          render(current + (diff < 0 ? 1 : -1));
+        }
+      }, {passive:true});
+
+      var initN = parseInt((location.hash || '').replace('#', ''), 10);
+      render(isNaN(initN) ? 0 : initN - 1);
+    })();
+  </script>
+  <script src="/mobile-block.js"></script>
+</body>
+</html>
