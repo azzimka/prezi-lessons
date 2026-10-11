@@ -96,7 +96,27 @@
     .take{display:flex;gap:12px;align-items:center;margin-top:18px;padding:15px 20px;border-radius:14px;background:var(--purple);font-size:15px;font-weight:700;line-height:1.4}
     .take i{width:12px;height:12px;flex:none;border-radius:50%;background:var(--black)}
     
-    /* ── ЭЛЕМЕНТЫ ШАГОВ ── */
+    /* ── СЛАЙД FIGMA EMBED ── */
+    .slide-figma .content{padding:10px 56px 14px;align-items:stretch}
+    .slide-figma .shell{height:100%;max-width:100%;display:flex;flex-direction:column}
+    .figma-embed-card{flex:1;height:100%;min-height:0;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--white);box-shadow:0 12px 30px rgba(10,10,10,.06);display:flex;flex-direction:column}
+    .figma-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:#F5F5FA;border-bottom:1px solid var(--border);gap:14px;flex-shrink:0}
+    .figma-dots{display:flex;gap:7px}
+    .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+    .dot.red{background:#FF5F56}.dot.yellow{background:#FFBD2E}.dot.green{background:#27C93F}
+    .figma-tab{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:800;color:var(--text);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .figma-tab-icon{width:18px;height:18px;object-fit:contain;flex-shrink:0}
+    .figma-ext-btn{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--black);text-decoration:none;padding:7px 16px;border-radius:99px;background:var(--yellow);flex-shrink:0;transition:opacity .2s ease}
+    .figma-ext-btn:hover{opacity:.85}
+    .figma-ext-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4}
+    .figma-frame-wrap{flex:1;height:100%;min-height:0;background:#1E1E1E;position:relative;display:flex;flex-direction:column}
+    .figma-iframe{width:100%;height:100%;border:none;flex:1}
+    .figma-meta-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 22px;background:var(--white);border-top:1px solid var(--border);flex-shrink:0;font-size:12px;font-weight:700;color:var(--muted);gap:12px;flex-wrap:wrap}
+    .figma-meta-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--label);flex-shrink:0}
+    .figma-sections-badge{display:flex;gap:8px;flex-wrap:wrap}
+    .f-badge{padding:4px 10px;border-radius:6px;background:rgba(10,10,10,.06);font-size:11px;font-weight:800;color:var(--text)}
+
+    /* ── ЭЛЕМЕНТЫ ШАГОВ И КОД ── */
     .step-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .step-circle{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--black);color:var(--white);font:900 13px/1 Unbounded,sans-serif}
     .step-circle.yellow{background:var(--yellow);color:var(--black)}
@@ -105,6 +125,13 @@
     .purple .step-tag{color:rgba(10,10,10,.6)}
     .yellow .step-tag{color:rgba(10,10,10,.6)}
     .beige .step-tag{color:rgba(10,10,10,.6)}
+    .step-cmd{display:inline-block;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;font-weight:800;padding:5px 11px;border-radius:8px;background:var(--black);color:var(--yellow);margin-bottom:12px;width:fit-content}
+    .dark .step-cmd{background:rgba(255,255,255,.15);color:var(--yellow)}
+    .step-cmd.yellow{background:var(--yellow);color:var(--black)}
+    .cli-chip{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;background:rgba(10,10,10,.07);margin-top:auto;letter-spacing:-.01em;white-space:nowrap;overflow-x:auto}
+    .dark .cli-chip{background:rgba(255,255,255,.12);color:var(--yellow)}
+    .purple .cli-chip{background:rgba(10,10,10,.1)}
+    .yellow .cli-chip{background:rgba(10,10,10,.1)}
     
     /* ── НАВИГАЦИЯ ── */
     .nav{position:fixed;right:36px;bottom:16px;z-index:5;display:flex;gap:8px}
@@ -130,6 +157,8 @@
       .nav{right:18px}
       .nav button{width:50px;height:50px}
       .progress{left:24px;right:150px}
+      .slide-figma .content{padding:10px 20px 80px}
+      .figma-frame-wrap{height:calc(100vh - 250px)}
     }
     @media(max-width:520px){
       .brand-name{font-size:18px}
@@ -138,6 +167,10 @@
       .title-ital{font-size:52px}
       .title-third{font-size:22px}
       .title-sub{font-size:15px}
+      .figma-frame-wrap{height:340px}
+      .figma-tab{font-size:10px}
+      .figma-ext-btn{font-size:9px;padding:4px 8px}
+      .figma-meta-bar{display:none}
     }
     @media(prefers-reduced-motion:reduce){
       *,*:before,*:after{transition-duration:.01ms!important;scroll-behavior:auto!important}
@@ -260,10 +293,104 @@
           '</div>' +
           '<div class="take"><i></i><span>Цель проекта — соединить все знания месяца в единую цельную систему и создать работающий сайт.</span></div>'
         ],
-        // Плейсхолдеры для Итераций 2 и 3
-        ['МАКЕТ FIGMA', '<p class="eyebrow">ИЗУЧЕНИЕ МАКЕТА</p><h2 class="h2">ИНТЕРАКТИВНЫЙ РАЗБОР FIGMA</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Разбор секций макета Online Course Educational Website...</p></div>'],
-        ['DESKTOP FIRST', '<p class="eyebrow">СТРАТЕГИЯ ВЁРСТКИ</p><h2 class="h2">АРХИТЕКТУРА: СНАЧАЛА ДЕСКТОП</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Построение сетки десктопа...</p></div>'],
-        ['МЕДИАЗАПРОСЫ', '<p class="eyebrow">АДАПТИВНАЯ ВЁРСТКА</p><h2 class="h2">МОБИЛЬНАЯ АДАПТАЦИЯ И @MEDIA</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Брейкпоинты и нулевой горизонтальный скролл...</p></div>'],
+        // 04: Макет Figma
+        [
+          'МАКЕТ FIGMA',
+          '<div class="figma-embed-card">' +
+            '<div class="figma-bar">' +
+              '<div class="figma-dots"><i class="dot red"></i><i class="dot yellow"></i><i class="dot green"></i></div>' +
+              '<span class="figma-tab">' +
+                '<img src="img/figma-logo.png" alt="Figma" class="figma-tab-icon">' +
+                'МАКЕТ: ONLINE COURSE E-LEARNING EDUCATIONAL WEBSITE' +
+              '</span>' +
+              '<a href="https://www.figma.com/design/ojBZfaZMzOy4fZkqkI4KYy/Online-Course-E-Learning-Educational-Website-UI-Template-Design-in-Light-Theme---FREE-Editable----Community---Copy-?node-id=109-87&t=cHduLzW0H2zGNsQZ-0" target="_blank" rel="noopener noreferrer" class="figma-ext-btn">' +
+                'ОТКРЫТЬ В FIGMA ' +
+                '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+              '</a>' +
+            '</div>' +
+            '<div class="figma-frame-wrap">' +
+              '<iframe src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fdesign%2FojBZfaZMzOy4fZkqkI4KYy%2FOnline-Course-E-Learning-Educational-Website-UI-Template-Design-in-Light-Theme---FREE-Editable----Community---Copy-%3Fnode-id%3D109-87%26t%3DcHduLzW0H2zGNsQZ-0" class="figma-iframe" allowfullscreen loading="lazy"></iframe>' +
+            '</div>' +
+            '<div class="figma-meta-bar">' +
+              '<span class="figma-meta-label">АНАТОМИЯ СЕКЦИЙ САЙТА:</span>' +
+              '<div class="figma-sections-badge">' +
+                '<span class="f-badge">01. HEADER &amp; НАВИГАЦИЯ</span>' +
+                '<span class="f-badge">02. HERO &amp; ОФФЕР</span>' +
+                '<span class="f-badge">03. ПАРТНЁРЫ</span>' +
+                '<span class="f-badge">04. СЕТКА КУРСОВ</span>' +
+                '<span class="f-badge">05. ПРЕИМУЩЕСТВА</span>' +
+                '<span class="f-badge">06. FOOTER</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        ],
+        // 05: Desktop First
+        [
+          'DESKTOP FIRST',
+          '<p class="eyebrow">АРХИТЕКТУРА ВЁРСТКИ · 1440PX</p>' +
+          '<h2 class="h2">СТРАТЕГИЯ DESKTOP FIRST: БАЗОВАЯ СЕТКА</h2>' +
+          '<div class="grid-4">' +
+            '<article class="card beige">' +
+              '<div class="step-top"><span class="step-circle">01</span><span class="step-tag">ФУНДАМЕНТ</span></div>' +
+              '<code class="step-cmd">Desktop First</code>' +
+              '<h3 class="ctitle">ПОЛНЫЙ МАКЕТ</h3>' +
+              '<p class="copy">Вёрстка начинается с большого экрана 1440px. Выстраиваем всю композицию: полную ширину, сложные карточки и многоколоночные ряды.</p>' +
+              '<div class="cli-chip">width: 1440px / 1200px</div>' +
+            '</article>' +
+            '<article class="card purple">' +
+              '<div class="step-top"><span class="step-circle">02</span><span class="step-tag">ЦЕНТРОВКА</span></div>' +
+              '<code class="step-cmd">.container</code>' +
+              '<h3 class="ctitle">ОСЬ КОНТЕНТА</h3>' +
+              '<p class="copy">Ограничиваем ширину контента: <code>max-width: 1200px; margin: 0 auto;</code>. На 2K/4K мониторах сайт останется аккуратным по центру.</p>' +
+              '<div class="cli-chip">max-width: 1200px; margin: 0 auto;</div>' +
+            '</article>' +
+            '<article class="card yellow">' +
+              '<div class="step-top"><span class="step-circle">03</span><span class="step-tag">СЕМАНТИКА</span></div>' +
+              '<code class="step-cmd">HTML5 Tags</code>' +
+              '<h3 class="ctitle">ЧИСТЫЕ БЛОКИ</h3>' +
+              '<p class="copy">Строгий запрет на бесконечные div. Используйте <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code> и <code>&lt;footer&gt;</code>.</p>' +
+              '<div class="cli-chip">&lt;header&gt; &lt;main&gt; &lt;footer&gt;</div>' +
+            '</article>' +
+            '<article class="card dark">' +
+              '<div class="step-top"><span class="step-circle yellow">04</span><span class="step-tag">РАСКЛАДКА</span></div>' +
+              '<code class="step-cmd yellow">display: flex</code>' +
+              '<h3 class="ctitle">СЕТКА КАРТОЧЕК</h3>' +
+              '<p class="copy">Стройте ряды на Flexbox: <code>justify-content: space-between</code> для шапки и <code>gap: 24px</code> для колонок. Никаких хаков с float.</p>' +
+              '<div class="cli-chip">display: flex; gap: 24px;</div>' +
+            '</article>' +
+          '</div>' +
+          '<div class="take"><i></i><span>В Desktop First вы сначала программируете идеальный вид на мониторе, а затем плавно сжимаете экран через медиазапросы.</span></div>'
+        ],
+        // 06: Медиазапросы
+        [
+          'МЕДИАЗАПРОСЫ',
+          '<p class="eyebrow">МОБИЛЬНАЯ АДАПТАЦИЯ · @MEDIA</p>' +
+          '<h2 class="h2">ТРАНСФОРМАЦИЯ СЕТКИ ПОД ЭКРАНЫ</h2>' +
+          '<div class="grid-3">' +
+            '<article class="card beige">' +
+              '<div class="step-top"><span class="step-circle">01</span><span class="step-tag">ПЛАНШЕТЫ</span></div>' +
+              '<code class="step-cmd">max-width: 1024px</code>' +
+              '<h3 class="ctitle">ПЛАНШЕТНЫЙ РЕЖИМ</h3>' +
+              '<p class="copy">Экран сужается: карточки курсов перестраиваются из 3-4 колонок в 2 колонки. Уменьшаются крупные отступы (padding с 80px до 40px), текст слегка масштабируется.</p>' +
+              '<div class="cli-chip">grid-template-columns: repeat(2, 1fr)</div>' +
+            '</article>' +
+            '<article class="card purple">' +
+              '<div class="step-top"><span class="step-circle">02</span><span class="step-tag">СМАРТФОНЫ</span></div>' +
+              '<code class="step-cmd">max-width: 768px</code>' +
+              '<h3 class="ctitle">МОБИЛЬНЫЙ СТЕК</h3>' +
+              '<p class="copy">Все горизонтальные ряды превращаются в одну вертикальную колонку. Картинка Hero встает под заголовок, а карточки курсов занимают 100% ширины.</p>' +
+              '<div class="cli-chip">flex-direction: column; width: 100%;</div>' +
+            '</article>' +
+            '<article class="card yellow">' +
+              '<div class="step-top"><span class="step-circle">03</span><span class="step-tag">ПРАВИЛО 0</span></div>' +
+              '<code class="step-cmd">375px — 480px</code>' +
+              '<h3 class="ctitle">0 СКРОЛЛА ПО ГОРИЗОНТАЛИ</h3>' +
+              '<p class="copy"><b>Строгий запрет на горизонтальную полосу прокрутки!</b> Картинкам задайте <code>max-width: 100%</code>, контейнерам <code>overflow-x: hidden</code>. Страница листается только вертикально.</p>' +
+              '<div class="cli-chip">max-width: 100%; height: auto;</div>' +
+            '</article>' +
+          '</div>' +
+          '<div class="take"><i></i><span>Всегда тестируйте верстку в режиме эмуляции Chrome DevTools на экранах iPhone (375px, 390px) и iPad (768px).</span></div>'
+        ],
         ['GIT & GITHUB', '<p class="eyebrow">КОНТРОЛЬ ВЕРСИЙ</p><h2 class="h2">ФИКСАЦИЯ ЭТАПОВ В РЕПОЗИТОРИИ</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Ритм коммитов и структура проекта...</p></div>'],
         ['ДЕПЛОЙ VERCEL', '<p class="eyebrow">ПУБЛИКАЦИЯ В СЕТЬ</p><h2 class="h2">ОБЛАЧНЫЙ ХОСТИНГ НА VERCEL</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Подключение к GitHub и запуск деплоя...</p></div>'],
         ['ЧЕК-ЛИСТ КРИТЕРИЕВ', '<p class="eyebrow">ТРЕБОВАНИЯ К РАБОТЕ</p><h2 class="h2">КРИТЕРИИ ПРИЁМКИ И ОЦЕНКИ</h2><div class="card" style="padding:40px;text-align:center;"><p class="copy">Полный чек-лист готовности проекта...</p></div>'],
